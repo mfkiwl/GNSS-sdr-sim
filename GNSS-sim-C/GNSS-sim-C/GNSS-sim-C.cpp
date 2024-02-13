@@ -17,24 +17,24 @@
 void example_manager_galileo() {
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
-    FileSource fileSource("galileo.txt");
-    FileSink fileSink("ExampleOutput.sigmf-data");
+    FileSource fileSource("../../data/galileo.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(15000000, 1575420000);
 
     manager.run(fileSource, fileSink, 1);
 }
 
 void example_manager_gps() {
-    FileSource fileSource("gps.txt");
-    FileSink fileSink("ExampleOutput.sigmf-data");
+    FileSource fileSource("../../data/gps.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(2600000, 1575420000);
 
     manager.run(fileSource, fileSink, 1);
 }
 
 void example_manager_gps10() {
-    FileSource fileSource("gps.txt");
-    FileSink fileSink("ExampleOutput.sigmf-data");
+    FileSource fileSource("../../data/gps.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(10000000, 1575420000);
 
     manager.run(fileSource, fileSink, 1);
@@ -42,22 +42,13 @@ void example_manager_gps10() {
 
 void example_manager_glonass() {
     //FileSource fileSource("ExampleData.txt");
-    FileSource fileSource("glonass.txt");
-    FileSink fileSink("ExampleOutput.sigmf-data");
+    FileSource fileSource("../../data/glonass.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(15000000, 1602000000);
 
     manager.run(fileSource, fileSink, 1);
 }
 
-void example_file() {
-    FileSource fileSource("ExampleData.txt");
-    std::vector<Satellite*> sats = fileSource.getSats();
-    std::map<std::string, DataFrame> data1 = fileSource.nextData();
-    std::map<std::string, DataFrame> data2 = fileSource.nextData();
-    std::map<std::string, DataFrame> data3 = fileSource.nextData();
-    std::cout << "file done" << std::endl;
-    std::map<std::string, DataFrame> data4 = fileSource.nextData();
-}
 
 void example_chain() {
 
