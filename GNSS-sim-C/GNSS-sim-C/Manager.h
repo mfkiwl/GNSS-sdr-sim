@@ -94,7 +94,9 @@ public:
 				sink.add(iq);
 			}
 			printf("\r %.1f s", (float)t / 10.0);
+			std::cout << std::flush;
 			//std::cout << "\r" << (float)t / 10.0 << " s";
+			//std::cout << "line" << std::endl;
 		}
 		sink.close();
 

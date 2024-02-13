@@ -9,8 +9,8 @@
 
 namespace galileo {
 
-	auto prnB_codes = galileo::getPRNCodes("C:\\Users\\Mike\\Desktop\\Thesis\\Galileo\\C7_E1B.txt");
-	auto prnC_codes = getPRNCodes("C:\\Users\\Mike\\Desktop\\Thesis\\Galileo\\C8_E1C.txt");
+	auto prnB_codes = galileo::getPRNCodes("../../data/Galileo/C7_E1B.txt");
+	auto prnC_codes = getPRNCodes("../../data/Galileo/C8_E1C.txt");
 
 	class Sat : public Satellite {
 

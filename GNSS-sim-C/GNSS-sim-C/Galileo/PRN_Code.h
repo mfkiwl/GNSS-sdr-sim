@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <stdexcept>
 
+
 namespace galileo {
 
 	const size_t code_length = 4092;

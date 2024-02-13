@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -o "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/FIFO_isim_beh.exe" -prj "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/FIFO_beh.prj" "work.FIFO" 

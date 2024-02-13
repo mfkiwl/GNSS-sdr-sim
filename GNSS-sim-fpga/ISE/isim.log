@@ -1,0 +1,16 @@
+ISim log file
+Running: /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/FIFO_isim_beh.exe -intstyle ise -gui -tclbatch isim.cmd -wdb /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/FIFO_isim_beh.wdb 
+ISim P.20131013 (signature 0xfbc00daa)
+WARNING: A WEBPACK license was found.
+WARNING: Please use Xilinx License Configuration Manager to check out a full ISim license.
+WARNING: ISim will run in Lite mode. Please refer to the ISim documentation for more information on the differences between the Lite and the Full version.
+This is a Lite version of ISim.
+ERROR: at 0 ps: Signal registers index is out of bound.
+
+ERROR: Time resolution is 1 fs
+# onerror resume
+# wave add /
+No active Database
+# run 1000 ns
+Unable to execute live simulation command.
+# exit 0

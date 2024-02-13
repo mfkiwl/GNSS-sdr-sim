@@ -1,0 +1,7 @@
+net "clk" loc = "G18"
+net "reset" loc = "B18"
+net "serial_in" loc = "H18"
+net "parallel_out<0>" loc = "L18"
+net "parallel_out<0>" loc = "F18"
+net "parallel_out<0>" loc = "D17"
+net "parallel_out<0>" loc = "D16"

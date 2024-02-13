@@ -1,0 +1,6 @@
+Command line:
+   FIFO_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  60101
+
