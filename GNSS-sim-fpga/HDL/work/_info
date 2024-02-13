@@ -1,0 +1,258 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Mike/Desktop/Thesis/HDL
+Edatasource
+Z1 w1705418222
+Z2 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z5 8C:/Users/Mike/Desktop/Thesis/HDL/DataSource.vhdl
+Z6 FC:/Users/Mike/Desktop/Thesis/HDL/DataSource.vhdl
+l0
+L5
+VX64XL=gS^EGeAMR4KQi1c2
+!s100 KJHXc7[G3BBaU9c2680Rj1
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1705418241
+!i10b 1
+Z9 !s108 1705418241.000000
+Z10 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/DataSource.vhdl|
+Z11 !s107 C:/Users/Mike/Desktop/Thesis/HDL/DataSource.vhdl|
+!i113 1
+Z12 o-work work
+Z13 tExplicit 1 CvgOpt 0
+Adummy1
+R2
+R3
+R4
+Z14 DEx4 work 10 datasource 0 22 X64XL=gS^EGeAMR4KQi1c2
+l24
+L18
+VT_YgL@0WIbT45J<FH:@kV2
+!s100 =<VjAf=YfAE?o7gFJKEP]3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Edopplerupsample
+Z15 w1705411781
+R2
+R3
+R4
+R0
+Z16 8C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample.vhdl
+Z17 FC:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample.vhdl
+l0
+L5
+VU9A=j<VMIS]0jH>aZ<8O?0
+!s100 W2bfoU=h^LanT]kFm[ASl2
+R7
+32
+Z18 !s110 1705417292
+!i10b 1
+Z19 !s108 1705417292.000000
+Z20 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample.vhdl|
+Z21 !s107 C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample.vhdl|
+!i113 1
+R12
+R13
+Aarch1
+R2
+R3
+R4
+DEx4 work 15 dopplerupsample 0 22 U9A=j<VMIS]0jH>aZ<8O?0
+l71
+L29
+VzkFOkYV5XKg?ZWXDiT5lD2
+!s100 JaE6Rf4lUN[WTa3f65Wi83
+R7
+32
+R18
+!i10b 1
+R19
+R20
+R21
+!i113 1
+R12
+R13
+Edopplerupsample_tb
+Z22 w1705336609
+R0
+Z23 8C:/Users/Mike/Desktop/Thesis/HDL/ExampleSource.vhdl
+Z24 FC:/Users/Mike/Desktop/Thesis/HDL/ExampleSource.vhdl
+l0
+L28
+Vem1E2dI51j4IE7^knS8P31
+!s100 4[3zlN8<@[5Xa:V40FlT@0
+R7
+32
+R18
+!i10b 1
+R19
+Z25 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/ExampleSource.vhdl|
+Z26 !s107 C:/Users/Mike/Desktop/Thesis/HDL/ExampleSource.vhdl|
+!i113 1
+R12
+R13
+Astim1
+w1705395024
+DEx4 work 18 dopplerupsample_tb 0 22 em1E2dI51j4IE7^knS8P31
+R2
+R3
+R4
+8C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample_tb.vhdl
+FC:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample_tb.vhdl
+l52
+L5
+V2L_7?o<<>:kXXCRP;LMF=0
+!s100 W0LCDYMa5L<Xe5[MSzE@Y3
+R7
+32
+R18
+!i10b 1
+R19
+!s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample_tb.vhdl|
+!s107 C:/Users/Mike/Desktop/Thesis/HDL/DopplerUpsample_tb.vhdl|
+!i113 1
+R12
+R13
+Eexampleinput
+R22
+R2
+R3
+R4
+R0
+R23
+R24
+l0
+L5
+Vb5EFR:9Plg5YhTU>1nNmO0
+!s100 _?nWY>1kWJ2Y9ec63e?1d2
+R7
+32
+R18
+!i10b 1
+R19
+R25
+R26
+!i113 1
+R12
+R13
+Ahalfhertz
+R2
+R3
+R4
+DEx4 work 12 exampleinput 0 22 b5EFR:9Plg5YhTU>1nNmO0
+l15
+L13
+VzdIWIML4Z<XZO80M^>2aY2
+!s100 ScEaPm_jLhV9hVPC5fXII3
+R7
+32
+R18
+!i10b 1
+R19
+R25
+R26
+!i113 1
+R12
+R13
+Eglonassmodulation
+Z27 w1705401832
+R2
+R3
+R4
+R0
+Z28 8C:/Users/Mike/Desktop/Thesis/HDL/GlonassModulation.vhdl
+Z29 FC:/Users/Mike/Desktop/Thesis/HDL/GlonassModulation.vhdl
+l0
+L5
+VjVM``UOBKj2D4@KoDAaoH2
+!s100 YW;OhlNJU308Ti?;OX<eN1
+R7
+32
+R18
+!i10b 1
+R19
+Z30 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/GlonassModulation.vhdl|
+Z31 !s107 C:/Users/Mike/Desktop/Thesis/HDL/GlonassModulation.vhdl|
+!i113 1
+R12
+R13
+Aglonassl1
+R2
+R3
+R4
+DEx4 work 17 glonassmodulation 0 22 jVM``UOBKj2D4@KoDAaoH2
+l24
+L18
+V:PP:VSDD98iogC99S5kif2
+!s100 YYOK_HV<dYCH=Ac:>a7aV3
+R7
+32
+R18
+!i10b 1
+R19
+R30
+R31
+!i113 1
+R12
+R13
+Eglonassupsample_tb
+Z32 w1705418216
+Z33 DPx4 ieee 16 std_logic_textio 0 22 V5TSK`;aJKC<l]CEg1>mz1
+R2
+R3
+R4
+R0
+Z34 8C:/Users/Mike/Desktop/Thesis/HDL/GlonassUpsample_tb.vhdl
+Z35 FC:/Users/Mike/Desktop/Thesis/HDL/GlonassUpsample_tb.vhdl
+l0
+L8
+VGCUOXKeDI<W;BbhZ>=2DN1
+!s100 0_UL]PRn9J4ebiW;7<2zP2
+R7
+32
+Z36 !s110 1705418238
+!i10b 1
+Z37 !s108 1705418238.000000
+Z38 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/HDL/GlonassUpsample_tb.vhdl|
+Z39 !s107 C:/Users/Mike/Desktop/Thesis/HDL/GlonassUpsample_tb.vhdl|
+!i113 1
+R12
+R13
+Astim1
+R33
+R2
+R3
+R4
+DEx4 work 18 glonassupsample_tb 0 22 GCUOXKeDI<W;BbhZ>=2DN1
+l78
+L11
+VSXaA2T^n:;@Y3HgciTAIN2
+!s100 PZeomB8=7WC:hXeNNI[2d3
+R7
+32
+R36
+!i10b 1
+R37
+R38
+R39
+!i113 1
+R12
+R13
