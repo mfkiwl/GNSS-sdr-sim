@@ -84,16 +84,16 @@ def main():
     print("main")
 
     constelation = Glonass.getConstelation()
-    rinexFile = "../data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
-    resultFile = "../data/glonass.txt"
+    rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
+    resultFile = "data/glonass.txt"
     
     #constelation = Galileo.getConstelation()
-    #rinexFile = "../data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
-    #resultFile = "../data/galileo.txt"
+    #rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
+    #resultFile = "data/galileo.txt"
 
     #constelation = GPS.getConstelation()
-    #rinexFile = "../data/GPS/brdc3260.23n"
-    #resultFile = "../data/gps.txt"
+    #rinexFile = "data/GPS/brdc3260.23n"
+    #resultFile = "data/gps.txt"
 
 
     startTime = datetime.datetime(2024,1,11, 2, 0) # glonass

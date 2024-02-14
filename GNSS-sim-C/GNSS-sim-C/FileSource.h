@@ -14,6 +14,7 @@
 #include "Galileo/Sat.h"
 #include "Glonass/Sat.h"
 #include "GPS/Sat.h"
+#include "BeiDou/Sat.h"
 
 Satellite* constructSat(std::string constelationCode, std::string id, std::string arg) {
 	//std::cout << constelationCode << " " << id << " " << arg << std::endl;
@@ -27,6 +28,10 @@ Satellite* constructSat(std::string constelationCode, std::string id, std::strin
 	}
 	if (constelationCode == "G") {
 		Satellite* sat = new gps::Sat(std::stoi(id));
+		return sat;
+	}
+	if (constelationCode == "B") {
+		Satellite* sat = new beidou::Sat(std::stoi(id));
 		return sat;
 	}
 	throw std::invalid_argument("Unexpeced constelation code");

@@ -142,6 +142,9 @@
     <ClCompile Include="GNSS-sim-C.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BeiDou\Modulation.h" />
+    <ClInclude Include="BeiDou\PRN_Code.h" />
+    <ClInclude Include="BeiDou\Sat.h" />
     <ClInclude Include="ChainLink.h" />
     <ClInclude Include="DataFrame.h" />
     <ClInclude Include="DataHandler.h" />
