@@ -16,7 +16,7 @@ entity FIFO is
 end FIFO;
 
 architecture behavioral of FIFO is
-  type FIFO_ARRAY_TYPE is array (0 to depth-1) of std_logic_vector(width-1 downto 0);
+  type FIFO_ARRAY_TYPE is array (depth-1 downto 0) of std_logic_vector(width-1 downto 0);
   signal registers : FIFO_ARRAY_TYPE := (others => (others => '0'));
   
   signal size : integer range depth-1 downto 0 := 0;
