@@ -35,8 +35,8 @@ architecture bench of InputHandler_tb is
           reset : in std_logic;
           serial_in : in std_logic;
           store : in std_logic;
-          I : out std_logic_vector(7 downto 0);
-          Q : out std_logic_vector(7 downto 0)
+          I : out IQ;
+          Q : out IQ
         );
     end component;
 
@@ -46,7 +46,7 @@ architecture bench of InputHandler_tb is
     signal serial    : std_logic := '0';
     signal store     : std_logic := '0';
 
-    signal I, Q : std_logic_vector(7 downto 0);
+    signal I, Q : IQ;
 
     signal word    : std_logic_vector(frameWidth-1 downto 0);
 
@@ -67,15 +67,37 @@ begin
             store <= '0';
             wait for 0.5 us;
         end procedure;
+
+        procedure send(
+          satNum:     in integer range 0 to 255;
+          bits:       in std_logic_vector(63 downto 0);
+          delay:      in integer;
+          phase_step: in integer;
+          power:      in integer range 0 to 255
+        ) is
+        begin
+            send(
+              std_logic_vector(to_unsigned(satNum, 8)) & 
+              bits & 
+              std_logic_vector(to_signed(delay, 64)) & 
+              std_logic_vector(to_signed(phase_step, 32)) & 
+              std_logic_vector(to_unsigned(power, 8))
+            );
+        end procedure;
+
     begin
         wait for 1 us;
-        send(x"00333333333333333333333333333333333333333333");
+        --send(x"00333333333333333333333333333333333333333333");
+        send(0, x"3333333333333333", 0, 10, 255);
         wait for 10 us;
-        send(x"01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        --send(x"01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        send(1, x"aaaaaaaaaaaaaaaa", 0, 20, 0);
         wait for 10 us;
-        send(x"02555555555555555555555555555555555555555555");
+        --send(x"02555555555555555555555555555555555555555555");
+        send(2, x"5555555555555555", 0, 0, 0);
         wait for 10 us;
-        send(x"03999999999999999999999999999999999999999999");
+        --send(x"03999999999999999999999999999999999999999999");
+        send(3, x"9999999999999999", 0, 0, 0);
         wait for 10 us;
     end process;
 

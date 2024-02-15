@@ -28,9 +28,9 @@ begin
             for i in 0 to n-1 loop
                 clk <= '0';
                 serial_out <= word(i);
-                wait for clk_period;
+                wait for clk_period/2;
                 clk <= '1';
-                wait for clk_period;
+                wait for clk_period/2;
             end loop;
             
             done <= '1';

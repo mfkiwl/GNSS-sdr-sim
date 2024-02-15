@@ -14,8 +14,8 @@ entity InputHandler is
         serial_in : in std_logic;
         store : in std_logic;
 
-        I : out std_logic_vector(7 downto 0);
-        Q : out std_logic_vector(7 downto 0)
+        I : out IQ;
+        Q : out IQ
     );
 end InputHandler;
 
@@ -43,8 +43,9 @@ architecture behavioral of InputHandler is
           reset : in std_logic;
           get_next_frame : out std_logic;
           next_frame : in std_logic_vector(frameWidth-1 downto 0);
-          I : out std_logic_vector(7 downto 0);
-          Q : out std_logic_vector(7 downto 0)
+          I : out IQ;
+          Q : out IQ;
+          power : out Power_t
         );
     end component;
 
@@ -69,8 +70,9 @@ architecture behavioral of InputHandler is
           reset : in std_logic;
           I_s : in IQList;
           Q_s : in IQList;
-          I : out std_logic_vector(7 downto 0);
-          Q : out std_logic_vector(7 downto 0)
+          powers : in PowerList_t;
+          I : out IQ;
+          Q : out IQ
         );
     end component;
 
@@ -84,12 +86,12 @@ architecture behavioral of InputHandler is
     end function To_Std_Logic;
     
     
-    signal I_s : IQList;
-    signal Q_s : IQList;
+    signal I_s, Q_s : IQList;
 
-    type ChanelSelect is array(chanel_count-1 downto 0) of std_logic;
-    signal push : ChanelSelect;
-    signal pop  : ChanelSelect;
+    signal power_s : PowerList_t;
+
+    signal push : std_logic_vector(chanel_count-1 downto 0);-- := (others => '0');
+    signal pop  : std_logic_vector(chanel_count-1 downto 0) := (others => '0');
 
     signal newData : std_logic_vector(frameWidth-1 downto 0);
     type Frames_t is array(chanel_count-1 downto 0) of std_logic_vector(frameWidth-1 downto 0);
@@ -109,10 +111,10 @@ begin
     GEN_CHANEL:
     for i in 0 to chanel_count-1 generate
         FIFO_X: FIFO port map (push(i), pop(i), reset, newData, frames(i));
-        CHANEL_X: Chanel port map (clk, reset, pop(i), frames(i), I_s(i), Q_s(i));
+        CHANEL_X: Chanel port map (clk, reset, pop(i), frames(i), I_s(i), Q_s(i), power_s(i));
         push(i) <= To_Std_Logic( (store='1') and (chanel_select=i) );
     end generate GEN_CHANEL;
 
-    RESULT: Mixer port map(clk, reset, I_s, Q_s, I, Q);
+    RESULT: Mixer port map(clk, reset, I_s, Q_s, power_s, I, Q);
 
 end architecture;

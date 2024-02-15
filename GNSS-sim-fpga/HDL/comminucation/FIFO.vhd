@@ -29,8 +29,10 @@ begin
         if (reset = '1') then
             registers <= (others => (others => '0'));   
         elsif rising_edge(push) then
-            size <= size+1;
-            registers(size) <= Q;
+            if (size /= depth-1) then
+                size <= size+1;
+                registers(size) <= Q;
+            end if;
         elsif rising_edge(pop) then
             size <= size-1;
             registers(depth-2 downto 0) <= registers(depth-1 downto 1);

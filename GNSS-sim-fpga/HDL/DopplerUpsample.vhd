@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.settings.all;
 
 entity DopplerUpsample is
   generic
@@ -16,15 +17,18 @@ entity DopplerUpsample is
     reset : in std_logic;
 
     clk_output : in std_logic;
-    I_output   : out integer;
-    Q_output   : out integer;
+    I_output   : out IQ;
+    Q_output   : out IQ;
 
     clk_input : out std_logic;
-    I_input   : in integer;
-    Q_input   : in integer;
+    I_input   : in IQ;
+    Q_input   : in IQ;
 
     doppler_shift : in integer;
-    delay         : in integer
+
+    delay_set     : in signed(63 downto 0);
+    delay_step    : in signed(63 downto 0);
+    delay_current : out signed(63 downto 0)
   );
 end DopplerUpsample;
 
@@ -55,38 +59,41 @@ architecture arch1 of DopplerUpsample is
   X"fd", X"fd", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe", X"fe"
   );
 
-  signal n           : integer;
-  signal itterNStep  : integer;
-  signal bufferNStep : integer;
+  signal n           : signed(63 downto 0);
+  signal itterNStep  : signed(63 downto 0);
+  signal bufferNStep : signed(63 downto 0);
 
   signal unitPhase     : integer;
   signal unitPhaseStep : integer;
 
-  signal lastDelay   : integer;
+  signal lastDelay   : signed(63 downto 0);
   signal lastDoppler : integer;
 
   signal tableIndex : std_logic_vector(7 downto 0);
   signal tableOp    : std_logic_vector(1 downto 0);
-  signal sinPhase   : integer := 0;
-  signal cosPhase   : integer := 0;
+  signal sinPhase   : signed(8 downto 0);
+  signal cosPhase   : signed(8 downto 0);
 
 begin
 
-  process (clk_output, reset, doppler_shift, delay)
-    variable next_n       : integer;
+  delay_current <= lastDelay;
+
+  process (clk_output, reset, doppler_shift, delay_set)
+    variable next_n       : signed(63 downto 0);
     variable phase        : integer;
     variable phase_vector : std_logic_vector(31 downto 0);
+    variable I_mult, Q_mult : signed(16 downto 0);
   begin
     next_n := n;
     phase  := unitPhase;
     if reset = '1' then
-      itterNStep  <= subCycles * inputRate;
-      bufferNStep <= subCycles * outputRate;
-      next_n := 0;
+      itterNStep  <= to_signed(subCycles * inputRate, itterNStep'length);
+      bufferNStep <= to_signed(subCycles * outputRate, bufferNStep'length);
+      next_n := to_signed(0, next_n'length);
       phase  := 0;
       unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
-      lastDelay     <= delay;
-      next_n := next_n - delay;
+      lastDelay     <= delay_set;
+      next_n := next_n - delay_set;
       clk_input <= '0';
 
     elsif rising_edge(clk_output) then
@@ -97,23 +104,27 @@ begin
 
       case tableOp is
         when "00" =>
-          sinPhase <=   to_integer(SIN_TABLE(to_integer(unsigned(tableIndex))));
-          cosPhase <=   to_integer(SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          sinPhase <=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          cosPhase <=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
         when "01" =>
-          sinPhase <=   to_integer(SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
-          cosPhase <= - to_integer(SIN_TABLE(to_integer(unsigned(tableIndex))));
+          sinPhase <=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          cosPhase <= - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
         when "10" =>
-          sinPhase <= - to_integer(SIN_TABLE(to_integer(unsigned(tableIndex))));
-          cosPhase <= - to_integer(SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          sinPhase <= - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          cosPhase <= - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
         when "11" =>
-          sinPhase <= - to_integer(SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
-          cosPhase <=   to_integer(SIN_TABLE(to_integer(unsigned(tableIndex))));
+          sinPhase <= - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          cosPhase <=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
         when others =>
-          sinPhase <= 0;
+          sinPhase <= to_signed(0, 9);
+          cosPhase <= to_signed(255, 9);
       end case;
 
-      I_output <= (cosPhase * I_input + sinPhase * Q_input)/256;
-      Q_output <= (sinPhase * I_input + cosPhase * Q_input)/256;
+      I_mult := (cosPhase * I_input + sinPhase * Q_input);
+      Q_mult := (sinPhase * I_input + cosPhase * Q_input);
+      
+      I_output <= I_mult(15 downto 8);
+      Q_output <= Q_mult(15 downto 8);
 
       next_n := next_n + itterNStep;
       phase  := phase + unitPhaseStep;
@@ -131,11 +142,11 @@ begin
     elsif falling_edge(clk_output) then
       clk_input <= '0';
 
-    elsif lastDelay /= delay then
-      next_n := next_n + lastDelay - delay;
-      lastDelay <= delay;
+    elsif (delay_set'event) then
+      next_n := next_n + lastDelay - delay_set;
+      lastDelay <= delay_set;
 
-    elsif lastDoppler /= doppler_shift then
+    elsif (doppler_shift'event) then
       unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
 
     end if;

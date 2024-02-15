@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+USE ieee.numeric_std.ALL;
 use work.settings.all;
 
 entity Mixer is
@@ -11,16 +12,29 @@ entity Mixer is
         reset:            in std_logic; 
         I_s:              in IQList;
         Q_s:              in IQList;
-        I:                out std_logic_vector(7 downto 0);
-        Q:                out std_logic_vector(7 downto 0)
+        powers:           in PowerList_t;
+        I:                out IQ;
+        Q:                out IQ
     );
 end Mixer;
 
 architecture behavioral of Mixer is
 
-begin
+begin -- force sum of powers to add up to a power of 2 -> 256
 
-    I <= I_s(0);
-    Q <= Q_s(0);
+
+    process(I_s, Q_s, powers)
+        variable total_i : signed(16 downto 0);
+        variable total_q : signed(16 downto 0);
+    begin
+        total_I := (others => '0');
+        total_Q := (others => '0');
+        for n in I_s'range loop
+            total_I := total_I + I_s(n)*signed('0'&powers(n));
+            total_Q := total_Q + Q_s(n)*signed('0'&powers(n));
+        end loop;
+        I <= total_i(15 downto 8);
+        Q <= total_q(15 downto 8);
+    end process;
 
 end architecture;
