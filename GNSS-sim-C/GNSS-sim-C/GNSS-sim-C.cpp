@@ -11,8 +11,7 @@
 
 #include "DataHandler.h"
 #include "Resample.h"
-#include "Galileo/CBOC.h"
-#include "Galileo/Sat.h"
+#include "IRNSS/PRN_Code.h"
 
 void example_manager_galileo() {
     //FileSource fileSource("ExampleData.txt");
@@ -45,6 +44,22 @@ void example_manager_glonass() {
     FileSource fileSource("../../data/glonass.txt");
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(15000000, 1602000000);
+
+    manager.run(fileSource, fileSink, 1);
+}
+
+void example_manager_beidou() {
+    FileSource fileSource("../../data/beidou.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
+    Manager manager(4000000, 1561098000);
+
+    manager.run(fileSource, fileSink, 1);
+}
+
+void example_manager_irnss() {
+    FileSource fileSource("../../data/irnss.txt");
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
+    Manager manager(2600000, 1176450000);
 
     manager.run(fileSource, fileSink, 1);
 }
@@ -86,14 +101,16 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    /*gps::PRN ca2 (2);
+    /*irnss::PRN ca (1);
     for (int i = 0; i < 1023; i++) {
-        std::cout << (int)ca2.next();
+        std::cout << (int)ca.next();
     }*/
 
-    example_manager_glonass();
+    //example_manager_glonass();
     //example_manager_galileo();
     //example_manager_gps();
+    //example_manager_beidou();
+    example_manager_irnss();
     //example_file();
     //example_chain();
 }

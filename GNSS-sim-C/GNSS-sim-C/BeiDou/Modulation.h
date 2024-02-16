@@ -38,6 +38,13 @@ namespace beidou {
 		Modulation(ChainLink* dataSource, int prn) : dataSource(dataSource), prn(prn) {
 			step = 0;
 			chip = 0;
+
+			if (prn < 6) {
+				Crepeat = 2; // D2
+			}
+			else {
+				Crepeat = 20; // D1
+			}
 		}
 
 		float next() {
@@ -59,6 +66,7 @@ namespace beidou {
 
 			uint8_t prn_chip = prn.next();
 			float v = (currentData ^ NH_code[repeat] ^ prn_chip) * 2 - 1;
+			//std::cout << v << std::endl;
 			//float v = (((currentData>>1)&1) ^ (currentData&1) ^ NH_code[repeat] ^ prn_chip) * 2 - 1; // is this how i want to handle the 2 data streams?
 
 			step++;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -160,6 +160,9 @@
     <ClInclude Include="GPS\PRN_Code.h" />
     <ClInclude Include="GPS\Sat.h" />
     <ClInclude Include="IQ.h" />
+    <ClInclude Include="IRNSS\Modulation.h" />
+    <ClInclude Include="IRNSS\PRN_Code.h" />
+    <ClInclude Include="IRNSS\Sat.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Resample.h" />
     <ClInclude Include="Satellite.h" />

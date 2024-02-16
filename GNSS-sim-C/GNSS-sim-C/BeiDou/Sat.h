@@ -34,7 +34,12 @@ namespace beidou {
 		};
 
 		virtual int getFrameSize() {
-			return 5; // D1
+			if (prn < 6) {
+				return 50; // D2
+			}
+			else {
+				return 5; // D1
+			}
 		}
 	};
 
