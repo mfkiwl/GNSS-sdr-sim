@@ -14,7 +14,7 @@ namespace glonass {
     class Sat : public Satellite {
 		int frequency_number;
 	public:
-		Sat(int prn, int frequency_number) : frequency_number(frequency_number) {
+		Sat(int prn, int frequency_number) : Satellite(prn), frequency_number(frequency_number) {
 			std::stringstream ss;
 			ss << "R" << std::setw(2) << std::setfill('0') << prn;
 			name = ss.str();

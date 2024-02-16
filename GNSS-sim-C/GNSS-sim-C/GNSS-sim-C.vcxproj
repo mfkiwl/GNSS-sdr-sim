@@ -148,6 +148,7 @@
     <ClInclude Include="ChainLink.h" />
     <ClInclude Include="DataFrame.h" />
     <ClInclude Include="DataHandler.h" />
+    <ClInclude Include="FPGA_data.h" />
     <ClInclude Include="Galileo\Carrier.h" />
     <ClInclude Include="Galileo\CBOC.h" />
     <ClInclude Include="FileSource.h" />

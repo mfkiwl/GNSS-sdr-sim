@@ -13,11 +13,9 @@ namespace galileo {
 	auto prnC_codes = getPRNCodes("../../data/Galileo/C8_E1C.txt");
 
 	class Sat : public Satellite {
-
-		int prn;
 	public:
 
-		Sat(int prn): prn(prn) {
+		Sat(int prn): Satellite(prn) {
 			std::stringstream ss;
 			ss << "E" << std::setw(2) << std::setfill('0') << prn;
 			name = ss.str();

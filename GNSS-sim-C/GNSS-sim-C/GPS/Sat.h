@@ -12,9 +12,8 @@
 namespace gps {
 
 	class Sat : public Satellite {
-		int prn;
 	public:
-		Sat(int prn) : prn(prn) {
+		Sat(int prn) : Satellite(prn) {
 			std::stringstream ss;
 			ss << "G" << std::setw(2) << std::setfill('0') << prn;
 			name = ss.str();

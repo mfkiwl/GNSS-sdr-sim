@@ -83,5 +83,17 @@
     <ClInclude Include="BeiDou\Sat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IRNSS\Modulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRNSS\PRN_Code.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRNSS\Sat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPGA_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

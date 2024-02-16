@@ -13,6 +13,8 @@
 #include "Resample.h"
 #include "IRNSS/PRN_Code.h"
 
+#include "FPGA_data.h"
+
 void example_manager_galileo() {
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
@@ -105,12 +107,13 @@ int main()
     for (int i = 0; i < 1023; i++) {
         std::cout << (int)ca.next();
     }*/
+    generateFPGA_data("../../data/glonass.txt", 1602000000, 1000000, 100);
 
     //example_manager_glonass();
     //example_manager_galileo();
     //example_manager_gps();
     //example_manager_beidou();
-    example_manager_irnss();
+    //example_manager_irnss();
     //example_file();
     //example_chain();
 }
