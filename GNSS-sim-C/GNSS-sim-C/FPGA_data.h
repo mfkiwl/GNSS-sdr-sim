@@ -6,10 +6,13 @@ void generateFPGA_data(std::string fileName, unsigned long radioFrequency, unsig
 	FileSource fileSource(fileName);
 	std::vector<Satellite*> sats = fileSource.getSats();
 
+	std::cout << "radioFrequency: " << radioFrequency << ", outputRate: " << outputRate << ", subCycles: " << subCycles << std::endl;
+
 	int n = 0;
 	std::map<std::string, DataFrame> data;
 	do {
 		n++;
+		int i = 0;
 		for (auto& sat : sats) {
 			DataFrame dataFrame = data[sat->getName()];
 			unsigned long targetFrequency = sat->getRadioFrequency() + dataFrame.doppler;
@@ -25,17 +28,30 @@ void generateFPGA_data(std::string fileName, unsigned long radioFrequency, unsig
 			double delay_samples = delay / 1000 * outputRate;
 			uint64_t delay_n = (subCycles * sat->getModulationRate()) * delay_samples;
 
+			std::stringstream ss2;
+			ss2 << std::setw(16) << std::setfill('0') << std::hex << delay_n;
+			std::string hexDelay = ss2.str();
+
+			int PHASE_POWER = 30;
+			unsigned long PHASE_RANGE = 1<<PHASE_POWER; // 2 ^ 30
+
 			int scale = 100;
 			targetFrequency *= scale;
 			long shift = targetFrequency - radioFrequency * scale;
 			double normalPhaseSampleDelta = shift / (double)outputRate;
-			uint32_t unitStepPhase = normalPhaseSampleDelta / scale * (LONG_MAX / 2);
+			uint32_t unitStepPhase = normalPhaseSampleDelta / scale * (PHASE_RANGE);
 			
+			int k = 4;
 			if (power != 0) {
-				printf("send(%i, x\"%s\", %lli, %li, %i)\n", prn, hexBits.c_str(), delay_n, unitStepPhase, power);
+				//std::cout << "delay: " << delay << std::endl;
+				printf("send(%i, x\"%s\", x\"%s\", %li, %i);\n", /*prn*/ i, hexBits.c_str(), hexDelay.c_str(), unitStepPhase, /*power*/ 250/k);
+				i++;
+				if (i >= k) {
+					break;
+				}
 			}
 		}
-		if (n == 40) {
+		if (n == 350) {
 			break;
 		}
 		data = fileSource.nextData();

@@ -107,7 +107,7 @@ int main()
     for (int i = 0; i < 1023; i++) {
         std::cout << (int)ca.next();
     }*/
-    generateFPGA_data("../../data/glonass.txt", 1602000000, 1000000, 100);
+    generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();
     //example_manager_galileo();

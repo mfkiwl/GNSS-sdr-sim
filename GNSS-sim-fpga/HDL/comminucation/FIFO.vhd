@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 entity FIFO is
     generic (
         width  : integer := 4;
-        depth  : integer := 4
+        depth  : integer := 64
     );
     port(
         push:             in std_logic; 
@@ -34,7 +34,9 @@ begin
                 registers(size) <= Q;
             end if;
         elsif rising_edge(pop) then
-            size <= size-1;
+            if(size /= 1) then
+                size <= size-1;
+            end if;
             registers(depth-2 downto 0) <= registers(depth-1 downto 1);
         end if;
     end process;

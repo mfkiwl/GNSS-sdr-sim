@@ -21,6 +21,8 @@ begin
 
     process
     begin
+        clk <= '0';
+        serial_out <= '0';
         loop
             wait on word;
             done <= '0';

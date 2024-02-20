@@ -90,7 +90,7 @@ begin
   --    clk_output=>clk_data, data_out=>data, 
   --    doppler_shift_out=>doppler_shift, delay_out=>delay);
 
-  data0 : component FrameHandler generic map (bits => 5)
+  data0 : component FrameHandler generic map (bits => 10)
   port map
   (
     reset => reset,
@@ -111,7 +111,7 @@ begin
     radioFrequencyOut => 1602000000,
     radioFrequencyIn  => 1602000000, -- set this diffrently for diffrent prn
     inputRate         =>  511000,
-    outputRate        => 1000000,
+    outputRate        => outputRate,
     subCycles         => 100
   )
   port map (

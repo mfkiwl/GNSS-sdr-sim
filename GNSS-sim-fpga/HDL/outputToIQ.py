@@ -1,6 +1,8 @@
 with open('output_results.txt', 'r') as result_file:
     with open("signal.sigmf-data", 'wb') as iq_file:
+        n = 0
         for line in result_file:
+            n+=1
             [i, q] = line.split(", ")
             
             i = int(i)
@@ -22,3 +24,4 @@ with open('output_results.txt', 'r') as result_file:
                 q += 256
             q = q.to_bytes(1)
             iq_file.write(q)
+        print("n:", n)

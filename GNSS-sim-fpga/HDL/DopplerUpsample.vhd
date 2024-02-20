@@ -69,20 +69,20 @@ architecture arch1 of DopplerUpsample is
   signal lastDelay   : signed(63 downto 0);
   signal lastDoppler : integer;
 
-  signal tableIndex : std_logic_vector(7 downto 0);
-  signal tableOp    : std_logic_vector(1 downto 0);
-  signal sinPhase   : signed(8 downto 0);
-  signal cosPhase   : signed(8 downto 0);
-
 begin
 
   delay_current <= lastDelay;
+  unitPhaseStep <= doppler_shift;
 
   process (clk_output, reset, doppler_shift, delay_set)
     variable next_n       : signed(63 downto 0);
     variable phase        : integer;
     variable phase_vector : std_logic_vector(31 downto 0);
     variable I_mult, Q_mult : signed(16 downto 0);
+    variable tableIndex   : std_logic_vector(7 downto 0);
+    variable tableOp      : std_logic_vector(1 downto 0);
+    variable sinPhase     : signed(8 downto 0);
+    variable cosPhase     : signed(8 downto 0);
   begin
     next_n := n;
     phase  := unitPhase;
@@ -91,33 +91,36 @@ begin
       bufferNStep <= to_signed(subCycles * outputRate, bufferNStep'length);
       next_n := to_signed(0, next_n'length);
       phase  := 0;
-      unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
+      --unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
       lastDelay     <= delay_set;
       next_n := next_n - delay_set;
       clk_input <= '0';
 
+      I_output <= (others => '0');
+      Q_output <= (others => '0');
+
     elsif rising_edge(clk_output) then
 
       phase_vector := std_logic_vector(to_signed(phase, 32));
-      tableIndex <= phase_vector(PHASE_POWER - 3 downto PHASE_POWER - TABLE_POWER - 2);
-      tableOp    <= phase_vector(PHASE_POWER - 1 downto PHASE_POWER - 2);
+      tableIndex := phase_vector(PHASE_POWER - 3 downto PHASE_POWER - TABLE_POWER - 2);
+      tableOp    := phase_vector(PHASE_POWER - 1 downto PHASE_POWER - 2);
 
       case tableOp is
         when "00" =>
-          sinPhase <=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
-          cosPhase <=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          sinPhase :=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          cosPhase :=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
         when "01" =>
-          sinPhase <=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
-          cosPhase <= - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          sinPhase :=   signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          cosPhase := - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
         when "10" =>
-          sinPhase <= - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
-          cosPhase <= - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          sinPhase := - signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          cosPhase := - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
         when "11" =>
-          sinPhase <= - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
-          cosPhase <=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
+          sinPhase := - signed('0' & SIN_TABLE(to_integer(TABLE_SIZE - 1 - unsigned(tableIndex))));
+          cosPhase :=   signed('0' & SIN_TABLE(to_integer(unsigned(tableIndex))));
         when others =>
-          sinPhase <= to_signed(0, 9);
-          cosPhase <= to_signed(255, 9);
+          sinPhase := to_signed(0, 9);
+          cosPhase := to_signed(255, 9);
       end case;
 
       I_mult := (cosPhase * I_input + sinPhase * Q_input);
@@ -146,10 +149,11 @@ begin
       next_n := next_n + lastDelay - delay_set;
       lastDelay <= delay_set;
 
-    elsif (doppler_shift'event) then
-      unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
-
+    --elsif (doppler_shift'event) then
+    --  unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);
+    --
     end if;
+    
     n         <= next_n;
     unitPhase <= phase;
   end process;

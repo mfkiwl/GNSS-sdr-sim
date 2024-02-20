@@ -1,7 +1,7 @@
 {
     "global": {
         "core:datatype": "ci8_le",
-        "core:sample_rate": 20000000,
+        "core:sample_rate": 15000000,
         "core:hw": "Hack RF 1",
         "core:author": "Mike Verhoeff",
         "core:version": "1.0.0"

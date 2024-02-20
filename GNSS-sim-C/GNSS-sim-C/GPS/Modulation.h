@@ -57,7 +57,7 @@ namespace gps {
 		}
 
 		IQ nextSample() {
-			IQ iq(next());
+			IQ iq(0, next());
 			return iq;
 		}
 

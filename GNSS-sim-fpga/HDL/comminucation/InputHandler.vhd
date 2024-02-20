@@ -26,7 +26,7 @@ architecture behavioral of InputHandler is
     component FIFO
         generic (
           width : integer := frameWidth;
-          depth : integer := 4
+          depth : integer := 200
         );
         port (
           push : in std_logic;
@@ -76,6 +76,13 @@ architecture behavioral of InputHandler is
         );
     end component;
 
+    component ClockDiv16
+      port (
+        clk : in std_logic;
+        clkdiv : out std_logic
+      );
+    end component;
+
     function To_Std_Logic(L: BOOLEAN) return std_ulogic is
     begin
         if L then
@@ -100,6 +107,7 @@ architecture behavioral of InputHandler is
     signal chanel_select : integer;
     signal chanel_select_v : std_logic_vector(7 downto 0);
 
+    signal clk16 : std_logic;
 
 begin
 
@@ -108,13 +116,15 @@ begin
 
     SPI_IN: SPI port map (clk, reset, serial_in, newData);
 
+    CLK_DIV : ClockDiv16 port map (clk, clk16);
+
     GEN_CHANEL:
     for i in 0 to chanel_count-1 generate
         FIFO_X: FIFO port map (push(i), pop(i), reset, newData, frames(i));
-        CHANEL_X: Chanel port map (clk, reset, pop(i), frames(i), I_s(i), Q_s(i), power_s(i));
+        CHANEL_X: Chanel port map (clk16, reset, pop(i), frames(i), I_s(i), Q_s(i), power_s(i));
         push(i) <= To_Std_Logic( (store='1') and (chanel_select=i) );
     end generate GEN_CHANEL;
 
-    RESULT: Mixer port map(clk, reset, I_s, Q_s, power_s, I, Q);
+    RESULT: Mixer port map(clk16, reset, I_s, Q_s, power_s, I, Q);
 
 end architecture;

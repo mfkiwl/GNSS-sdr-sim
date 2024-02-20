@@ -23,18 +23,24 @@ architecture behavioral of Mixer is
 begin -- force sum of powers to add up to a power of 2 -> 256
 
 
-    process(I_s, Q_s, powers)
+    process(clk, reset)
         variable total_i : signed(16 downto 0);
         variable total_q : signed(16 downto 0);
     begin
-        total_I := (others => '0');
-        total_Q := (others => '0');
-        for n in I_s'range loop
-            total_I := total_I + I_s(n)*signed('0'&powers(n));
-            total_Q := total_Q + Q_s(n)*signed('0'&powers(n));
-        end loop;
-        I <= total_i(15 downto 8);
-        Q <= total_q(15 downto 8);
+        if (reset = '1') then
+            I <= (others => '0');
+            Q <= (others => '0');
+        elsif falling_edge(clk) then
+            
+            total_I := (others => '0');
+            total_Q := (others => '0');
+            for n in I_s'range loop
+                total_I := total_I + I_s(n)*signed('0'&powers(n));
+                total_Q := total_Q + Q_s(n)*signed('0'&powers(n));
+            end loop;
+            I <= total_i(15 downto 8);
+            Q <= total_q(15 downto 8);
+        end if;
     end process;
 
 end architecture;
