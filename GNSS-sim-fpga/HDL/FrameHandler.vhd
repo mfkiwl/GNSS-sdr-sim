@@ -35,12 +35,13 @@ begin
         elsif rising_edge( pull_data ) then
             if current_bit+1 < bits then
                 current_bit <= current_bit+1;
+					 get_next_frame <= '0';
             else
                 current_bit <= 0;
                 get_next_frame <= '1';
             end if;
-        elsif falling_edge( pull_data ) then
-            get_next_frame <= '0';
+        --elsif falling_edge( pull_data ) then
+        --    get_next_frame <= '0';
         end if;
     end process;
 end behavioral;

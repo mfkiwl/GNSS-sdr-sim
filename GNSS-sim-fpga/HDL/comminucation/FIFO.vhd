@@ -21,23 +21,51 @@ architecture behavioral of FIFO is
   
   signal size : integer range depth-1 downto 0 := 0;
 
+  signal top : integer range depth-1 downto 0 := 0;
+  signal bottom : integer range depth-1 downto 0 := 0;
+  
 begin
-    D <= registers(0);
+    D <= registers(bottom);
 
-    process (push, pop, reset)
-    begin
-        if (reset = '1') then
-            registers <= (others => (others => '0'));   
-        elsif rising_edge(push) then
-            if (size /= depth-1) then
-                size <= size+1;
-                registers(size) <= Q;
-            end if;
-        elsif rising_edge(pop) then
-            if(size /= 1) then
-                size <= size-1;
-            end if;
-            registers(depth-2 downto 0) <= registers(depth-1 downto 1);
-        end if;
-    end process;
+    process (pop)
+	 begin 
+      if rising_edge(pop) then
+		  if (bottom /= depth-1) then
+		    bottom <= bottom + 1;
+		  else
+		    bottom <= 0;
+		  end if;
+		end if;
+	 end process;
+	 
+	 process (push, reset)
+	 begin
+		if (reset = '1') then
+        registers <= (others => (others => '0'));   
+      elsif rising_edge(push) then
+		  registers(top) <= Q;
+		  if (top /= depth-1) then
+		    top <= top + 1;
+		  else
+		    top <= 0;
+		  end if;
+		end if;
+	 end process;
+	 
+    --process (push, pop, reset)
+    --begin
+    --    if (reset = '1') then
+    --        registers <= (others => (others => '0'));   
+    --    elsif rising_edge(push) then
+    --        if (size /= depth-1) then
+    --            size <= size+1;
+    --            registers(size) <= Q;
+    --        end if;
+    --    elsif rising_edge(pop) then
+    --        if(size /= 1) then
+    --            size <= size-1;
+    --        end if;
+    --        registers(depth-2 downto 0) <= registers(depth-1 downto 1);
+    --    end if;
+    --end process;
 end behavioral;

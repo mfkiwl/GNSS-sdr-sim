@@ -22,11 +22,13 @@ architecture glonassL1 of GlonassModulation is
   signal shift_register : std_logic_vector(9 downto 1);
   
   signal spreading_code : std_logic;
+  signal pull_data : std_logic;
 begin
 
-  process(clk_output, reset)
+  process(clk_output, reset, code_step, repeat)
     variable step : integer;
 	  variable rep  : integer;
+	  variable pull_data : std_logic;
   begin
     step := code_step;
 	  rep  := repeat;
@@ -36,6 +38,7 @@ begin
 	    rep  :=0;
 	    shift_register <= "111111111";
 	  elsif rising_edge( clk_output ) then
+       pull_data := '0';
 	    shift_register <= shift_register(9-1 downto 1) & (shift_register(5) xor shift_register(9));
 	    step := step+1;
 	    if step=511 then
@@ -43,11 +46,12 @@ begin
 		    rep  := rep+1;
 		    if rep=10 then
 		      rep := 0;
-		      clk_input <= '1';
+		      pull_data := '1';
 		    end if;
 	    end if;
-	  elsif falling_edge( clk_output ) then
-      clk_input <= '0';
+       clk_input <= pull_data;
+	  --elsif falling_edge( clk_output ) then
+     -- clk_input <= '0';
     end if;
 	  code_step <= step;
 	  repeat <= rep;

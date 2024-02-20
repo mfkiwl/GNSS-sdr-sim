@@ -83,6 +83,7 @@ begin
     variable tableOp      : std_logic_vector(1 downto 0);
     variable sinPhase     : signed(8 downto 0);
     variable cosPhase     : signed(8 downto 0);
+	 variable pull_sample  : std_logic;
   begin
     next_n := n;
     phase  := unitPhase;
@@ -128,8 +129,13 @@ begin
       
       I_output <= I_mult(15 downto 8);
       Q_output <= Q_mult(15 downto 8);
-
-      next_n := next_n + itterNStep;
+		
+		if (delay_set /= lastDelay) then
+			next_n := next_n + itterNStep + lastDelay - delay_set;
+			lastDelay <= delay_set;
+		else
+			next_n := next_n + itterNStep;
+		end if;
       phase  := phase + unitPhaseStep;
       if (phase >= PHASE_RANGE) then
         phase := phase - PHASE_RANGE;
@@ -138,16 +144,19 @@ begin
       end if;
 
       if (next_n >= bufferNStep) then
-        clk_input <= '1';
+        pull_sample := '1';
         next_n := next_n - bufferNStep;
+		else
+		  pull_sample := '0';
       end if;
+		clk_input <= pull_sample;
 
-    elsif falling_edge(clk_output) then
-      clk_input <= '0';
+    --elsif falling_edge(clk_output) then
+    --  clk_input <= '0';
 
-    elsif (delay_set'event) then
-      next_n := next_n + lastDelay - delay_set;
-      lastDelay <= delay_set;
+    --elsif (delay_set'event) then
+    --  next_n := next_n + lastDelay - delay_set;
+    --  lastDelay <= delay_set;
 
     --elsif (doppler_shift'event) then
     --  unitPhaseStep <= (radioFrequencyIn + doppler_shift - radioFrequencyOut) * (PHASE_RANGE/outputRate);

@@ -1,0 +1,7 @@
+net "clk" loc = "L15";
+net "reset" loc = "K12";
+net "store" loc = "L17";
+net "serial_in" loc = "M15";
+net "serial_out" loc = "K13";
+
+NET "clk" CLOCK_DEDICATED_ROUTE = FALSE; // improve clock to remove this

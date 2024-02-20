@@ -26,7 +26,7 @@ architecture behavioral of InputHandler is
     component FIFO
         generic (
           width : integer := frameWidth;
-          depth : integer := 200
+          depth : integer := 10
         );
         port (
           push : in std_logic;
