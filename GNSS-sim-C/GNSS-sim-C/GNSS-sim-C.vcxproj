@@ -142,6 +142,9 @@
     <ClCompile Include="GNSS-sim-C.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BeiDou\B1c\Modulation.h" />
+    <ClInclude Include="BeiDou\B1c\PRN_Code.h" />
+    <ClInclude Include="BeiDou\B1c\Sat.h" />
     <ClInclude Include="BeiDou\Modulation.h" />
     <ClInclude Include="BeiDou\PRN_Code.h" />
     <ClInclude Include="BeiDou\Sat.h" />
@@ -157,6 +160,9 @@
     <ClInclude Include="Galileo\Sat.h" />
     <ClInclude Include="Glonass\Modulation.h" />
     <ClInclude Include="Glonass\Sat.h" />
+    <ClInclude Include="GPS\L2c\Modulation.h" />
+    <ClInclude Include="GPS\L2c\PRN_Code.h" />
+    <ClInclude Include="GPS\L2c\Sat.h" />
     <ClInclude Include="GPS\Modulation.h" />
     <ClInclude Include="GPS\PRN_Code.h" />
     <ClInclude Include="GPS\Sat.h" />
@@ -167,6 +173,7 @@
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Resample.h" />
     <ClInclude Include="Satellite.h" />
+    <ClInclude Include="WeilCode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

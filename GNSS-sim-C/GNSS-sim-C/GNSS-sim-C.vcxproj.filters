@@ -95,5 +95,26 @@
     <ClInclude Include="FPGA_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WeilCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BeiDou\B1c\PRN_Code.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BeiDou\B1c\Modulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BeiDou\B1c\Sat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPS\L2c\Sat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPS\L2c\Modulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPS\L2c\PRN_Code.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

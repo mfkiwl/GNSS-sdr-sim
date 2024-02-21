@@ -55,8 +55,6 @@ begin
     SPI0: component SPI_helper port map (word, send_done, clk, MOSI);
     TOP0: component Top port map (clk, reset, store, MOSI, MISO);
 
-    reset <= '1', '0' after 1 ns;
-
     process
         procedure send(value: in std_logic_vector(frameWidth-1 downto 0)) is
         begin
@@ -101,11 +99,19 @@ begin
         end procedure;
 
     begin
+        reset <= '1';
+        wait for 1 ns;
+        reset <= '0';
+
         wait for 1 us;
 
         send(0, x"00000000000001aa", x"00002d0fe08c7ccf", 40297315, 62);
         send(0, x"0000000000000295", x"00002d0fdf463844", 40297315, 62);
         send(0, x"000000000000015a", x"00002d0fddffffb2", 40297244, 62);
+        reset <= '1';
+        wait for 1 us;
+        reset <= '0';
+        wait for 1 us;
         send(0, x"0000000000000155", x"00002d0fdcb9d01b", 40297244, 62);
         send(0, x"00000000000001a9", x"00002d0fdb73af7d", 40297244, 62);
         send(0, x"00000000000002a6", x"00002d0fda2d94dc", 40297244, 62);

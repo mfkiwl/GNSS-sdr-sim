@@ -41,17 +41,18 @@ void generateFPGA_data(std::string fileName, unsigned long radioFrequency, unsig
 			double normalPhaseSampleDelta = shift / (double)outputRate;
 			uint32_t unitStepPhase = normalPhaseSampleDelta / scale * (PHASE_RANGE);
 			
-			int k = 4;
+			int k = 1;
 			if (power != 0) {
 				//std::cout << "delay: " << delay << std::endl;
-				printf("send(%i, x\"%s\", x\"%s\", %li, %i);\n", /*prn*/ i, hexBits.c_str(), hexDelay.c_str(), unitStepPhase, /*power*/ 250/k);
+				//printf("send(%i, x\"%s\", x\"%s\", %li, %i);\n", /*prn*/ i, hexBits.c_str(), hexDelay.c_str(), unitStepPhase, /*power*/ 250/k);
+				std::cout << "0x" << hexBits.c_str() << ", " << std::setprecision(10) << delay << ", " << std::setprecision(6) << dataFrame.doppler << ", " << 250 << ", " << i << ", " << sat->getRadioFrequency() <<  std::endl;
 				i++;
 				if (i >= k) {
 					break;
 				}
 			}
 		}
-		if (n == 350) {
+		if (n == 10) {
 			break;
 		}
 		data = fileSource.nextData();
