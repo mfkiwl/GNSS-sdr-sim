@@ -1,3 +1,13 @@
+//#define DEBUG_ENABLED
+
+#ifdef DEBUG_ENABLED
+  #define DEBUG(x) Serial.print(x)
+  #define DEBUGln(x) Serial.println(x)
+#else
+  #define DEBUG(x)
+  #define DEBUGln(x)
+#endif
+
 #include "dataFrame.h"
 #include "fpgaInterface.h"
 #include "parsing.h"
@@ -7,9 +17,13 @@ const int IQPerDataFrame = sizeof(IQ)/sizeof(DataFrame);
 
 void serialPrintIQ(IQ* samples, int n) {
   for(int i=0; i<n; i++) {
-    Serial.print((int)samples[i].i);
-    Serial.print(",");
-    Serial.println((int)samples[i].q);
+    #ifndef DEBUG_ENABLED
+    Serial.write(samples[i].i);
+    Serial.write(samples[i].q);
+    #endif
+    DEBUG((int)samples[i].i);
+    DEBUG(",");
+    DEBUGln((int)samples[i].q);
   }
 }
 
@@ -19,51 +33,54 @@ void setup() {
 
   FPGAInterfaceInit();
   
-  Serial.println("waiting for input to start");
+  DEBUGln("waiting for input to start");
   while(Serial.available()<=0) {}
-  Serial.println("starting");
+  DEBUGln("starting");
+  DEBUG(sizeof(DataFrame));
   
   delay(1000);
-  Serial.println("started");
+  DEBUGln("started");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   delay(1000);
   
-  Serial.println("reset FPGA");
+  DEBUGln("reset FPGA");
   reset();
 
-  DataFrame data = paramsToDataFrame(0x00000000000001aa, 64.63954998, 447.065, 250, 0, 1602562500);
-  Serial.println("Start first Transmission");
+  int chanel = 0;
+  
+  DataFrame data = paramsToDataFrame(0x00000000000001aa, 64.63954998, 447.065, 250, chanel, 1602562500);
+  DEBUGln("Start first Transmission");
   IQ* samples = transferFrameAndIQ(&data);
-  Serial.println("First frame Transmitted");
+  DEBUGln("First frame Transmitted");
   serialPrintIQ(samples, IQPerDataFrame);
-  Serial.println("First samples Recieved");
+  DEBUGln("First samples Recieved");
   
-  data = paramsToDataFrame(0x0000000000000295, 64.63952209, 447.006, 250, 0, 1602562500);
+  data = paramsToDataFrame(0x0000000000000295, 64.63952209, 447.006, 250, chanel, 1602562500);
   samples = transferFrameAndIQ(&data);
-  Serial.println("Seccond frame Transmitted");
+  DEBUGln("Seccond frame Transmitted");
   serialPrintIQ(samples, IQPerDataFrame);
-  Serial.println("Seccond samples Recieved");
+  DEBUGln("Seccond samples Recieved");
   
-  data = paramsToDataFrame(0x000000000000015a, 64.6394942, 446.947, 250, 0, 1602562500);
+  data = paramsToDataFrame(0x000000000000015a, 64.6394942, 446.947, 250, chanel, 1602562500);
   samples = transferFrameAndIQ(&data);
-  Serial.println("Third frame Transmitted");
+  DEBUGln("Third frame Transmitted");
   serialPrintIQ(samples, IQPerDataFrame);
-  Serial.println("Third samples Recieved");
+  DEBUGln("Third samples Recieved");
 
-  Serial.println("starting loop");
-  Serial.print("n: ");
-  Serial.println((outputRate/10-IQPerDataFrame)*3);
+  DEBUGln("starting loop");
+  DEBUG("n: ");
+  DEBUGln((outputRate/10-IQPerDataFrame)*3);
   for(unsigned long i=0; i<(outputRate/10-IQPerDataFrame)*3; i++) {
     IQ iq = getIQ();
     serialPrintIQ(&iq, 1);
     //if((i & ((1<<15)-1))==0) {
-    //  Serial.print(i);
-    //  Serial.print("          ");
-    //  Serial.print("\r   ");
+      //DEBUGln(i);
+      //DEBUG("          ");
+      //DEBUG("\r   ");
     //}
   }
-  Serial.println("loop done");
+  DEBUGln("loop done");
 }

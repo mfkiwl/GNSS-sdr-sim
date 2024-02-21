@@ -15,7 +15,8 @@ entity InputHandler is
         store : in std_logic;
 
         I : out IQ;
-        Q : out IQ
+        Q : out IQ;
+        debug : out std_logic_vector(7 downto 0)
     );
 end InputHandler;
 
@@ -113,6 +114,8 @@ begin
 
     chanel_select <= to_integer(unsigned(newData(frameWidth-1 downto frameWidth-8)));
     chanel_select_v <= newData(frameWidth-1 downto frameWidth-8);
+
+    debug <= chanel_select_v;
 
     SPI_IN: SPI port map (clk, reset, serial_in, newData);
 

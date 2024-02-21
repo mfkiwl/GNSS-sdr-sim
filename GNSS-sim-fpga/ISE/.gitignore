@@ -75,3 +75,4 @@ _xmsgs/
 *_synthesis.nlf
 *_synthesis.v
 *_synthesis.vhd
+*.debug

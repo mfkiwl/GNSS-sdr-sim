@@ -1,0 +1,19 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "clk" LOC = L15;
+NET "reset" LOC = K12;
+NET "serial_in" LOC = M15;
+NET "serial_out" LOC = K13;
+NET "store" LOC = L17;
+NET "debug[7]" LOC = U18;
+NET "debug[6]" LOC = T18;
+NET "debug[5]" LOC = R16;
+NET "debug[4]" LOC = P17;
+NET "debug[3]" LOC = T17;
+NET "debug[2]" LOC = R15;
+NET "debug[1]" LOC = R18;
+NET "debug[0]" LOC = M13;
+
+
+NET "clk" CLOCK_DEDICATED_ROUTE = FALSE; // improve clock to remove this

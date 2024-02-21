@@ -4,4 +4,13 @@ net "store" loc = "L17";
 net "serial_in" loc = "M15";
 net "serial_out" loc = "K13";
 
+net "debug(0)" loc = "M13";
+net "debug(1)" loc = "R18";
+net "debug(2)" loc = "R15";
+net "debug(3)" loc = "T17";
+net "debug(4)" loc = "P17";
+net "debug(5)" loc = "R16";
+net "debug(6)" loc = "T18";
+net "debug(7)" loc = "U18";
+
 NET "clk" CLOCK_DEDICATED_ROUTE = FALSE; // improve clock to remove this

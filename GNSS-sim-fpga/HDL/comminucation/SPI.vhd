@@ -23,7 +23,7 @@ begin
         if (reset = '1') then
             reg <= (others => '0');   
         elsif (clk'event and clk='1') then
-            reg <= serial_in & reg(n-1 downto 1);
+            reg <=  reg(n-2 downto 0) & serial_in;
         end if;
     end process;
 end behavioral;

@@ -36,4 +36,3 @@ DataFrame paramsToDataFrame(uint64_t bits, double delay, float doppler, int powe
 
   return data;
 }
-

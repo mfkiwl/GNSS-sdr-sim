@@ -27,9 +27,9 @@ begin
             wait on word;
             done <= '0';
 
-            for i in 0 to n-1 loop
+            for i in 1 to n loop
                 clk <= '0';
-                serial_out <= word(i);
+                serial_out <= word(n-i);
                 wait for clk_period/2;
                 clk <= '1';
                 wait for clk_period/2;
