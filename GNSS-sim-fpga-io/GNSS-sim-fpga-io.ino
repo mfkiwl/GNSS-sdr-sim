@@ -32,6 +32,8 @@ void setup() {
   Serial.begin(115200);
 
   FPGAInterfaceInit();
+
+  reset();
   
   DEBUGln("waiting for input to start");
   while(Serial.available()<=0) {}
@@ -42,7 +44,47 @@ void setup() {
   DEBUGln("started");
 }
 
+bool startFound = false;
 void loop() {
+  if(!startFound && Serial.available()>=2) {
+    if (Serial.read()==0xAA) { // start bytes, 2 times 0xAA
+      if (Serial.read()==0xAA) {
+        startFound = true;
+      } else { DEBUGln("Error 2"); }
+    } else { DEBUGln("Error 1"); }
+  }
+  if(startFound && Serial.available()>=22) { // new data frame
+    uint8_t bytes[22];
+    Serial.readBytes(bytes, 22);
+    DEBUGln("Frame Recieved");
+
+    /*DataFrame frame;
+    frame.satNum = bytes[0];
+    frame.bits = *((uint64_t*)&bytes[1]);
+    frame.delay = *((int64_t*)&bytes[9]);
+    frame.phaseStep = *((int32_t*)&bytes[17]);
+    frame.power = *((uint8_t*)&bytes[21]);*/
+
+    IQ* samples = transferFrameAndIQ(bytes);
+    serialPrintIQ(samples, 11);
+    
+    startFound = false;
+  }
+  else {
+    IQ iq = getIQ();
+    serialPrintIQ(&iq, 1);
+  }
+}
+
+
+
+
+
+
+
+
+
+void loop_old() {
   // put your main code here, to run repeatedly:
   delay(1000);
   

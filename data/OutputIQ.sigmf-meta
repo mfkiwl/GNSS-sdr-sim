@@ -1,0 +1,16 @@
+{
+    "global": {
+        "core:datatype": "ci8_le",
+        "core:sample_rate": 15000000,
+        "core:hw": "Hack RF 1",
+        "core:author": "Mike Verhoeff",
+        "core:version": "1.0.0"
+    },
+    "captures": [
+        {
+            "core:sample_start": 0,
+            "core:frequency": 1602000000
+        }
+    ],
+    "annotations": []
+}

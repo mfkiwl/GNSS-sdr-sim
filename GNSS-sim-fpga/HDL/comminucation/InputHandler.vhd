@@ -109,13 +109,17 @@ architecture behavioral of InputHandler is
     signal chanel_select_v : std_logic_vector(7 downto 0);
 
     signal clk16 : std_logic;
-
+    
+	 signal I_tmp : IQ;
+	 
 begin
 
     chanel_select <= to_integer(unsigned(newData(frameWidth-1 downto frameWidth-8)));
     chanel_select_v <= newData(frameWidth-1 downto frameWidth-8);
 
-    debug <= chanel_select_v;
+    --debug <= chanel_select_v;
+    debug <= std_logic_vector(I_tmp);
+	 I <= I_tmp;
 
     SPI_IN: SPI port map (clk, reset, serial_in, newData);
 
@@ -128,6 +132,6 @@ begin
         push(i) <= To_Std_Logic( (store='1') and (chanel_select=i) );
     end generate GEN_CHANEL;
 
-    RESULT: Mixer port map(clk16, reset, I_s, Q_s, power_s, I, Q);
+    RESULT: Mixer port map(clk16, reset, I_s, Q_s, power_s, I_tmp, Q);
 
 end architecture;

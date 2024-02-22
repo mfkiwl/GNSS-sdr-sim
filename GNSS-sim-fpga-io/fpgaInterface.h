@@ -40,7 +40,7 @@ void store() {
 
 //#define SPI_SETTINGS SPISettings(16000000, MSBFIRST, SPI_MODE0)
 
-#define SPI_SETTINGS SPISettings(160000, MSBFIRST, SPI_MODE0)
+#define SPI_SETTINGS SPISettings(1600000, MSBFIRST, SPI_MODE0)
 
 IQ* transferFrameAndIQ(DataFrame* frame) {
 
@@ -51,6 +51,19 @@ IQ* transferFrameAndIQ(DataFrame* frame) {
   SPI.transfer(&frame->delay, 8);
   SPI.transfer(&frame->phaseStep, 4);
   SPI.transfer(&frame->power, 1);
+  SPI.endTransaction();
+  // deselct when do to get the data to the right place
+  store();
+  // assume we are always getting data back
+  return (IQ*)frame;
+
+}
+
+IQ* transferFrameAndIQ(uint8_t* frame) {
+
+  // select a signal that we are sending data
+  SPI.beginTransaction(SPI_SETTINGS);
+  SPI.transfer(frame, 22);
   SPI.endTransaction();
   // deselct when do to get the data to the right place
   store();

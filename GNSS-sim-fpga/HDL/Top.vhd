@@ -13,7 +13,8 @@ entity Top is
         serial_in : in std_logic;
         serial_out : out std_logic;
 
-        debug : out std_logic_vector(7 downto 0)
+        debug : out std_logic_vector(7 downto 0);
+		  debug2: out std_logic_vector(2 downto 0)
     );
 end Top;
 
@@ -39,7 +40,8 @@ architecture structural of Top is
           reset : in std_logic;
           serial_out : out std_logic;
           I : in IQ;
-          Q : in IQ
+          Q : in IQ;
+			 debug : out std_logic_vector(2 downto 0)
         );
     end component;
 
@@ -50,6 +52,6 @@ begin
 	 --serial_out <= serial_in;
 	 
     IN0: component InputHandler port map (clk, reset, serial_in, store, I, Q, debug);
-    OUT0: component OutputHandler port map (clk, reset, serial_out, I, Q);
+    OUT0: component OutputHandler port map (clk, reset, serial_out, I, Q, debug2);
 
 end structural;

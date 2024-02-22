@@ -15,5 +15,9 @@ NET "debug[2]" LOC = R15;
 NET "debug[1]" LOC = R18;
 NET "debug[0]" LOC = M13;
 
+NET "debug2[2]" LOC = G15;
+NET "debug2[1]" LOC = J16;
+NET "debug2[0]" LOC = G13;
+
 
 NET "clk" CLOCK_DEDICATED_ROUTE = FALSE; // improve clock to remove this

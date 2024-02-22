@@ -20,5 +20,16 @@ package settings is
     
     constant outputRate : integer := 15000000;
     constant samplePeriode : time := 0.0666666667 us;
+	 
+	 -- from: https://groups.google.com/d/msg/comp.lang.vhdl/eBZQXrw2Ngk/4H7oL8hdHMcJ
+	--function reverse_any_vector (a: in std_logic_vector) return std_logic_vector is
+	--	variable result: std_logic_vector(a'RANGE);
+	--	alias aa: std_logic_vector(a'REVERSE_RANGE) is a;
+	--begin
+	--	for i in aa'RANGE loop
+	--		result(i) := aa(i);
+	--	end loop;
+	--	return result;
+	--end; -- function reverse_any_vector	
 
 end package;
