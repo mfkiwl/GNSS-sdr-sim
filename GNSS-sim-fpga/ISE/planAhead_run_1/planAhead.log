@@ -1,0 +1,253 @@
+#-----------------------------------------------------------
+# PlanAhead v14.7 (64-bit)
+# Build 321239 by xbuild on Fri Sep 27 19:24:36 MDT 2013
+# Start of session at: Fri Feb 23 10:51:15 2024
+# Process ID: 9051
+# Log file: /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_run_1/planAhead.log
+# Journal file: /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+INFO: [Common 17-78] Attempting to get a license: PlanAhead
+INFO: [Common 17-290] Got license for PlanAhead
+INFO: [Device 21-36] Loading parts and site information from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/arch.xml
+Parsing RTL primitives file [/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/rtl/prims/rtl_prims.xml]
+Finished parsing RTL primitives file [/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/rtl/prims/rtl_prims.xml]
+start_gui
+source /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/pa.fromHdl.tcl
+# create_project -name ISE -dir "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_run_1" -part xc3s1200efg320-4
+# set_param project.pinAheadLayout yes
+# set srcset [get_property srcset [current_run -impl]]
+# set_property target_constrs_file "Top.ucf" [current_fileset -constrset]
+Adding file '/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/Top.ucf' to fileset 'constrs_1'
+# set hdlfile [add_files [list {../HDL/Constants.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/simplesignals/GlonassModulation.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/FrameHandler.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/DopplerUpsample.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/Mixer.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/comminucation/SPI.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/comminucation/FIFO.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/comminucation/ClockDiv16.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/Chanel.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/comminucation/OutputHandler.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/comminucation/InputHandler.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set hdlfile [add_files [list {../HDL/Top.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set_property top Top $srcset
+# add_files [list {Top.ucf}] -fileset [get_property constrset [current_run]]
+# open_rtl_design -part xc3s1200efg320-4
+Using Verific elaboration
+Parsing VHDL file "/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/rtl/lib/synplify/synattr.vhd" into library synplify
+Parsing VHDL file "/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/rtl/lib/synplify/synattr.vhd" into library synplify
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/Constants.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/simplesignals/GlonassModulation.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/FrameHandler.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/DopplerUpsample.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/Mixer.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/comminucation/SPI.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/comminucation/FIFO.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/comminucation/ClockDiv16.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/Chanel.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/comminucation/OutputHandler.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/comminucation/InputHandler.vhd" into library work
+Parsing VHDL file "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL/Top.vhd" into library work
+INFO: [Designutils 20-910] Reading macro library /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn
+Parsing EDIF File [/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn]
+Finished Parsing EDIF File [/opt/Xilinx/14.7/ISE_DS/PlanAhead/data/./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn]
+Loading clock regions from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/xc3s1200e/ClockRegion.xml
+Loading clock buffers from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/xc3s1200e/ClockBuffers.xml
+Loading package from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/xc3s1200e/fg320/Package.xml
+Loading io standards from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/./parts/xilinx/spartan3e/IOStandards.xml
+INFO: [Device 21-19] Loading pkg sso from /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/xc3s1200e/fg320/SSORules.xml
+Loading list of drcs for the architecture : /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/./parts/xilinx/spartan3e/spartan3e/drc.xml
+INFO: [Timing 38-77] Reading timing library /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/spartan3e-4.lib.
+INFO: [Timing 38-34] Done reading timing library /opt/Xilinx/14.7/ISE_DS/PlanAhead/data/parts/xilinx/spartan3e/spartan3e/spartan3e-4.lib.
+Parsing UCF File [/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/Top.ucf]
+Finished Parsing UCF File [/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/Top.ucf]
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Phase 0 | Netlist Checksum: 8ed62747
+open_rtl_design: Time (s): cpu = 00:00:14 ; elapsed = 00:00:06 . Memory (MB): peak = 2938.863 ; gain = 164.695
+update_compile_order -fileset sim_1
+set_property iostandard LVCMOS25 [get_ports [list clk]]
+set_property iostandard {} [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list clk]]
+set_property iostandard {} [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list reset]]
+set_property iostandard LVCMOS33 [get_ports [list serial_in]]
+set_property iostandard LVCMOS33 [get_ports [list serial_out]]
+set_property iostandard LVCMOS33 [get_ports [list store]]
+set_property iostandard LVCMOS33 [get_ports [list {debug2[2]} {debug2[1]} {debug2[0]}]]
+set_property iostandard LVCMOS33 [get_ports [list {debug[7]} {debug[6]} {debug[5]} {debug[4]} {debug[3]} {debug[2]} {debug[1]} {debug[0]}]]
+set_property slew FAST [get_ports [list serial_out]]
+save_constraints
+startgroup
+set_property package_pin L15 [get_ports clk]
+endgroup
+set_property is_loc_fixed false [get_ports [list  reset]]
+set_property is_loc_fixed true [get_ports [list  reset]]
+undo
+INFO: [Common 17-17] undo 'set_property is_loc_fixed true [get_ports [list  reset]]'
+startgroup
+set_property package_pin A4 [get_ports clk]
+endgroup
+startgroup
+set_property package_pin L15 [get_ports reset]
+endgroup
+startgroup
+set_property package_pin K12 [get_ports clk]
+endgroup
+save_constraints
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)
+ERROR: [#UNDEF] *** Exception: java.lang.NumberFormatException: For input string: "1,87" (See /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_pid9051.debug)

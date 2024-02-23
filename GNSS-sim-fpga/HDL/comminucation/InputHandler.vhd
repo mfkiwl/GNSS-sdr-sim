@@ -30,11 +30,11 @@ architecture behavioral of InputHandler is
           depth : integer := 10
         );
         port (
-          push : in std_logic;
-          pop : in std_logic;
+          push  : in std_logic;
+          pop   : in std_logic;
           reset : in std_logic;
-          Q : in std_logic_vector(frameWidth-1 downto 0);
-          D : out std_logic_vector(frameWidth-1 downto 0)
+          Q     : in std_logic_vector(frameWidth-1 downto 0);
+          D     : out std_logic_vector(frameWidth-1 downto 0)
         );
     end component;
 
@@ -112,24 +112,26 @@ architecture behavioral of InputHandler is
     
 	 signal I_tmp : IQ;
 	 
+	 --constant g : integer := 0;
 begin
 
     chanel_select <= to_integer(unsigned(newData(frameWidth-1 downto frameWidth-8)));
     chanel_select_v <= newData(frameWidth-1 downto frameWidth-8);
 
     --debug <= chanel_select_v;
-    debug <= std_logic_vector(I_tmp);
+    --debug <= std_logic_vector(I_tmp);
 	 I <= I_tmp;
+	 debug <= push(0) & pop(0) & newData(3 downto 2) & chanel_select_v(3 downto 0);
 
     SPI_IN: SPI port map (clk, reset, serial_in, newData);
 
     CLK_DIV : ClockDiv16 port map (clk, clk16);
 
     GEN_CHANEL:
-    for i in 0 to chanel_count-1 generate
-        FIFO_X: FIFO port map (push(i), pop(i), reset, newData, frames(i));
-        CHANEL_X: Chanel port map (clk16, reset, pop(i), frames(i), I_s(i), Q_s(i), power_s(i));
-        push(i) <= To_Std_Logic( (store='1') and (chanel_select=i) );
+    for g in 0 to chanel_count-1 generate
+        FIFO_X: FIFO port map (push(g), pop(g), reset, newData, frames(g));
+        CHANEL_X: Chanel port map (clk16, reset, pop(g), frames(g), I_s(g), Q_s(g), power_s(g));
+        push(g) <= To_Std_Logic( (store='1') and (chanel_select=g) );
     end generate GEN_CHANEL;
 
     RESULT: Mixer port map(clk16, reset, I_s, Q_s, power_s, I_tmp, Q);

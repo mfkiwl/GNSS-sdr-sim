@@ -27,8 +27,33 @@ architecture behavioral of FIFO is
 begin
     D <= registers(bottom);
 
-    process (pop, reset)
-	  begin
+	--process(clk, reset)
+	--begin
+	--	if (reset = '1') then
+	--		registers <= (others => (others => '0'));
+	--		top <= 0;
+	--		bottom <= 0;
+	--	elsif rising_edge(clk) then
+	--		if pop='1' then
+	--			if (bottom /= depth-1) then
+	--				bottom <= bottom + 1;
+	--			else
+	--				bottom <= 0;
+	--			end if;
+	--		end if;
+	--		if push='1' then
+	--			registers(top) <= Q;
+	--			if (top /= depth-1) then
+	--				top <= top + 1;
+	--			else
+	--				top <= 0;
+	--			end if;
+	--		end if;
+	--	end if;
+	--end process;
+    
+	 process (pop, reset)
+	 begin
       if (reset = '1') then
         bottom <= 0;
       elsif rising_edge(pop) then
@@ -38,22 +63,22 @@ begin
           bottom <= 0;
         end if;
       end if;
-	  end process;
+	 end process;
 	 
 	 process (push, reset)
 	 begin
-		if (reset = '1') then
+      if (reset = '1') then
         registers <= (others => (others => '0'));
         top <= 0;
       elsif rising_edge(push) then
-		  registers(top) <= Q;
-		  if (top /= depth-1) then
-		    top <= top + 1;
-		  else
-		    top <= 0;
-		  end if;
-		end if;
-	 end process;
+        registers(top) <= Q;
+        if (top /= depth-1) then
+          top <= top + 1;
+        else
+          top <= 0;
+        end if;
+      end if;
+    end process;
 	 
     --process (push, pop, reset)
     --begin

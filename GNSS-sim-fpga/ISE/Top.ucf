@@ -1,8 +1,7 @@
 
-# PlanAhead Generated physical constraints 
 
-NET "clk" LOC = L15;
-NET "reset" LOC = K12;
+NET "reset" LOC = L15;
+NET "clk" LOC = K12;
 NET "serial_in" LOC = M15;
 NET "serial_out" LOC = K13;
 NET "store" LOC = L17;
@@ -20,4 +19,26 @@ NET "debug2[1]" LOC = J16;
 NET "debug2[0]" LOC = G13;
 
 
-NET "clk" CLOCK_DEDICATED_ROUTE = FALSE; // improve clock to remove this
+//NET "clk" CLOCK_DEDICATED_ROUTE = FALSE;
+// improve clock to remove this
+
+# PlanAhead Generated IO constraints 
+
+NET "clk" IOSTANDARD = LVCMOS33;
+NET "reset" IOSTANDARD = LVCMOS33;
+NET "serial_in" IOSTANDARD = LVCMOS33;
+NET "serial_out" IOSTANDARD = LVCMOS33;
+NET "store" IOSTANDARD = LVCMOS33;
+NET "debug2[2]" IOSTANDARD = LVCMOS33;
+NET "debug2[1]" IOSTANDARD = LVCMOS33;
+NET "debug2[0]" IOSTANDARD = LVCMOS33;
+NET "debug[7]" IOSTANDARD = LVCMOS33;
+NET "debug[6]" IOSTANDARD = LVCMOS33;
+NET "debug[5]" IOSTANDARD = LVCMOS33;
+NET "debug[4]" IOSTANDARD = LVCMOS33;
+NET "debug[3]" IOSTANDARD = LVCMOS33;
+NET "debug[2]" IOSTANDARD = LVCMOS33;
+NET "debug[1]" IOSTANDARD = LVCMOS33;
+NET "debug[0]" IOSTANDARD = LVCMOS33;
+NET "serial_out" SLEW = FAST;
+

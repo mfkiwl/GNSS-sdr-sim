@@ -1,0 +1,40 @@
+#-----------------------------------------------------------
+# PlanAhead v14.7 (64-bit)
+# Build 321239 by xbuild on Fri Sep 27 19:24:36 MDT 2013
+# Start of session at: Fri Feb 23 10:51:15 2024
+# Process ID: 9051
+# Log file: /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_run_1/planAhead.log
+# Journal file: /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source /home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE/pa.fromHdl.tcl
+update_compile_order -fileset sim_1
+set_property iostandard LVCMOS25 [get_ports [list clk]]
+set_property iostandard {} [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list clk]]
+set_property iostandard {} [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list clk]]
+set_property iostandard LVCMOS33 [get_ports [list reset]]
+set_property iostandard LVCMOS33 [get_ports [list serial_in]]
+set_property iostandard LVCMOS33 [get_ports [list serial_out]]
+set_property iostandard LVCMOS33 [get_ports [list store]]
+set_property iostandard LVCMOS33 [get_ports [list {debug2[2]} {debug2[1]} {debug2[0]}]]
+set_property iostandard LVCMOS33 [get_ports [list {debug[7]} {debug[6]} {debug[5]} {debug[4]} {debug[3]} {debug[2]} {debug[1]} {debug[0]}]]
+set_property slew FAST [get_ports [list serial_out]]
+save_constraints
+startgroup
+set_property package_pin L15 [get_ports clk]
+endgroup
+set_property is_loc_fixed false [get_ports [list  reset]]
+set_property is_loc_fixed true [get_ports [list  reset]]
+undo
+startgroup
+set_property package_pin A4 [get_ports clk]
+endgroup
+startgroup
+set_property package_pin L15 [get_ports reset]
+endgroup
+startgroup
+set_property package_pin K12 [get_ports clk]
+endgroup
+save_constraints

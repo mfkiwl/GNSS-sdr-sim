@@ -9,6 +9,9 @@ outputRate = 15000000
 modulationRate = 511000
 subCycles = 100
 
+chanel_assignemnt = {"R01":0, "R07":1, "R09":2, "R11":3, "R17":4, "R23":5, "R24":6, "R10":7, "R02":8}
+chanel_count = 3
+
 class Sat:
     ccode : str = ""
     id : str = ""
@@ -21,7 +24,10 @@ class Sat:
         self.id = id
         self.arg = arg
         
-        self.chanel = int(id)-1
+        self.chanel = -1
+        if ccode+id in chanel_assignemnt:
+            self.chanel = chanel_assignemnt[ccode+id]
+            
         if ccode=="R":
             self.radioFrequency = 1602000000 + 562500 * int(arg)
 
@@ -92,14 +98,14 @@ def to_DataFrame_bytes(id, data, setup):
     unitStepPhase = normalPhaseSampleDelta / scale * (PHASE_RANGE)
 
     message = bytes()
-    message += struct.pack(">B", setup.chanel) # -1 is for testing, find better way to address
+    message += struct.pack(">B", setup.chanel%256) # -1 is for testing, find better way to address
     message += bytes.fromhex(data["data"].zfill(16))
-    #message += struct.pack(">q", int(delay_n))
+    message += struct.pack(">q", int(delay_n))
     #print("delay n:", int(delay_n))
-    message += struct.pack(">q", 0)
-    #message += struct.pack(">l", int(unitStepPhase))
+    #message += struct.pack(">q", 0)
+    message += struct.pack(">l", int(unitStepPhase))
     #print("phase step:", int(unitStepPhase))
-    message += struct.pack(">l", 0)
+    #message += struct.pack(">l", 0)
     message += struct.pack(">B", int(data["power"]))
 
 
@@ -134,7 +140,7 @@ def main():
     for i in range(2):
         step = next(source)
         for sat in step:
-            if setup[sat].chanel != 0:
+            if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
                 continue
             frames.append(to_DataFrame_bytes(sat, step[sat], setup[sat]))
 
@@ -142,7 +148,7 @@ def main():
     with serial.Serial(port) as ser, open("data/OutputIQ.sigmf-data", "wb") as binFile:
         for step in source:
             for sat in step:
-                if setup[sat].chanel != 0:
+                if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
                     continue
                 frames.append(to_DataFrame_bytes(sat, step[sat], setup[sat]))
             
@@ -162,19 +168,19 @@ def main():
                     iqs = ser.read(32)
                     #for i in range(16):
                     #    print(ser.readline().decode('utf-8'))
-                    for l in range(16):
-                        i = int.from_bytes(iqs[0+2*l:1+2*l], signed=True)
-                        q = int.from_bytes(iqs[1+2*l:2+2*l], signed=True)
-                        print(i, q)
+                    #for l in range(16):
+                    #    i = int.from_bytes(iqs[0+2*l:1+2*l], signed=True)
+                    #    q = int.from_bytes(iqs[1+2*l:2+2*l], signed=True)
+                    #    print(i, q)
                     binFile.write(iqs)
                     #print("read 16")
                 else:
                     k+=1
                     iq = ser.read(2)
                     #print(ser.readline().decode('utf-8'))
-                    i = int.from_bytes(iq[0:1], signed=True)
-                    q = int.from_bytes(iq[1:2], signed=True)
-                    print(i, q)
+                    #i = int.from_bytes(iq[0:1], signed=True)
+                    #q = int.from_bytes(iq[1:2], signed=True)
+                    #print(i, q)
                     binFile.write(iq)
                     #print("read 1")
                 
