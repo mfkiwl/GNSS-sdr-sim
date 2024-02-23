@@ -13,7 +13,7 @@ entity OutputHandler is
         I : in IQ;
         Q : in IQ;
 		  
-		  debug : out std_logic_vector(2 downto 0)
+        debug : out std_logic_vector(2 downto 0)
     );
 end OutputHandler;
 
@@ -32,13 +32,15 @@ architecture behavioral of OutputHandler is
 		end loop;
 		return result;
 	 end; -- function reverse_any_vector	
-	 
+	
+    signal debugl : std_logic_vector(3 downto 0);
 begin
 
-    serial_out <= word(0);
+    serial_out <= word(15);
     
-	 debug <= std_logic_vector(to_unsigned(state, debug'length));
-	 
+	debugl <= std_logic_vector(to_unsigned(state, 4));
+	debug <= debugl(2 downto 0); 
+
     process (reset, clk, I, Q)
     begin
         if reset = '1' then
@@ -50,7 +52,7 @@ begin
                 word <= std_logic_vector(I) & std_logic_vector(Q);
             else
                 state <= state+1;
-                word <= '0' & word(15 downto 1);
+                word <= word(14 downto 0) & '0';
             end if;
         end if;
     end process;

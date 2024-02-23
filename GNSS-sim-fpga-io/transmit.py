@@ -95,11 +95,15 @@ def to_DataFrame_bytes(id, data, setup):
     message += struct.pack(">B", setup.chanel) # -1 is for testing, find better way to address
     message += bytes.fromhex(data["data"].zfill(16))
     #message += struct.pack(">q", int(delay_n))
+    #print("delay n:", int(delay_n))
     message += struct.pack(">q", 0)
     #message += struct.pack(">l", int(unitStepPhase))
+    #print("phase step:", int(unitStepPhase))
     message += struct.pack(">l", 0)
     message += struct.pack(">B", int(data["power"]))
 
+
+    print(message, message.hex())
     return message
 
 def uploadFrame(ser, data):
