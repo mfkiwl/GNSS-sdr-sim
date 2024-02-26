@@ -36,6 +36,7 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
             headerData["h2"] = float(fields[2])
             headerData["h3"] = int(  fields[3])
             headerData["h4"] = int(  fields[4])
+
         # for GPS
         if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
             headerData["alpha1"] = parse_float(fields[0])
@@ -56,6 +57,41 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
             headerData["W"] = parse_float(fields[3])
             #print("Delta UTC")
 
+        # for beidou
+        if fields[0].upper() == "BDSA":
+            headerData["alpha1"] = parse_float(fields[1])
+            headerData["alpha2"] = parse_float(fields[2])
+            headerData["alpha3"] = parse_float(fields[3])
+            headerData["alpha4"] = parse_float(fields[4])
+        if fields[0].upper() == "BDSB":
+            headerData["beta1"] = parse_float(fields[1])
+            headerData["beta2"] = parse_float(fields[2])
+            headerData["beta3"] = parse_float(fields[3])
+            headerData["beta4"] = parse_float(fields[4])
+        if fields[0].upper() == "BDUT": # GAL-UTC(a0, a1)
+            headerData["a0"]   = float(fields[1])
+            headerData["a1"]   = float(fields[2])
+            headerData["TOW"]  = int(  fields[3])
+            headerData["WN"]   = int(  fields[4])
+
+        # for irnss
+        if fields[0].upper() == "IRNA":
+            headerData["alpha1"] = parse_float(fields[1])
+            headerData["alpha2"] = parse_float(fields[2])
+            headerData["alpha3"] = parse_float(fields[3])
+            headerData["alpha4"] = parse_float(fields[4])
+        if fields[0].upper() == "IRNB":
+            headerData["beta1"] = parse_float(fields[1])
+            headerData["beta2"] = parse_float(fields[2])
+            headerData["beta3"] = parse_float(fields[3])
+            headerData["beta4"] = parse_float(fields[4])
+        if fields[0].upper() == "IRUT": # GAL-UTC(a0, a1)
+            headerData["a0"]   = parse_float(fields[1])
+            headerData["a1"]   = parse_float(fields[2])
+            headerData["TOW"]  = int(  fields[3])
+            headerData["WN"]   = int(  fields[4])
+
+
         # all
         if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
             headerData["t_LS"] = int(fields[0])
@@ -63,7 +99,7 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
     
     lines = itertools.dropwhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
     lines = itertools.islice(lines, 1, None)
-    batchedLines = itertools.batched(lines, 8)
+    batchedLines = itertools.batched(lines, 8) #CHECK: is 8 standered?
     #batchedLines = map(lambda x: list(map(lambda y: y.strip().split(), list(x))), batchedLines)
     expr = r"((-?\d*)(\.\d*([EeDd][+-]?\d*)?)?|[^\s]*)"
     batchedLines = map(lambda x: list(map(lambda y: [m[0] for m in re.findall(expr, y) if m[0]!=""], list(x))), batchedLines)
@@ -76,6 +112,8 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
             entry[0][0] = constelationPrefix+(entry[0][0].strip().zfill(2))
         if entry[0][0][0]==constelationPrefix:
             for row in range(len(dataDescription)):
+                if len(entry[row])-1 == len(dataDescription[row]) and len(entry[row][0])==1 and entry[row][1].strip().isnumeric():
+                    entry[row] = [entry[row][0]+"0"+entry[row][1]]+entry[row][2:]
                 assert len(entry[row]) == len(dataDescription[row])
                 for column in range(len(dataDescription[row])):
                     if isinstance(dataDescription[row][column], list):

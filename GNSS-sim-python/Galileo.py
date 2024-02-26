@@ -171,18 +171,18 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
     (TOW, WN) = utcToConstelationTime(dateTime+datetime.timedelta(seconds=1))
 
     word = getWord(subFrame, page, eph, ephs, {"TOW":TOW, "WN":WN})
-    assert(len(word), 128)
+    #assert(len(word), 128)
 
     p_even, p_odd = make_nominal_pages(word, (t+1)%3+1)
 
     if dateTime.second%2==1 :
-        page = (SYNC + interleave(encode_page(p_even))
-            + SYNC + interleave(encode_page(p_odd)))
-        assert(len(page), 128)
+        page = (SYNC + NavMessage.interleave(encode_page(p_even))
+            + SYNC + NavMessage.interleave(encode_page(p_odd)))
+        #assert(len(page), 128)
         return page
     else:
-        page = SYNC + interleave(encode_page(p_odd))
-        assert(len(page), 64)
+        page = SYNC + NavMessage.interleave(encode_page(p_odd))
+        #assert(len(page), 64)
         return page
 
 def getWord(subFrame, page, eph, ephs, time):
@@ -348,7 +348,7 @@ def make_nominal_pages(data, SSP_i):
     
     #print(len(crc_protected_1+crc_protected_2))
     #print(''.join(map(lambda x: str(x), crc_protected_1+crc_protected_2)))
-    crc = crc_remainder(crc_protected_1+crc_protected_2, stringToArray("1100001100100110011111011"), 0)
+    crc = NavMessage.crc_remainder(crc_protected_1+crc_protected_2, stringToArray("1100001100100110011111011"), 0)
     #print(len(crc))
     crc = [0]*(24-len(crc)) + crc
     
@@ -356,30 +356,6 @@ def make_nominal_pages(data, SSP_i):
     # tail = 000000
     
     return (crc_protected_1 + tail, crc_protected_2 + crc + SSP_values[SSP_i] + tail)
-
-# modified from CRC Wikipedia
-def crc_remainder(input_bitstring, polynomial_bitstring, initial_filler):
-    """Calculate the CRC remainder of a string of bits using a chosen polynomial.
-    initial_filler should be '1' or '0'.
-    """
-    polynomial_bitstring = list(itertools.dropwhile(lambda x : x == 0, polynomial_bitstring))
-    len_input = len(input_bitstring)
-    initial_padding = [initial_filler]*(len(polynomial_bitstring) - 1)
-    input_padded_array = list(input_bitstring + initial_padding)
-    while 1 in input_padded_array[:len_input]:
-        cur_shift = input_padded_array.index(1)
-        for i in range(len(polynomial_bitstring)):
-            input_padded_array[cur_shift + i] \
-            = int(int(polynomial_bitstring[i] != input_padded_array[cur_shift + i]))
-    return input_padded_array[len_input:]
-
-def interleave(data, c=8, r=30):
-    assert len(data)==c*r
-    datai = [0]*len(data)
-    for i in range(c):
-        for j in range(r):
-            datai[i*r+j] = data[j*c+i]
-    return datai
 
 def encode_page(plain):
     

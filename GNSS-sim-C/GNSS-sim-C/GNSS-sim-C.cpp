@@ -63,7 +63,7 @@ void example_manager_irnss() {
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(2600000, 1176450000);
 
-    manager.run(fileSource, fileSink, 1);
+    manager.run(fileSource, fileSink, 2);
 }
 
 
@@ -107,13 +107,13 @@ int main()
     for (int i = 0; i < 1023; i++) {
         std::cout << (int)ca.next();
     }*/
-    generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
+    //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();
     //example_manager_galileo();
     //example_manager_gps();
     //example_manager_beidou();
-    //example_manager_irnss();
+    example_manager_irnss();
     //example_file();
     //example_chain();
 }

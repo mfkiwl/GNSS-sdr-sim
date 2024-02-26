@@ -1,5 +1,8 @@
 
 
+import itertools
+
+
 class BitBuffer:
 
     buffer = []
@@ -13,6 +16,8 @@ class BitBuffer:
         self.buffer = []
 
     def getBits(self, n, datetime, sat, sats):
+        if not isinstance(n, int):
+            n = n(sat)
         if len(self.buffer) >= n:
             data = self.buffer[0:n]
             self.buffer = self.buffer[n:]
@@ -74,6 +79,30 @@ def bitsToHex(bits):
         return bitsToHex(bits[4:])+char
     else:
         return char
+
+# modified from CRC Wikipedia
+def crc_remainder(input_bitstring, polynomial_bitstring, initial_filler):
+    """Calculate the CRC remainder of a string of bits using a chosen polynomial.
+    initial_filler should be '1' or '0'.
+    """
+    polynomial_bitstring = list(itertools.dropwhile(lambda x : x == 0, polynomial_bitstring))
+    len_input = len(input_bitstring)
+    initial_padding = [initial_filler]*(len(polynomial_bitstring) - 1)
+    input_padded_array = list(input_bitstring + initial_padding)
+    while 1 in input_padded_array[:len_input]:
+        cur_shift = input_padded_array.index(1)
+        for i in range(len(polynomial_bitstring)):
+            input_padded_array[cur_shift + i] \
+            = int(int(polynomial_bitstring[i] != input_padded_array[cur_shift + i]))
+    return input_padded_array[len_input:]
+
+def interleave(data, c=8, r=30):
+    assert len(data)==c*r
+    datai = [0]*len(data)
+    for i in range(c):
+        for j in range(r):
+            datai[i*r+j] = data[j*c+i]
+    return datai
 
 def main():
     print("NavMessage")

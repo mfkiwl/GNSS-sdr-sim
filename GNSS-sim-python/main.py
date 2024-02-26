@@ -9,6 +9,8 @@ import NavMessage
 import Glonass
 import Galileo
 import GPS
+import BeiDou
+import IRNSS
 
 SPEED_OF_LIGHT = 299792458
 
@@ -83,9 +85,9 @@ def printResults(time, results, userPos):
 def main():
     print("main")
 
-    constelation = Glonass.getConstelation()
-    rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
-    resultFile = "data/glonass.txt"
+    #constelation = Glonass.getConstelation()
+    #rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
+    #resultFile = "data/glonass.txt"
     
     #constelation = Galileo.getConstelation()
     #rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
@@ -95,10 +97,21 @@ def main():
     #rinexFile = "data/GPS/brdc3260.23n"
     #resultFile = "data/gps.txt"
 
+    #constelation = BeiDou.getConstelation()
+    #rinexFile = "data/BeiDou/Brdc0530.24f"
+    #resultFile = "data/beidou.txt"
 
-    startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
+    constelation = IRNSS.getConstelation()
+    rinexFile = "data/IRNSS/KRGG00ATF_R_20240530000_01D_IN.rnx"
+    resultFile = "data/irnss.txt"
+
+
+    startTime = datetime.datetime(2024,2,21, 23,00) # IRNSS
+    #startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
+    #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
     #startTime = datetime.datetime(2023,11,22, 4, 0) # gps
-    duration = datetime.timedelta(seconds=210)
+
+    duration = datetime.timedelta(seconds=120)
 
 
 
@@ -111,6 +124,7 @@ def main():
     #sats = {"E07":sats["E07"]}
     #sats = {"E04":sats["E04"], "E05":sats["E05"], "E09":sats["E09"], "E10":sats["E10"], "E11":sats["E11"], "E12":sats["E12"], "E18":sats["E18"], "E34":sats["E34"], "E36":sats["E36"]}
     #sats = {"R01":sats["R01"], "R09":sats["R09"], "R17":sats["R17"], "R23":sats["R23"], "R24":sats["R24"]}
+    sats = {"I02":sats["I02"]}
     setup = constelation.getSetupHeader(sats)
 
     print("min(min), max(min), min(max), max(max)")
@@ -121,7 +135,8 @@ def main():
     timestep = datetime.timedelta(milliseconds=100) # hardcoded 0.1s
     endTime = startTime+duration
 
-    userPos = np.array([[4541995.72232094],[833907.206476633],[4384738.7981905]])
+    #userPos = np.array([[4541995.72232094],[833907.206476633],[4384738.7981905]])
+    userPos = np.array([[1239.522], [5463.155], [3039.514]])
     userVel = np.array([[0],[0],[0]])
 
     outputFile = open(resultFile, "w")
