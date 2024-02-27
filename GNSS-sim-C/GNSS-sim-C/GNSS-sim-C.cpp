@@ -55,7 +55,7 @@ void example_manager_beidou() {
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(4000000, 1561098000);
 
-    manager.run(fileSource, fileSink, 1);
+    manager.run(fileSource, fileSink, 2);
 }
 
 void example_manager_irnss() {
@@ -112,8 +112,8 @@ int main()
     //example_manager_glonass();
     //example_manager_galileo();
     //example_manager_gps();
-    //example_manager_beidou();
-    example_manager_irnss();
+    example_manager_beidou();
+    //example_manager_irnss();
     //example_file();
     //example_chain();
 }

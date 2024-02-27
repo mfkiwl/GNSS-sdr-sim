@@ -31,7 +31,7 @@ Satellite* constructSat(std::string constelationCode, std::string id, std::strin
 		Satellite* sat = new gps::Sat(std::stoi(id));
 		return sat;
 	}
-	if (constelationCode == "B1c") {
+	if (constelationCode == "C") {
 		Satellite* sat = new beidou::Sat(std::stoi(id));
 		return sat;
 	}

@@ -136,14 +136,14 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
         print("not aligned")
         return [0]
     
-    subframe = (dateTime.second//12)%4
+    subframe = ((dateTime.minute*60+dateTime.second)//12)%4
 
     data = [1]*232
 
     if subframe+1==1:
         data = NavMessage.dataStructureToBits(data1, eph, twosCompliment=True, spareData={})
     if subframe+1==2:
-        data = NavMessage.dataStructureToBits(data1, eph, twosCompliment=True, spareData={})
+        data = NavMessage.dataStructureToBits(data2, eph, twosCompliment=True, spareData={})
     if subframe+1==3 or subframe+1==4:
         if "MessageIndex" not in bitBuffer.store:
             bitBuffer.store["MessageIndex"] = 0
@@ -155,7 +155,7 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
 
 # 7 is almonac, second is sat, 14 is differential correction, 26 is time, ...
 message_sequence = [[7, "I01"], [7, "I02"], [7, "I03"], [7, "I04"], [7, "I05"], [7, "I06"], [7, "I07"], [7, "I08"], [7, "I09"], [7, "I10"]]
-almanac = [["WN", 10], ["e", 16, 2**21], ["toa", 16, 2**-4], ["i0", 24, 2**23/math.pi], ["OmegaDot", 16, 2**38/math.pi], ["sqrt_a", 24, 2**11], ["Omega0", 24, 2**23/math.pi], ["omega", 24, 2**23/math.pi], ["M0", 24, 2**23/math.pi], ["a_f0", 11, 2**20], ["a_f1", 11, 2**38], ["sv id", 6], ["T_GD", 8, 2**31], [0, 6]]
+almanac = [["WN", 10], ["e", 16, 2**21], ["toa", 16, 2**-4], ["i0", 24, 2**23/math.pi], ["omegaDot", 16, 2**38/math.pi], ["sqrt_a", 24, 2**11], ["omega0", 24, 2**23/math.pi], ["omega", 24, 2**23/math.pi], ["M0", 24, 2**23/math.pi], ["a_f0", 11, 2**20], ["a_f1", 11, 2**38], ["sv id", 6], ["T_GD", 8, 2**31], [0, 6]]
 
 data1 = [["WN", 10], ["a_f0", 22, 2**31], ["a_f1", 16, 2**43], ["a_f2", 8, 2**55], ["URA", 4], ["t_oc", 16, 1/16], ["T_GD", 8, 2**31],
          ["deltan", 22, 2**41/math.pi], ["IODEC", 8], [0, 10], ["health_L5_S", 2], 
@@ -163,7 +163,7 @@ data1 = [["WN", 10], ["a_f0", 22, 2**31], ["a_f1", 16, 2**43], ["a_f2", 8, 2**55
          ["IDot", 14, 2**43/math.pi], [0, 2]
          ]
 
-data2 = [["M0", 32, 2**31], ["toe", 16, 1/16], ["e", 32, 2**33], ["sqrt_a", 32, 2**19], ["Omega0", 32, 2**31], ["omega", 32, 2**31], ["OmegaDot", 22, 2**41], ["i0", 32, 2**31], [0, 2]]
+data2 = [["M0", 32, 2**31/math.pi], ["toe", 16, 1/16], ["e", 32, 2**33], ["sqrt_a", 32, 2**19], ["omega0", 32, 2**31/math.pi], ["omega", 32, 2**31/math.pi], ["omegaDot", 22, 2**41/math.pi], ["i0", 32, 2**31/math.pi], [0, 2]]
 
 def getMessage(id, eph, ephs):
     message = None
@@ -186,37 +186,16 @@ def indexOrZero(data, index):
 
 def encode_subframe(bits):
     tbits = [0]*6+bits
-    G1 = lambda i : tbits[i+6 -0] ^ tbits[i+6 -3] ^ tbits[i+6 -4] ^ tbits[i+6 -5] ^ tbits[i+6 -6]
-    G2 = lambda i : tbits[i+6 -0] ^ tbits[i+6 -1] ^ tbits[i+6 -3] ^ tbits[i+6 -4] ^ tbits[i+6 -6]
-
-    #G1 = lambda i : tbits[i+5 -0] ^ tbits[i+5 -1] ^ tbits[i+5 -2] ^ tbits[i+5 -3] ^ tbits[i+5 -6]
-    #G2 = lambda i : tbits[i+5 -0] ^ tbits[i+5 -2] ^ tbits[i+5 -3] ^ tbits[i+5 -5] ^ tbits[i+5 -6] ^ 1
+    G1 = lambda i : tbits[i+6 -0] ^ tbits[i+6 -1] ^ tbits[i+6 -2] ^ tbits[i+6 -3] ^ tbits[i+6 -6]
+    G2 = lambda i : tbits[i+6 -0] ^ tbits[i+6 -2] ^ tbits[i+6 -3] ^ tbits[i+6 -5] ^ tbits[i+6 -6]
 
     FEC = [0]*584
     for i in range(292):
         FEC[2*i+0] = G1(i)
         FEC[2*i+1] = G2(i)
 
-
-    #def encode1(d, i):
-    #    G1 = (indexOrZero(d, i-0) + indexOrZero(d, i-1) + indexOrZero(d, i-2) + indexOrZero(d, i-3) + indexOrZero(d, i-6))%2
-    #    G2 = (indexOrZero(d, i-0) + indexOrZero(d, i-2) + indexOrZero(d, i-3) + indexOrZero(d, i-5) + indexOrZero(d, i-6) + 1)%2
-    #    
-    #    
-    #    #G1 = (indexOrZero(d, i-0) + indexOrZero(d, i-3) + indexOrZero(d, i-4) + indexOrZero(d, i-5) + indexOrZero(d, i-6))%2
-    #    #G2 = (indexOrZero(d, i-0) + indexOrZero(d, i-1) + indexOrZero(d, i-3) + indexOrZero(d, i-4) + indexOrZero(d, i-6))%2
-    #    return (G1, G2)
-    #
-    #plain = bits
-    #sG = [0]*(2*len(plain))
-    #for i in range(len(plain)):
-    #    G1, G2 = encode1(plain, i)
-    #    sG[2*i] = G1
-    #    sG[2*i+1] = G2
-
     assert len(bits)==292
     return NavMessage.interleave(FEC, 8, 73)
-    #return NavMessage.interleave(sG, 8, 73)
 
 
 def packageSubFrame(subframe, data, eph, dateTime:datetime.datetime):

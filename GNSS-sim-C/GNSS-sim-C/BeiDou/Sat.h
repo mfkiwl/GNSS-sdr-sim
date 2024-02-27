@@ -15,7 +15,7 @@ namespace beidou {
 	public:
 		Sat(int prn) : Satellite(prn) {
 			std::stringstream ss;
-			ss << "B" << std::setw(2) << std::setfill('0') << prn;
+			ss << "C" << std::setw(2) << std::setfill('0') << prn;
 			name = ss.str();
 		}
 
