@@ -11,7 +11,7 @@
 
 #include "DataHandler.h"
 #include "Resample.h"
-#include "IRNSS/PRN_Code.h"
+#include "GPS/L1c/PRN_Code.h"
 
 #include "FPGA_data.h"
 
@@ -103,10 +103,11 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    /*irnss::PRN ca (1);
-    for (int i = 0; i < 1023; i++) {
+    gps::L1c::PRN ca(1);
+    for (int i = 0; i < 24; i++) {
         std::cout << (int)ca.next();
-    }*/
+    }
+    return 0;
     //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();

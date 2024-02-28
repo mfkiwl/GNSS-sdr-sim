@@ -51,7 +51,7 @@ namespace gps {
 
 				reg = reg << 1;
 
-				return v
+				return v;
 			}
 
 

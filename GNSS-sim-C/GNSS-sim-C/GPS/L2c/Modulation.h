@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../ChainLink.h"
+#include "PRN_Code.h"
 
 namespace gps {
 	namespace L2c {
@@ -26,7 +27,7 @@ namespace gps {
 			uint8_t currentData;
 
 		public:
-			Modulation(ChainLink* dataSource, int prn) : dataSource(dataSource), prn(prn) {
+			Modulation(ChainLink* dataSource, int prn) : dataSource(dataSource), prnM(prn, false), prnL(prn, true) {
 			}
 
 			IQ nextSample() {

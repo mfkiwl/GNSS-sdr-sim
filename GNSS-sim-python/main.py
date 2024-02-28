@@ -126,7 +126,7 @@ def main():
     #sats = {"R01":sats["R01"], "R09":sats["R09"], "R17":sats["R17"], "R23":sats["R23"], "R24":sats["R24"]}
     #sats = {"I02":sats["I02"]}
     del sats["C01"], sats["C02"], sats["C03"], sats["C04"], sats["C05"]
-    sats = {"C06":sats["C06"]}
+    sats = {"C06":sats["C06"], "C09":sats["C09"], "C12":sats["C12"], "C16":sats["C16"], "C19":sats["C19"], "C20":sats["C20"], "C22":sats["C22"]}
     setup = constelation.getSetupHeader(sats)
 
     print("min(min), max(min), min(max), max(max)")

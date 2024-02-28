@@ -1,19 +1,21 @@
 #pragma once
 
+#include <string>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 #include "../../Satellite.h"
 #include "Modulation.h"
 
 namespace gps {
-	namespace L2c {
+	namespace L5 {
 
 		class Sat : public Satellite {
 		public:
 			Sat(int prn) : Satellite(prn) {
 				std::stringstream ss;
-				ss << "G2c" << std::setw(2) << std::setfill('0') << prn;
+				ss << "G5_" << std::setw(2) << std::setfill('0') << prn;
 				name = ss.str();
 			}
 
@@ -23,15 +25,15 @@ namespace gps {
 			}
 
 			virtual int getModulationRate() {
-				return 1023000;
+				return 10230000;
 			}
 
 			virtual long getRadioFrequency() {
-				return 122760000;
+				return 1176450000;
 			};
 
 			virtual int getFrameSize() {
-				return 5;
+				return 10;
 			}
 		};
 

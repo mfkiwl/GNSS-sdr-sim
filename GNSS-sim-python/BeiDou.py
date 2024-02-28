@@ -126,7 +126,7 @@ def clockCorection(sat, syncTime):
     dt = syncTime[0] - t_oc
     satClkCorr = (sat["clockdriftrate"] * dt + sat["clockdrift"]) * dt + sat["clockbias"]
 
-    t_GD = 0#sat["T_GD"]
+    t_GD = sat["T_GD1"]
 
     # relativistic corection, uses 0.1s old data, but should be beter than nothing
     #if "E_k" in sat:
@@ -168,7 +168,7 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
 
         data = [0] * (4 + 11*(1+9*2))
 
-        (SOW, WN) = utcToConstelationTime(dateTime)
+        (SOW, WN) = utcToConstelationTime(dateTime)#+datetime.timedelta(seconds=6)
 
         spareData = {"FraID":subframe, "Pnum":page, "SOW":SOW, "WN":WN, "AmEpID":0b11, "AmID":AmID}
         if subframe==1:
@@ -238,9 +238,9 @@ subframe1_layout = [[0, 4], ["FraID", 3], ["SOW", 20], ["SatH1", 1], ["AODC", 5]
                     ["a_0", 8, 2**30], ["a_1", 8, 2**27], ["a_2", 8, 2**24], ["a_3", 8, 2**24], ["b_0", 8, 2**-11], ["b_1", 8, 2**-14], ["b_2", 8, 2**-16], ["b_3", 8, 2**-16],
                     ["a_f2", 11, 2**66], ["a_f0", 24, 2**33], ["a_f1", 22, 2**50], ["AODE", 5]]
 
-subframe2_layout = [[0, 4], ["FraID", 3], ["SOW", 20], ["deltan", 16, 2**43/math.pi], ["Cuc", 18, 2**31], ["M0", 32, 2**31], ["e", 32, 2**33], ["Cus", 18, 2**31], ["Crc", 18, 2**6], ["Crs", 18, 2**6], ["sqrt_a", 32, 2**19], ["toe", 2, 2**-3]]
+subframe2_layout = [[0, 4], ["FraID", 3], ["SOW", 20], ["deltan", 16, 2**43/math.pi], ["Cuc", 18, 2**31], ["M0", 32, 2**31/math.pi], ["e", 32, 2**33], ["Cus", 18, 2**31], ["Crc", 18, 2**6], ["Crs", 18, 2**6], ["sqrt_a", 32, 2**19], ["toe", 2, (2**-3)*(2**-15)]]
 
-subframe3_layout = [[0, 4], ["FraID", 3], ["SOW", 20], ["toe", 15, 2**-3], ["i0", 32, 2**31], ["Cic", 18, 2**31], ["omegaDot", 24, 2**43], ["Cis", 18, 2**31], ["IDot", 14, 2**43], ["omega0", 32, 2**31], ["omega", 32, 2**31], [0, 1]]
+subframe3_layout = [[0, 4], ["FraID", 3], ["SOW", 20], ["toe", 15, 2**-3], ["i0", 32, 2**31/math.pi], ["Cic", 18, 2**31], ["omegaDot", 24, 2**43/math.pi], ["Cis", 18, 2**31], ["IDot", 14, 2**43/math.pi], ["omega0", 32, 2**31/math.pi], ["omega", 32, 2**31/math.pi], [0, 1]]
 
 # subframe 4 page 1 to 24(all), subframe 5 page 1 to 6
 subframe_almanac_layout    = [[0, 4], ["FraID", 3], ["SOW", 20], [0, 1], ["Pnum", 7], ["sqrt_a", 24, 2**11], ["a_f1", 11, 2**38], ["a_f0", 11, 2**20], ["omega0", 24, 2**23], ["e", 17, 2**21], ["small delta_i", 16, 2**19], ["t_oa", 8, 2**-12], ["omegaDot", 17, 2**38], ["omega", 24, 2**23], ["M0", 24, 2**23], ["AmEpID", 2]] #AmEpID=0b11

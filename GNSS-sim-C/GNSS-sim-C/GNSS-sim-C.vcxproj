@@ -160,6 +160,8 @@
     <ClInclude Include="Galileo\Sat.h" />
     <ClInclude Include="Glonass\Modulation.h" />
     <ClInclude Include="Glonass\Sat.h" />
+    <ClInclude Include="GPS\L1c\Modulation.h" />
+    <ClInclude Include="GPS\L1c\PRN_Code.h" />
     <ClInclude Include="GPS\L2c\Modulation.h" />
     <ClInclude Include="GPS\L2c\PRN_Code.h" />
     <ClInclude Include="GPS\L2c\Sat.h" />
