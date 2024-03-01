@@ -29,7 +29,6 @@ begin
     process (clk,reset,parallel_in)
     begin
         if (reset = '1') then
-            reg <= (others => '0');
             reg_send <= parallel_in; -- or 0?
             index <= 0;
         elsif falling_edge(clk) then
@@ -40,6 +39,13 @@ begin
             else
               index <= index+1;
             end if;
+        end if;
+    end process;
+	 
+	 process (clk,reset)
+    begin
+        if (reset = '1') then
+            reg <= (others => '0');
         elsif rising_edge(clk) then
           reg <=  reg(n_out-2 downto 0) & serial_in;
         end if;
