@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 struct DataFrame {
   uint8_t satNum;
