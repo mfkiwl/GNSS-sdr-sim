@@ -1,0 +1,7 @@
+work/
+*.vstf
+.bak
+.wlf
+signal.sigmf-data
+output_results.txt
+wlft*

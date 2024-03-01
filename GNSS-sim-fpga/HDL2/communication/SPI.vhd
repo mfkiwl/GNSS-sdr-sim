@@ -19,23 +19,29 @@ entity SPI is
 end SPI;
 
 architecture behavioral of SPI is
-  signal reg: std_logic_vector(n_in-1 downto 0) := (Others => '0');
-  signal index: integer range n_out-1 downto 0;
+  signal reg: std_logic_vector(n_out-1 downto 0) := (others => '0');
+  signal reg_send: std_logic_vector(n_in-1 downto 0) := (others => '0');
+  signal index: integer range n_in-1 downto 0;
 begin
     parallel_out <= reg;
+    serial_out <= reg_send(n_in-1-index);
 
-    process (clk,reset)
+    process (clk,reset,parallel_in)
     begin
         if (reset = '1') then
             reg <= (others => '0');
+            reg_send <= parallel_in; -- or 0?
             index <= 0;
-        elsif rising_edge(clk) then
-            reg <=  reg(n_in-2 downto 0) & serial_in;
-            if (index=n_out-1) then
+        elsif falling_edge(clk) then
+            
+            if (index=n_in-1) then
               index <= 0;
+              reg_send <= parallel_in;
             else
               index <= index+1;
             end if;
+        elsif rising_edge(clk) then
+          reg <=  reg(n_out-2 downto 0) & serial_in;
         end if;
     end process;
 end behavioral;

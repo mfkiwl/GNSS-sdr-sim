@@ -23,6 +23,9 @@ package settings is
     q : IQ_s_t;
   end record IQ_t;
   type IQList is array (chanel_count - 1 downto 0) of IQ_t;
+  subtype IQ_v_t is std_logic_vector(15 downto 0);
+  function IQ_to_vector(IQ: IQ_t) return IQ_v_t;
+  function vector_to_IQ(vector: IQ_v_t) return IQ_t;
 
   subtype Power_t is unsigned(7 downto 0);
   type PowerList_t is array (chanel_count - 1 downto 0) of Power_t;
@@ -42,7 +45,6 @@ package settings is
   end record FrameRecord_t;
 
   function frame_to_record(frame: Frame_t) return FrameRecord_t;
-
   function record_to_frame(frame_record: FrameRecord_t) return Frame_t;
 
   constant ENABLED  : std_logic := '1';
@@ -156,6 +158,20 @@ package body settings is
     return res;
   end;
   
+  function IQ_to_vector(IQ: IQ_t) return IQ_v_t is
+    variable res: std_logic_vector(15 downto 0);
+  begin
+    res := std_logic_vector(IQ.i) & std_logic_vector(IQ.q);
+    return res;
+  end;
+  function vector_to_IQ(vector: IQ_v_t) return IQ_t is
+    variable res: IQ_t;
+  begin
+    res.i := signed(vector(15 downto 8));
+    res.q := signed(vector(7 downto 0));
+    return res;
+  end;
+
   function To_Std_Logic(L: BOOLEAN) return std_ulogic is
   begin
       if L then

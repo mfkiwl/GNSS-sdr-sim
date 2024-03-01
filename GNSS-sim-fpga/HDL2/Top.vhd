@@ -28,8 +28,8 @@ architecture structural of Top is
   end component;
   component SPI
     generic (
-      n_in  : integer := frameWidth;
-      n_out : integer := 16
+      n_in  : integer := 16;
+      n_out : integer := frameWidth
     );
     port (
       clk : in std_logic;
@@ -60,11 +60,21 @@ architecture structural of Top is
 
 begin
 
-  IQ_vector <= std_logic_vector(IQ.i) & std_logic_vector(IQ.q);
+  -- add fifo for iq samples?
+
+  process (clk16)
+  begin
+    if rising_edge(clk16) then
+      IQ_vector <= IQ_to_vector(IQ);--std_logic_vector(IQ.i) & std_logic_vector(IQ.q);
+      --if IQ.i=to_signed(-128, 8) or IQ.i=to_signed(127, 8) then
+      --  report "An unexpected value";
+      --end if;
+    end if;
+  end process;
 
   CLK_DIV: ClockDiv16 port map (clk, clk16);
   SPI_0  : SPI port map (clk, reset, serial_in, frame, IQ_vector, serial_out);
-  CHNS_0 : ChanelsHandler port map (clk, reset, '1', IQ, store, frame);
+  CHNS_0 : ChanelsHandler port map (clk16, reset, '1', IQ, store, frame);
 
   debug <= std_logic_vector(IQ.i);
   debug2(0) <= serial_in;

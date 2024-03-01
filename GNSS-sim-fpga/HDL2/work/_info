@@ -10,7 +10,7 @@ cModel Technology
 Z0 dC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2
 Echanel
 Z1 w1709222081
-Z2 DPx4 work 8 settings 0 22 PUWHWe2CX`Szg[`R:GbM>0
+Z2 DPx4 work 8 settings 0 22 zGi@;D5ECzKONZoab?76h2
 Z3 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
 Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
 Z5 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
@@ -23,9 +23,9 @@ VF3=1Fn8k5O79gE:d3B0gN0
 !s100 ITR9gIBbJgehX@@CG7C9o1
 Z8 OV;C;10.5b;63
 32
-Z9 !s110 1709222182
+Z9 !s110 1709286846
 !i10b 1
-Z10 !s108 1709222182.000000
+Z10 !s108 1709286846.000000
 Z11 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Chanel.vhd|
 Z12 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Chanel.vhd|
 !i113 1
@@ -66,9 +66,9 @@ VoI?cARUjY2zmkeU7T0ock2
 !s100 obRo7;BHd3O3M6CBcOF8a2
 R8
 32
-Z18 !s110 1709223152
+Z18 !s110 1709286851
 !i10b 1
-Z19 !s108 1709223152.000000
+Z19 !s108 1709286851.000000
 Z20 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ChanelsHandler.vhd|
 Z21 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ChanelsHandler.vhd|
 !i113 1
@@ -96,44 +96,44 @@ R13
 R14
 Echanelshandler_tb
 Z22 w1709223394
-R2
+Z23 DPx4 work 8 settings 0 22 PUWHWe2CX`Szg[`R:GbM>0
 R3
 R4
 R5
 R0
-Z23 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd
-Z24 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd
+Z24 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd
+Z25 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd
 l0
 L6
 V8@38nYliZ4KmoL`lO;ak13
 !s100 ;]A7cD]R_UGgm6]_l5nR]2
 R8
 32
-Z25 !s110 1709223399
+Z26 !s110 1709223399
 !i10b 1
-Z26 !s108 1709223399.000000
-Z27 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd|
-Z28 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd|
+Z27 !s108 1709223399.000000
+Z28 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd|
+Z29 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/ChanelsHandler_tb.vhd|
 !i113 1
 R13
 R14
 Abench1
-R2
+R23
 R3
 R4
 R5
-Z29 DEx4 work 17 chanelshandler_tb 0 22 8@38nYliZ4KmoL`lO;ak13
+DEx4 work 17 chanelshandler_tb 0 22 8@38nYliZ4KmoL`lO;ak13
 l26
 L9
 V9ATCoI>K;>HgJGzk@a2XV0
 !s100 _WioRj:c3LDAe>;<i51GZ0
 R8
 32
-R25
-!i10b 1
 R26
+!i10b 1
 R27
 R28
+R29
 !i113 1
 R13
 R14
@@ -152,9 +152,9 @@ VUeXfeZ;2zd4F8D?gMjeC[3
 !s100 iH0^6ZEY754zi:J>?^X6m0
 R8
 32
-Z33 !s110 1709218803
+Z33 !s110 1709286810
 !i10b 1
-Z34 !s108 1709218803.000000
+Z34 !s108 1709286810.000000
 Z35 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/ClockDiv16.vhd|
 Z36 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/ClockDiv16.vhd|
 !i113 1
@@ -195,9 +195,9 @@ VVEn?g@QhlJaobfDL:dm@X1
 !s100 R_BmmYIGJB>X3if6akS8b0
 R8
 32
-Z40 !s110 1709218588
+Z40 !s110 1709286854
 !i10b 1
-Z41 !s108 1709218588.000000
+Z41 !s108 1709286854.000000
 Z42 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/DopplerUpsample.vhd|
 Z43 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/DopplerUpsample.vhd|
 !i113 1
@@ -238,9 +238,9 @@ VIcn`=JM_j?aXl^61gEP4z0
 !s100 h4?dJA]Of2mHC6Q_4>oSz3
 R8
 32
-Z47 !s110 1709218806
+Z47 !s110 1709286806
 !i10b 1
-Z48 !s108 1709218806.000000
+Z48 !s108 1709286806.000000
 Z49 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/FIFO.vhd|
 Z50 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/FIFO.vhd|
 !i113 1
@@ -281,9 +281,9 @@ V63cl]`l_VE1Y5RXK_HFk<3
 !s100 O3_aYaN`KiTWKKgMfbo>l3
 R8
 32
-Z54 !s110 1709218585
+Z54 !s110 1709286857
 !i10b 1
-Z55 !s108 1709218585.000000
+Z55 !s108 1709286857.000000
 Z56 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/FrameHandler.vhd|
 Z57 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/FrameHandler.vhd|
 !i113 1
@@ -324,9 +324,9 @@ VCo?iTLY:@k4297IKBjTUM1
 !s100 aBT^F4A_Uj8BHe@18d8PS2
 R8
 32
-Z61 !s110 1709218592
+Z61 !s110 1709286860
 !i10b 1
-Z62 !s108 1709218592.000000
+Z62 !s108 1709286860.000000
 Z63 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Mixer.vhd|
 Z64 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Mixer.vhd|
 !i113 1
@@ -367,34 +367,34 @@ V3bPA<6Z]^Vzc^2FlcWBg63
 !s100 ^7<SKko@g8eTmmDFFi]JE0
 R8
 32
-!s110 1709218597
+!s110 1709286863
 !i10b 1
-!s108 1709218597.000000
+!s108 1709286863.000000
 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Modulation.vhd|
 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Modulation.vhd|
 !i113 1
 R13
 R14
 Aglonassl1
-w1709218791
+w1709293766
 DEx4 work 10 modulation 0 22 3bPA<6Z]^Vzc^2FlcWBg63
 R2
 R3
 R4
 R5
-8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Glonass/Modulation.vhd
-FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Glonass/Modulation.vhd
+8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ModConst.vhd
+FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ModConst.vhd
 l22
 L14
-V3AH5eVk:L[B03RY`PhI210
-!s100 3ocXkKijk4Z2;RH9]0nj?2
+VK0J`T15n;3cIXd3I3RB1_0
+!s100 ZI_O39da<MOoi203ZoEb=0
 R8
 32
-!s110 1709218793
+!s110 1709293776
 !i10b 1
-!s108 1709218793.000000
-!s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Glonass/Modulation.vhd|
-!s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Glonass/Modulation.vhd|
+!s108 1709293776.000000
+!s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ModConst.vhd|
+!s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/ModConst.vhd|
 !i113 1
 R13
 R14
@@ -402,20 +402,20 @@ Psettings
 R3
 R4
 R5
-Z65 w1709218457
+Z65 w1709286434
 R0
 Z66 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Constants.vhd
 Z67 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Constants.vhd
 l0
 L5
-VPUWHWe2CX`Szg[`R:GbM>0
-!s100 `ZbFB2feefeMEoOKik1913
+VzGi@;D5ECzKONZoab?76h2
+!s100 XT1=<TU[AEoTnT=o?IfhZ1
 R8
 32
 b1
-Z68 !s110 1709218461
+Z68 !s110 1709286436
 !i10b 1
-Z69 !s108 1709218461.000000
+Z69 !s108 1709286436.000000
 Z70 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Constants.vhd|
 Z71 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Constants.vhd|
 !i113 1
@@ -427,9 +427,9 @@ R3
 R4
 R5
 l0
-L92
-VYB:zEa6Dm3eg=Kg?B^GR<3
-!s100 ifnedaI1O43=WGA>jn>Yc1
+L94
+V59j>>LPR@f>zN^g5M>T<b1
+!s100 BbK;MOh67GlWo=f7`bm122
 R8
 32
 R68
@@ -441,7 +441,7 @@ R71
 R13
 R14
 Espi
-Z72 w1709218905
+Z72 w1709304785
 R4
 R5
 R0
@@ -453,9 +453,9 @@ V9FF1T2aDahU;QMKB7EYSP2
 !s100 LokM5]LSMz1=clJlR;[JH3
 R8
 32
-Z75 !s110 1709218924
+Z75 !s110 1709305409
 !i10b 1
-Z76 !s108 1709218924.000000
+Z76 !s108 1709305409.000000
 Z77 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/SPI.vhd|
 Z78 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/communication/SPI.vhd|
 !i113 1
@@ -464,11 +464,11 @@ R14
 Abehavioral
 R4
 R5
-DEx4 work 3 spi 0 22 9FF1T2aDahU;QMKB7EYSP2
-l24
+Z79 DEx4 work 3 spi 0 22 9FF1T2aDahU;QMKB7EYSP2
+l25
 L21
-VCzidJN8NX5ZdHP]iXfWS51
-!s100 1m;Colo49RiEZM]l6>9fJ1
+Z80 VhVXYDH1RFkcc:5H8CO7m^0
+Z81 !s100 mRlS22VmRl6EG^=l<o[570
 R8
 32
 R75
@@ -479,26 +479,110 @@ R78
 !i113 1
 R13
 R14
-Etop
-Z79 w1709219016
+Espi_helper
+Z82 w1709305379
+R3
+R4
+R5
+R0
+Z83 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_helper.vhd
+Z84 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_helper.vhd
+l0
+L5
+VO]H;>RTT<[hF@Fd>jE5Ln1
+!s100 7c63nLd5cnd<8>3m@Y:kJ0
+R8
+32
+Z85 !s110 1709305390
+!i10b 1
+Z86 !s108 1709305390.000000
+Z87 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_helper.vhd|
+Z88 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_helper.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R3
+R4
+R5
+DEx4 work 10 spi_helper 0 22 O]H;>RTT<[hF@Fd>jE5Ln1
+l49
+L28
+VVAcbM;^GB9:alIGjZ6k2l3
+!s100 0SViZR1FEeC3<M_hjiLkB2
+R8
+32
+R85
+!i10b 1
+R86
+R87
+R88
+!i113 1
+R13
+R14
+Espi_tb
+Z89 w1709299224
 R2
 R3
 R4
 R5
 R0
-Z80 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd
-Z81 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd
+Z90 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_tb.vhd
+Z91 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_tb.vhd
+l0
+L6
+VeG6O7Qk?ALEihOlKL;13a2
+!s100 o]QhnznLa30Vb5O25]b]Q2
+R8
+32
+Z92 !s110 1709299235
+!i10b 1
+Z93 !s108 1709299235.000000
+Z94 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_tb.vhd|
+Z95 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/SPI_tb.vhd|
+!i113 1
+R13
+R14
+Abench1
+R2
+R3
+R4
+R5
+DEx4 work 6 spi_tb 0 22 eG6O7Qk?ALEihOlKL;13a2
+l47
+L9
+V8PkBJ<m0YP;]mRbF=`7Fc3
+!s100 `Jlf>m_jQ6?OPoAObX<aH1
+R8
+32
+R92
+!i10b 1
+R93
+R94
+R95
+!i113 1
+R13
+R14
+Etop
+Z96 w1709304863
+R2
+R3
+R4
+R5
+R0
+Z97 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd
+Z98 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd
 l0
 L6
 VCM<WX6d:bQ<K:EIOG=;Ad2
 !s100 oUfYQ<WNk[ZBWbVj@R_HE2
 R8
 32
-Z82 !s110 1709219020
+Z99 !s110 1709304878
 !i10b 1
-Z83 !s108 1709219019.000000
-Z84 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd|
-Z85 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd|
+Z100 !s108 1709304878.000000
+Z101 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd|
+Z102 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/Top.vhd|
 !i113 1
 R13
 R14
@@ -510,15 +594,58 @@ R5
 DEx4 work 3 top 0 22 CM<WX6d:bQ<K:EIOG=;Ad2
 l61
 L22
-Vo1OUP9X3^d_R7QF7N;WWk3
-!s100 _OR`X6ZL5OmLWd=]JiWFT1
+V6^E9_dHd5:Whi3D4]m_QV1
+!s100 C@A5^K69]R0cEE2[_2adO1
 R8
 32
-R82
+R99
 !i10b 1
-R83
-R84
-R85
+R100
+R101
+R102
+!i113 1
+R13
+R14
+Etop_tb
+Z103 w1709305338
+R2
+R3
+R4
+R5
+R0
+Z104 8C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/Top_tb.vhd
+Z105 FC:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/Top_tb.vhd
+l0
+L6
+VWLfjIbdXVO<;15OG;OB@d0
+!s100 Oz:h;<nM1YL?J0S6f@z`91
+R8
+32
+Z106 !s110 1709305400
+!i10b 1
+Z107 !s108 1709305400.000000
+Z108 !s90 -reportprogress|300|-work|work|C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/Top_tb.vhd|
+Z109 !s107 C:/Users/Mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/HDL2/testbench/Top_tb.vhd|
+!i113 1
+R13
+R14
+Abench1
+R2
+R3
+R4
+R5
+DEx4 work 6 top_tb 0 22 WLfjIbdXVO<;15OG;OB@d0
+l50
+L9
+VCFm@iz8UU0nLU@2U[NeCE0
+!s100 5YGLnM?W>nImAEZ2?;Aea3
+R8
+32
+R106
+!i10b 1
+R107
+R108
+R109
 !i113 1
 R13
 R14
