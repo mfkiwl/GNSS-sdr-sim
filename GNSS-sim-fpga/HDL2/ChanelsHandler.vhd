@@ -73,19 +73,20 @@ architecture structural of ChanelsHandler is
 
   signal chanel_select : integer;
   
+  constant g : integer := 0;
+  
 begin
 
   frame_record <= frame_to_record(frame);
   chanel_select <= to_integer(frame_record.chanel);
-
-  GEN_CHANEL:
-  for g in 0 to chanel_count-1 generate
+  
+  --GEN_CHANEL:
+  --for g in 0 to chanel_count-1 generate
     FIFO_X: FIFO port map (reset, store, push(g), clk, pop(g), frame, frames(g));
     CHANEL_X: Chanel port map (clk, reset, enable, pop(g), frames(g), IQ_s(g), power_s(g));
     push(g) <= To_Std_Logic( chanel_select=g );
-  end generate GEN_CHANEL;
+  --end generate GEN_CHANEL;
 
   RESULT: Mixer port map(clk, reset, IQ_s, power_s, IQ);
-
 
 end structural;

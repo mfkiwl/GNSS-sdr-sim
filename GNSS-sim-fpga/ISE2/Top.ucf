@@ -1,11 +1,23 @@
+NET "reset" CLOCK_DEDICATED_ROUTE = FALSE;
 
+NET "clk" LOC = K12;       # JA2
+NET "reset" LOC = L15;     # JA1
+NET "serial_in" LOC = M15; # JA4
+NET "serial_out" LOC = L17;# JA3
+NET "store" LOC = K13;     # JA7
 
-NET "clk" LOC = K12;
-NET "reset" LOC = L15;
-NET "serial_in" LOC = M15;
-NET "serial_out" LOC = L17;
-NET "store" LOC = K13;
+NET "debug[7]" LOC = U18; # JB10
+NET "debug[6]" LOC = T18; # JB9
+NET "debug[5]" LOC = R16; # JB8
+NET "debug[4]" LOC = P17; # JB7
+NET "debug[3]" LOC = T17; # JB4
+NET "debug[2]" LOC = R15; # JB3
+NET "debug[1]" LOC = R18; # JB2
+NET "debug[0]" LOC = M13; # JB1
 
+NET "debug2[2]" LOC = G15; # JC1
+NET "debug2[1]" LOC = J16; # JC2
+NET "debug2[0]" LOC = G13; # JC3
 
 NET "clk" IOSTANDARD = LVCMOS33;
 NET "reset" IOSTANDARD = LVCMOS33;

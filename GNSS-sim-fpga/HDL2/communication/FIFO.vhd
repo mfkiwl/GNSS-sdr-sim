@@ -47,7 +47,7 @@ begin
 	begin
 		if (reset = '1') then
 			registers <= (others => (others => '0'));
-			top <= 0;
+			top <= 1;
 		elsif rising_edge(clk_push) then
 			if enable_push=ENABLED then
 				registers(top) <= Q;

@@ -13,8 +13,8 @@ package settings is
 
   constant subCycles        : integer := 100;
   constant frameWidth       : integer := 176;
-  constant frameBufferDepth : integer := 4;
-  constant chanel_count     : integer := 1;
+  constant frameBufferDepth : integer := 6;
+  constant chanel_count     : integer := 9;
   constant itterNStepWidth  : integer := 64 - 8;
 
   subtype IQ_s_t is signed(7 downto 0);
@@ -22,6 +22,7 @@ package settings is
     i : IQ_s_t;
     q : IQ_s_t;
   end record IQ_t;
+  constant IQ_ZERO : IQ_t := (i => (others => '0'), q => (others => '0'));
   type IQList is array (chanel_count - 1 downto 0) of IQ_t;
   subtype IQ_v_t is std_logic_vector(15 downto 0);
   function IQ_to_vector(IQ: IQ_t) return IQ_v_t;

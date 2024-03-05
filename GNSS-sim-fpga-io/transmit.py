@@ -18,6 +18,7 @@ class Sat:
     arg : str =""
     radioFrequency : int = 0
     chanel : int = -1
+    prn : int = 255
 
     def __init__(self, ccode: str, id: str, arg:str):
         self.ccode = ccode
@@ -27,6 +28,7 @@ class Sat:
         self.chanel = -1
         if ccode+id in chanel_assignemnt:
             self.chanel = chanel_assignemnt[ccode+id]
+            self.prn = int(id)
             
         if ccode=="R":
             self.radioFrequency = 1602000000 + 562500 * int(arg)
@@ -112,6 +114,46 @@ def to_DataFrame_bytes(id, data, setup):
     print(message, message.hex())
     return message
 
+def to_DataFrame_bytes_raw(id, data, setup, chanel_info):
+
+    delay_samples = data["delay"] / 1000 * outputRate
+    delay_n = (subCycles * modulationRate) * delay_samples
+
+    PHASE_POWER = 30
+    PHASE_RANGE = 2**PHASE_POWER
+
+    scale = 100
+    targetFrequency = setup.radioFrequency*scale + data["shift"]*scale
+    shift = targetFrequency - radioFrequencyOut * scale
+    normalPhaseSampleDelta = shift / outputRate
+    unitStepPhase = normalPhaseSampleDelta / scale * (PHASE_RANGE)
+
+
+    added_delay = delay_n-chanel_info["last_delay"]
+    itterNStep = subCycles * modulationRate # inputRate
+    bufferNStep = subCycles * outputRate
+    delayNStep = int(added_delay*itterNStep/(bufferNStep*modulationRate+added_delay)) # f(delay_n)
+    chanel_info["last_delay"] = delay_n # todo: account for rounding errors
+    
+    #unitStepPhase = 100000
+    power = 255//9 # data["power"]
+
+    message = bytes()
+    message += struct.pack(">B", setup.chanel%256) # -1 is for testing, find better way to address
+    message += struct.pack(">B", setup.prn)
+    message += bytes.fromhex(data["data"].zfill(16))
+    message += struct.pack(">q", int(delayNStep))[1:8]
+    #print("delay n:", int(delay_n))
+    #message += struct.pack(">q", 0)
+    message += struct.pack(">l", int(unitStepPhase))
+    #print("phase step:", int(unitStepPhase))
+    #message += struct.pack(">l", 0)
+    message += struct.pack(">B", int(power))
+
+
+    print(message, message.hex())
+    return message
+
 def uploadFrame(ser, data):
     ser.write(b'\xaa\xaa')
     ser.write(data)
@@ -135,29 +177,34 @@ def main():
 
     #exit("message")
 
+    chanel_info={}
     frames = []
     # load initalization frames
     for i in range(2):
         step = next(source)
         for sat in step:
-            if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
-                continue
-            frames.append(to_DataFrame_bytes(sat, step[sat], setup[sat]))
+            #if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
+            #    continue
+            if setup[sat].chanel not in chanel_info:
+                chanel_info[setup[sat].chanel] = {"last_delay":0}
+
+            frames.append(to_DataFrame_bytes_raw(sat, step[sat], setup[sat], chanel_info[setup[sat].chanel]))
 
     port = selectSerialPort()
     with serial.Serial(port) as ser, open("data/OutputIQ.sigmf-data", "wb") as binFile:
+        
         for step in source:
             for sat in step:
-                if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
-                    continue
-                frames.append(to_DataFrame_bytes(sat, step[sat], setup[sat]))
+                #if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
+                #    continue
+                frames.append(to_DataFrame_bytes_raw(sat, step[sat], setup[sat], chanel_info[setup[sat].chanel]))
             
             k=0
             while k<outputRate/10:
                 
                 
                 #if k>200:
-                #    exit();
+                #    exit()
 
 
                 if(outputRate/10-k >= 16):
@@ -167,25 +214,23 @@ def main():
                         print(datetime.now(), "upload")
                     iqs = ser.read(32)
                     #for i in range(16):
-                    #    print(ser.readline().decode('utf-8'))
+                    #    print(ser.readline().decode('utf-8'), end="")
                     #for l in range(16):
                     #    i = int.from_bytes(iqs[0+2*l:1+2*l], signed=True)
                     #    q = int.from_bytes(iqs[1+2*l:2+2*l], signed=True)
                     #    print(i, q)
                     binFile.write(iqs)
-                    #print("read 16")
                 else:
                     k+=1
                     iq = ser.read(2)
-                    #print(ser.readline().decode('utf-8'))
+                    #print(ser.readline().decode('utf-8'), end="")
                     #i = int.from_bytes(iq[0:1], signed=True)
                     #q = int.from_bytes(iq[1:2], signed=True)
                     #print(i, q)
                     binFile.write(iq)
-                    #print("read 1")
-                
+                    
                 #if ser.in_waiting > 10:
-                #    print(ser.readline().decode('utf-8'));
+                #    print(ser.readline().decode('utf-8'), end="")
 
                 if(k%int(outputRate/10/100)<16):
                     print(int(k/int(outputRate/10/100)), "% (of 0.1s)")

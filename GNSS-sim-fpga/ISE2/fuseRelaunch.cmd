@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -o "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE2/Top_tb_isim_beh.exe" -prj "/home/mike/Desktop/Thesis/GNSS-sdr-sim/GNSS-sim-fpga/ISE2/Top_tb_beh.prj" "work.Top_tb" 

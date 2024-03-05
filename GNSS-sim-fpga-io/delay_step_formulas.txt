@@ -1,0 +1,31 @@
+if (n >= bufferNStep) {
+	n -= bufferNStep;
+	currentSample = sampleSource->nextSample(); // --> this occures S times
+}
+
+
+// /--> this is itterated some number of times u
+n += itterNStep;
+
+n -= delayNStep;
+last_set_delay += delayNStep;
+
+
+------------------------
+one frame periode
+n -= bufferNstep*S
+
+n += (itterNStep-delayNStep)*u
+
+u = (bufferNstep*S)/(itterNStep-delayNStep)
+(itterNStep-delayNStep)*u - bufferNstep*S = 0
+
+added_delay = u*delayNStep;
+u = added_delay/delayNStep;
+
+
+(itterNStep-delayNStep)*added_delay/delayNStep - bufferNstep*S = 0
+(T-x)*D/x - B*S = 0
+x = DT/(BS+D)
+delayNStep = added_delay*itterNStep/(BufferNstep*S+added_delay)
+

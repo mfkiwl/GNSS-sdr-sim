@@ -43,7 +43,7 @@ architecture bench1 of Top_tb is
   signal frame : Frame_t;
 
   signal iq_vector : std_logic_vector(15 downto 0);
-  signal IQ : IQ_t;
+  signal IQ : IQ_t := IQ_ZERO;
 
   signal frame_done, iq_done, clk_override : std_logic;
 

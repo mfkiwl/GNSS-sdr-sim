@@ -51,7 +51,7 @@ architecture structural of Top is
     );
   end component;
 
-  signal IQ_vector : std_logic_vector(15 downto 0);
+  signal IQ_vector : std_logic_vector(15 downto 0) := (others => '0');
   signal IQ : IQ_t;
 
   signal frame : Frame_t;
@@ -75,10 +75,15 @@ begin
   CLK_DIV: ClockDiv16 port map (clk, clk16);
   SPI_0  : SPI port map (clk, reset, serial_in, frame, IQ_vector, serial_out);
   CHNS_0 : ChanelsHandler port map (clk16, reset, '1', IQ, store, frame);
-
-  debug <= std_logic_vector(IQ.i);
+  
+  debug  <= frame(frameWidth-1 downto frameWidth-8);
+  debug2(2) <= store;
+  debug2(1) <= clk;
   debug2(0) <= serial_in;
-  debug2(1) <= clk16;
-  debug2(2) <= frame(frame'HIGH-8);
+  
+  --debug <= std_logic_vector(IQ.i);
+  --debug2(0) <= serial_in;
+  --debug2(1) <= clk16;
+  --debug2(2) <= frame(frame'HIGH-8);
 
 end structural;
