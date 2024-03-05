@@ -10,7 +10,7 @@ package settings is
   constant glonassRadioFrequencyIn : integer := 1602000000;
   constant glonassInputRate        : integer := 511000;
   constant glonassFrameSize        : integer := 10;
-
+  
   constant subCycles        : integer := 100;
   constant frameWidth       : integer := 176;
   constant frameBufferDepth : integer := 6;

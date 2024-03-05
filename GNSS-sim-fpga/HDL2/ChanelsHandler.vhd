@@ -13,7 +13,10 @@ entity ChanelsHandler is
     IQ : out IQ_t;
 
     store  : in std_logic;
-    frame : in Frame_t
+    frame : in Frame_t;
+
+    debug  : out std_logic_vector(7 downto 0);
+    debug2 : out std_logic_vector(2 downto 0)
   );
 end ChanelsHandler;
 
@@ -73,20 +76,28 @@ architecture structural of ChanelsHandler is
 
   signal chanel_select : integer;
   
-  constant g : integer := 0;
+  --constant g : integer := 1;
+  
+  signal IQ_tmp : IQ_t;
   
 begin
 
   frame_record <= frame_to_record(frame);
   chanel_select <= to_integer(frame_record.chanel);
   
-  --GEN_CHANEL:
-  --for g in 0 to chanel_count-1 generate
+  IQ <= IQ_tmp;
+  
+  debug2 <= push(2 downto 0);
+  debug <= std_logic_vector(IQ_tmp.i);
+  
+  
+  GEN_CHANEL:
+  for g in 0 to chanel_count-1 generate
     FIFO_X: FIFO port map (reset, store, push(g), clk, pop(g), frame, frames(g));
     CHANEL_X: Chanel port map (clk, reset, enable, pop(g), frames(g), IQ_s(g), power_s(g));
     push(g) <= To_Std_Logic( chanel_select=g );
-  --end generate GEN_CHANEL;
+  end generate GEN_CHANEL;
 
-  RESULT: Mixer port map(clk, reset, IQ_s, power_s, IQ);
+  RESULT: Mixer port map(clk, reset, IQ_s, power_s, IQ_tmp);
 
 end structural;

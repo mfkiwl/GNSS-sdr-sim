@@ -49,7 +49,7 @@ void store() {
 
 //#define SPI_SETTINGS SPISettings(16000000, MSBFIRST, SPI_MODE0)
 
-#define SPI_SETTINGS SPISettings(1600000, MSBFIRST, SPI_MODE0)
+#define SPI_SETTINGS SPISettings(16000000, MSBFIRST, SPI_MODE0)
 
 
 IQ* transferFrameAndIQ(uint8_t* frame, size_t bytes) {

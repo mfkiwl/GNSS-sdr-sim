@@ -10,7 +10,7 @@ modulationRate = 511000
 subCycles = 100
 
 chanel_assignemnt = {"R01":0, "R07":1, "R09":2, "R11":3, "R17":4, "R23":5, "R24":6, "R10":7, "R02":8}
-chanel_count = 3
+#chanel_assignemnt = {"R01":0}
 
 class Sat:
     ccode : str = ""
@@ -136,7 +136,7 @@ def to_DataFrame_bytes_raw(id, data, setup, chanel_info):
     chanel_info["last_delay"] = delay_n # todo: account for rounding errors
     
     #unitStepPhase = 100000
-    power = 255//9 # data["power"]
+    power = 255//len(chanel_assignemnt) # data["power"]
 
     message = bytes()
     message += struct.pack(">B", setup.chanel%256) # -1 is for testing, find better way to address
@@ -192,7 +192,8 @@ def main():
 
     port = selectSerialPort()
     with serial.Serial(port) as ser, open("data/OutputIQ.sigmf-data", "wb") as binFile:
-        
+        frames_to_skip = 2
+
         for step in source:
             for sat in step:
                 #if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
@@ -219,7 +220,8 @@ def main():
                     #    i = int.from_bytes(iqs[0+2*l:1+2*l], signed=True)
                     #    q = int.from_bytes(iqs[1+2*l:2+2*l], signed=True)
                     #    print(i, q)
-                    binFile.write(iqs)
+                    if frames_to_skip<=0:
+                        binFile.write(iqs)
                 else:
                     k+=1
                     iq = ser.read(2)
@@ -227,13 +229,20 @@ def main():
                     #i = int.from_bytes(iq[0:1], signed=True)
                     #q = int.from_bytes(iq[1:2], signed=True)
                     #print(i, q)
-                    binFile.write(iq)
+                    if frames_to_skip<=0:
+                        binFile.write(iq)
                     
                 #if ser.in_waiting > 10:
                 #    print(ser.readline().decode('utf-8'), end="")
 
                 if(k%int(outputRate/10/100)<16):
                     print(int(k/int(outputRate/10/100)), "% (of 0.1s)")
+            
+            if frames_to_skip>1 :
+                frames_to_skip -= 1
+            elif frames_to_skip==1:
+                frames_to_skip -= 1
+                print("start saving")
 
 if __name__ == "__main__":
     main()

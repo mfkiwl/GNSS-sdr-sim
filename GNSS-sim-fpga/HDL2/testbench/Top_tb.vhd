@@ -63,7 +63,7 @@ begin
     wait for 1 ns;
     reset <='0';
 
-    frame_record.chanel     := to_unsigned(0, 8);
+    frame_record.chanel     := to_unsigned(1, 8);
     frame_record.prn        := to_unsigned(0, 8);
     frame_record.bits       := (others => '0');
     frame_record.delay_step := to_signed(0, frame_record.delay_step'length);

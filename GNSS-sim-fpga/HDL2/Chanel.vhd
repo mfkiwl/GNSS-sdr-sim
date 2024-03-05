@@ -88,7 +88,10 @@ architecture structural of Chanel is
   signal prn : PRN_t;
 
   signal IQ_upsampled, IQ_modulated : IQ_t;
-
+  
+  
+  FOR mod0: Modulation USE ENTITY WORK.Modulation(glonassL1);
+  
 begin
 
   IQ <= IQ_upsampled;
