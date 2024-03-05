@@ -193,6 +193,7 @@ def main():
     port = selectSerialPort()
     with serial.Serial(port) as ser, open("data/OutputIQ.sigmf-data", "wb") as binFile:
         frames_to_skip = 2
+        frames_saved = 0
 
         for step in source:
             for sat in step:
@@ -236,13 +237,16 @@ def main():
                 #    print(ser.readline().decode('utf-8'), end="")
 
                 if(k%int(outputRate/10/100)<16):
-                    print(int(k/int(outputRate/10/100)), "% (of 0.1s)")
+                    print(int(k/int(outputRate/10/100)), "% (of 0.1s) ("+str(frames_saved*0.1)+" s)", end="\r")
             
             if frames_to_skip>1 :
                 frames_to_skip -= 1
             elif frames_to_skip==1:
                 frames_to_skip -= 1
                 print("start saving")
+            else:
+                frames_saved += 1
+                
 
 if __name__ == "__main__":
     main()

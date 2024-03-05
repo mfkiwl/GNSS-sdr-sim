@@ -122,5 +122,11 @@
     <ClInclude Include="GPS\L1c\PRN_Code.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GPS\L1c\Sat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPS\L5\Sat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ begin
       
       if enable=ENABLED then
 
-        if repeat=repeat_count-1 then
+        if code_step=prn_len-1 then
           shift_register <= "111111111";
         else
           shift_register <= shift_register(9-1 downto 1) & (shift_register(5) xor shift_register(9));

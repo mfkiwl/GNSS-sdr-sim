@@ -22,7 +22,7 @@ architecture bench1 of Top_tb is
     generic (
       w_out : integer := frameWidth;
       w_in : integer := 16;
-      clk_period : time := samplePeriode/2
+      clk_period : time := (1000 ms)/15000000/16
     );
     port (
       clk : out std_logic;
@@ -78,11 +78,27 @@ begin
     wait for 1 ns;
     store <= '0';
 
+    frame_record.chanel     := to_unsigned(1, 8);
+    frame_record.prn        := to_unsigned(0, 8);
+    frame_record.bits       := (others => '1');
+    frame_record.delay_step := to_signed(0, frame_record.delay_step'length);
+    frame_record.phase_step := 100003;
+    frame_record.power      := to_unsigned(250, 8);
+
+    frame <= record_to_frame(frame_record);
+
+    wait until rising_edge(frame_done);
+    wait for 1 ns;
+    store <= '1';
+    wait for 1 ns;
+    store <= '0';
+
     clk_override <= '1';
     frame <= (others => '0');
 
-    wait for 200 ms;
-
+    loop
+      wait for 200 ms;
+    end loop;
   end process;
 
   process (iq_done)
