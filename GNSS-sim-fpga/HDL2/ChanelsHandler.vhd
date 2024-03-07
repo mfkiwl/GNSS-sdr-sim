@@ -87,7 +87,7 @@ begin
   
   IQ <= IQ_tmp;
   
-  debug2 <= push(2 downto 0);
+  debug2 <= (others => '0');
   debug <= std_logic_vector(IQ_tmp.i);
   
   

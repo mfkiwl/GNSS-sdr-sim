@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_std.ALL;
 use work.settings.all;
+use work.constelation.all;
 
 entity Chanel is
   port
@@ -90,14 +91,14 @@ architecture structural of Chanel is
   signal IQ_upsampled, IQ_modulated : IQ_t;
   
   
-  FOR mod0: Modulation USE ENTITY WORK.Modulation(glonassL1);
+  FOR mod0: Modulation USE ENTITY WORK.Modulation(gpsL1);
   
 begin
 
   IQ <= IQ_upsampled;
   enable_upsample <= enable;
 
-  data0 : component FrameHandler generic map (bits => glonassFrameSize)
+  data0 : component FrameHandler generic map (bits => FrameSize)
   port map (
     clk => clk, reset => reset,
     enable => enable_data, data => data, doppler_shift => doppler_shift, delay_step => delay_step, power => power, prn => prn,
@@ -116,8 +117,8 @@ begin
   
   upsample : component DopplerUpsample generic map (
     radioFrequencyOut => radioFrequencyOut,
-    radioFrequencyIn  => glonassRadioFrequencyIn, -- set this diffrently for diffrent prn
-    inputRate         => glonassInputRate,
+    radioFrequencyIn  => RadioFrequencyIn, -- set this diffrently for diffrent prn
+    inputRate         => InputRate,
     outputRate        => outputRate,
     subCycles         => subCycles
   )

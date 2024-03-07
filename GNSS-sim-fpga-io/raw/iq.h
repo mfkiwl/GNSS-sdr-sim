@@ -28,8 +28,9 @@ IQ new_IQ(int8_t i, int8_t q) {
 void serialPrintIQ(IQ* samples, int n) {
   for(int i=0; i<n; i++) {
     #ifndef DEBUG_ENABLED
-    Serial.write(IQ_i(samples[i]));
-    Serial.write(IQ_q(samples[i]));
+    //Serial.write(IQ_i(samples[i]));
+    //Serial.write(IQ_q(samples[i]));
+    Serial.write(samples, n*2);
     #endif
     DEBUG((int)IQ_i(samples[i]));
     DEBUG(",");

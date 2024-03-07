@@ -4,12 +4,12 @@ use ieee.numeric_std.all;
 
 package settings is
 
-  constant radioFrequencyOut : integer := 1602000000;
-  constant outputRate        : integer := 15000000;
+  --constant radioFrequencyOut : integer := 1602000000;
+  --constant outputRate        : integer := 15000000;
 
-  constant glonassRadioFrequencyIn : integer := 1602000000;
-  constant glonassInputRate        : integer := 511000;
-  constant glonassFrameSize        : integer := 10;
+  --constant glonassRadioFrequencyIn : integer := 1602000000;
+  --constant glonassInputRate        : integer := 511000;
+  --constant glonassFrameSize        : integer := 10;
   
   constant subCycles        : integer := 100;
   constant frameWidth       : integer := 176;
