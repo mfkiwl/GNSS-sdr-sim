@@ -4,18 +4,38 @@ import string
 import struct
 from datetime import datetime
 
-radioFrequencyOut = 1602000000
-outputRate = 15000000
-modulationRate = 511000
+
+
+
+#   gps
+#radioFrequencyOut = 1575420000
+#modulationRate = 1023000
+#datafile = "data/gps.txt"
+
+#   glonass
+#radioFrequencyOut = 1602000000
+#modulationRate = 511000
+#datafile = "data/glonass.txt"
+
+#   galileo
+radioFrequencyOut = 1575420000
+modulationRate = 2 * 6138000
+datafile = "data/galileo.txt"
+
+# general
+outputRate = modulationRate
 subCycles = 100
+for_vhdl_sim = True
+
 
 chanel_assignemnt = {
     "R01":0, "R07":1, "R09":2, "R11":3, "R17":4, "R23":5, "R24":6, "R10":7, "R02":8,
-    "G01":0, "G02":1, "G03":2, "G04":3, "G08":4, "G14":5, "G17":6, "G19":7, "G21":8
+    "G01":0, "G02":1, "G03":2, "G04":3, "G08":4, "G14":5, "G17":6, "G19":7, "G21":8,
+    "E04":0
     }
 #chanel_assignemnt = {"R01":0}
 
-for_vhdl_sim = True
+
 
 class Sat:
     ccode : str = ""
@@ -38,6 +58,8 @@ class Sat:
         if ccode=="R":
             self.radioFrequency = 1602000000 + 562500 * int(arg)
         if ccode=="G":
+            self.radioFrequency = 1575420000
+        if ccode=="E":
             self.radioFrequency = 1575420000
 
 def selectSerialPort():
@@ -68,7 +90,7 @@ def parseFile(filePath):
                 for cline in line[1:]:
                     (ccode, sats) = cline.split(":")
                     sats = sats[1:-1]
-                    setup[ccode] = {}
+                    #setup[ccode] = {}
                     for sat in sats.split(","):
                         o = sat.find("[")
                         id = sat[0:o]
@@ -120,10 +142,11 @@ def parseFile(filePath):
 #    print(message, message.hex())
 #    return message
 
-def to_DataFrame_bytes_raw(id, data, setup, chanel_info):
+def to_DataFrame_bytes_raw(id, data, next_data, setup, chanel_info):
 
-    delay_samples = data["delay"] / 1000 * outputRate
-    delay_n = (subCycles * modulationRate) * delay_samples
+    #note/todo need to get delay of next frame
+    delay_samples = next_data["delay"] / 1000 * outputRate
+    delay_n = int((subCycles * modulationRate) * delay_samples)
 
     PHASE_POWER = 30
     PHASE_RANGE = 2**PHASE_POWER
@@ -132,17 +155,21 @@ def to_DataFrame_bytes_raw(id, data, setup, chanel_info):
     targetFrequency = setup.radioFrequency*scale + data["shift"]*scale
     shift = targetFrequency - radioFrequencyOut * scale
     normalPhaseSampleDelta = shift / outputRate
+    #print(normalPhaseSampleDelta)
     unitStepPhase = normalPhaseSampleDelta / scale * (PHASE_RANGE)
 
 
     added_delay = delay_n-chanel_info["last_delay"]
     itterNStep = subCycles * modulationRate # inputRate
     bufferNStep = subCycles * outputRate
-    delayNStep = int(added_delay*itterNStep/(bufferNStep*modulationRate+added_delay)) # f(delay_n)
-    chanel_info["last_delay"] = delay_n # todo: account for rounding errors
+    delayNStep = int(added_delay*itterNStep/(bufferNStep*modulationRate/10+added_delay)) # f(delay_n)
+    u=int((bufferNStep*modulationRate/10)/(itterNStep-delayNStep))
+    print(delayNStep, delay_n, chanel_info["last_delay"])
+    chanel_info["last_delay"] = chanel_info["last_delay"]+u*delayNStep # delay_n # todo: account for rounding errors
     
     #unitStepPhase = 0
-    power = 255//9#255//len(chanel_assignemnt) # data["power"]
+    #delayNStep = 0
+    power = 255//1#255//len(chanel_assignemnt) # data["power"]
 
     #if(id==list(chanel_assignemnt.keys())[8]):
     #    print(id, unitStepPhase)
@@ -171,7 +198,7 @@ def uploadFrame(ser, data):
 
 def main():
 
-    source = parseFile("data/glonass.txt")
+    source = parseFile(datafile)
     setup = next(source)
     print("setup:", setup)
     n = 0
@@ -191,19 +218,25 @@ def main():
     chanel_info={}
     frames = []
     # load initalization frames
+    step = next(source)
     for i in range(10):
-        step = next(source)
+        next_step = next(source)
         for sat in step:
-            #if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
-            #    continue
+            if setup[sat].chanel!=0:# >= chanel_count or setup[sat].chanel<0:
+                continue
             if setup[sat].chanel not in chanel_info:
                 chanel_info[setup[sat].chanel] = {"last_delay":0}
 
-            frames.append(to_DataFrame_bytes_raw(sat, step[sat], setup[sat], chanel_info[setup[sat].chanel]))
+            frames.append(to_DataFrame_bytes_raw(sat, step[sat], next_step[sat], setup[sat], chanel_info[setup[sat].chanel]))
+        step = next_step
     if for_vhdl_sim:
-        for step in source:
+        #step = next(source)
+        for next_step in source:
             for sat in step:
-                frames.append(to_DataFrame_bytes_raw(sat, step[sat], setup[sat], chanel_info[setup[sat].chanel]))
+                if setup[sat].chanel!=0:
+                    continue
+                frames.append(to_DataFrame_bytes_raw(sat, step[sat], next_step[sat], setup[sat], chanel_info[setup[sat].chanel]))
+            step = next_step
         vhdl_template = """library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -223,18 +256,19 @@ end package;"""
         f = open("GNSS-sim-fpga/HDL2/testbench/data.vhd", "w")
         f.write(vhdl_input)
         f.close()
-        print(vhdl_input)
+        #print(vhdl_input)
     else:
         port = selectSerialPort()
         with serial.Serial(port) as ser, open("data/OutputIQ.sigmf-data", "wb") as binFile:
             frames_to_skip = 2
             frames_saved = 0
 
-            for step in source:
+            step = next(source)
+            for next_step in source:
                 for sat in step:
                     #if setup[sat].chanel >= chanel_count or setup[sat].chanel<0:
                     #    continue
-                    frames.append(to_DataFrame_bytes_raw(sat, step[sat], setup[sat], chanel_info[setup[sat].chanel]))
+                    frames.append(to_DataFrame_bytes_raw(sat, step[sat], next_step[sat], setup[sat], chanel_info[setup[sat].chanel]))
                 
                 k=0
                 while k<outputRate/10:
@@ -281,7 +315,8 @@ end package;"""
                     print("start saving")
                 else:
                     frames_saved += 1
-                    
+
+                step = next_step    
 
 if __name__ == "__main__":
     main()

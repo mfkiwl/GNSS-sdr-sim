@@ -60,6 +60,8 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             #print(name, (delay-delay_0)*1000)
 
             #print(name, delay*SPEED_OF_LIGHT-21807950.99675922+25386264.284501)
+            delay = 0
+            doplerShift = 0
 
             data = sat.bitBuffer.getBits(sat.constelation.bitsPerFrame, dateTime, eph, ephs)
             frameData.append("{}:{}_{:.9f}_{:.4f}_{}".format(name, NavMessage.bitsToHex(data), delay*1000, doplerShift, power))
@@ -89,13 +91,13 @@ def main():
     #rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
     #resultFile = "data/glonass.txt"
     
-    #constelation = Galileo.getConstelation()
-    #rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
-    #resultFile = "data/galileo.txt"
+    constelation = Galileo.getConstelation()
+    rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
+    resultFile = "data/galileo.txt"
 
-    constelation = GPS.getConstelation()
-    rinexFile = "data/GPS/brdc3260.23n"
-    resultFile = "data/gps.txt"
+    #constelation = GPS.getConstelation()
+    #rinexFile = "data/GPS/brdc3260.23n"
+    #resultFile = "data/gps.txt"
 
     #constelation = BeiDou.getConstelation()
     #rinexFile = "data/BeiDou/Brdc0530.24f"
@@ -111,7 +113,7 @@ def main():
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
     startTime = datetime.datetime(2023,11,22, 4, 0) # gps
 
-    duration = datetime.timedelta(seconds=50)
+    duration = datetime.timedelta(seconds=10)
 
 
 
@@ -121,8 +123,9 @@ def main():
     #sats = {"G01":sats["G01"]}
     #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"]}
     #sats = {"E07":sats["E07"], "E08":sats["E08"], "E12":sats["E12"], "E13":sats["E13"], "E19":sats["E19"]}
-    #sats = {"E07":sats["E07"]}
+    sats = {"E04":sats["E04"]}
     #sats = {"E04":sats["E04"], "E05":sats["E05"], "E09":sats["E09"], "E10":sats["E10"], "E11":sats["E11"], "E12":sats["E12"], "E18":sats["E18"], "E34":sats["E34"], "E36":sats["E36"]}
+    #sats = {"R01":sats["R01"]}
     #sats = {"R01":sats["R01"], "R09":sats["R09"], "R17":sats["R17"], "R23":sats["R23"], "R24":sats["R24"]}
     #sats = {"I02":sats["I02"]}
     #del sats["C01"], sats["C02"], sats["C03"], sats["C04"], sats["C05"]

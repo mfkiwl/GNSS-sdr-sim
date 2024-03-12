@@ -20,8 +20,8 @@ namespace gps {
 		}
 
 		PRN(int prn) {
-			tap1 = taps1[prn];
-			tap2 = taps2[prn];
+			tap1 = taps1[prn % 256];
+			tap2 = taps2[prn % 256];
 			reset();
 		}
 

@@ -39,7 +39,7 @@ begin
         end if;
 
         -- if we need a new data bit next time already request it
-        if repeat=repeat_count-1 and code_step=prn_len-1 then
+        if repeat=repeat_count-1 and code_step=prn_len-2 then
           enable_data <= ENABLED;
         else
           enable_data <= DISABLED;
@@ -71,9 +71,9 @@ begin
   begin
     spreading_code := shift_register(7);
     if (shift_register(7) xor data_input)='1' then
-      IQ_output <= (to_signed(100, 8), to_signed(0, 8));
+      IQ_output <= (to_signed(-121, 8), to_signed(0, 8));
     else
-      IQ_output <= (to_signed(-100, 8), to_signed(0, 8));
+      IQ_output <= (to_signed(121, 8), to_signed(0, 8));
     end if;
   end process;
   

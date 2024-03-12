@@ -14,7 +14,7 @@ package settings is
   constant subCycles        : integer := 100;
   constant frameWidth       : integer := 176;
   constant frameBufferDepth : integer := 6;
-  constant chanel_count     : integer := 9;
+  constant chanel_count     : integer := 1;
   constant itterNStepWidth  : integer := 64 - 8;
 
   subtype IQ_s_t is signed(7 downto 0);
@@ -40,7 +40,7 @@ package settings is
     chanel : unsigned(7 downto 0);
     prn    : PRN_t;
     bits   : std_logic_vector(63 downto 0);
-    delay_step: DelayStep_t;
+    delay_step: DelayStep_t; -- chainge in delay per sample
     phase_step: Doppler_t; -- unsigned(31 downto 0)
     power  : Power_t;
   end record FrameRecord_t;

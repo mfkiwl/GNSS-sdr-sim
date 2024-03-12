@@ -14,7 +14,8 @@ entity FIFO is
         clk_pop:     in std_logic;
         enable_pop:  in std_logic; 
         Q:           in std_logic_vector(width-1 downto 0);
-        D:           out std_logic_vector(width-1 downto 0)
+        D:           out std_logic_vector(width-1 downto 0);
+        D2:          out std_logic_vector(width-1 downto 0)
     );
 end FIFO;
 
@@ -22,11 +23,22 @@ architecture behavioral of FIFO is
   type FIFO_ARRAY_TYPE is array (depth-1 downto 0) of std_logic_vector(width-1 downto 0);
   signal registers : FIFO_ARRAY_TYPE := (others => (others => '0'));
 
-  signal top : integer range depth-1 downto 0 := 0;
+  signal top    : integer range depth-1 downto 0 := 0;
   signal bottom : integer range depth-1 downto 0 := 0;
+  signal peek   : integer range depth-1 downto 0 := 0;
   
 begin
-    D <= registers(bottom);
+  D  <= registers(bottom);
+  D2 <= registers(peek);
+
+  process (bottom)
+  begin
+    if (bottom /= depth-1) then
+      peek <= bottom + 1;
+    else
+      peek <= 0;
+    end if;
+  end process;
 
 	process(clk_pop, reset)
 	begin
@@ -47,7 +59,7 @@ begin
 	begin
 		if (reset = '1') then
 			registers <= (others => (others => '0'));
-			top <= 1;
+			top <= 0;
 		elsif rising_edge(clk_push) then
 			if enable_push=ENABLED then
 				registers(top) <= Q;

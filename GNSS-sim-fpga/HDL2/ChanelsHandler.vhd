@@ -33,7 +33,8 @@ architecture structural of ChanelsHandler is
       clk_pop : in std_logic;
       enable_pop : in std_logic;
       Q : in std_logic_vector(width-1 downto 0);
-      D : out std_logic_vector(width-1 downto 0)
+      D : out std_logic_vector(width-1 downto 0);
+      D2 : out std_logic_vector(width-1 downto 0)
     );
   end component;
 
@@ -44,6 +45,7 @@ architecture structural of ChanelsHandler is
       enable : in std_logic;
       enable_next_frame : out std_logic;
       next_frame : in Frame_t;
+      peek_frame : in Frame_t;
       IQ : out IQ_t;
       power : out Power_t
     );
@@ -73,6 +75,7 @@ architecture structural of ChanelsHandler is
 
   signal frame_record : FrameRecord_t;
   signal frames : FrameList_t;
+  signal peek_frames : FrameList_t;
 
   signal chanel_select : integer;
   
@@ -93,8 +96,8 @@ begin
   
   GEN_CHANEL:
   for g in 0 to chanel_count-1 generate
-    FIFO_X: FIFO port map (reset, store, push(g), clk, pop(g), frame, frames(g));
-    CHANEL_X: Chanel port map (clk, reset, enable, pop(g), frames(g), IQ_s(g), power_s(g));
+    FIFO_X: FIFO port map (reset, store, push(g), clk, pop(g), frame, frames(g), peek_frames(g));
+    CHANEL_X: Chanel port map (clk, reset, enable, pop(g), frames(g), peek_frames(g), IQ_s(g), power_s(g));
     push(g) <= To_Std_Logic( chanel_select=g );
   end generate GEN_CHANEL;
 

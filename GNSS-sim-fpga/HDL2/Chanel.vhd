@@ -13,6 +13,7 @@ entity Chanel is
 
     enable_next_frame : out std_logic;
     next_frame     : in Frame_t;
+    peek_frame     : in Frame_t;
 
     IQ : out IQ_t;
 
@@ -38,7 +39,8 @@ architecture structural of Chanel is
       power          : out Power_t;
       prn            : out PRN_T;
       enable_next_frame : out std_logic := '0';
-      next_frame     : in Frame_t
+      next_frame     : in Frame_t;
+      peek_frame     : in Frame_t
     );
   end component;
 
@@ -91,7 +93,7 @@ architecture structural of Chanel is
   signal IQ_upsampled, IQ_modulated : IQ_t;
   
   
-  FOR mod0: Modulation USE ENTITY WORK.Modulation(gpsL1);
+  FOR mod0: Modulation USE ENTITY WORK.Modulation(galileoL1);
   
 begin
 
@@ -102,7 +104,7 @@ begin
   port map (
     clk => clk, reset => reset,
     enable => enable_data, data => data, doppler_shift => doppler_shift, delay_step => delay_step, power => power, prn => prn,
-    enable_next_frame => enable_next_frame, next_frame => next_frame
+    enable_next_frame => enable_next_frame, next_frame => next_frame, peek_frame => peek_frame
   );
 
   mod0 : component Modulation port map (

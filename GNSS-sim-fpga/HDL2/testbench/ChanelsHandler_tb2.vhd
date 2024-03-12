@@ -67,8 +67,8 @@ begin
 
     procedure storeSatsFrames(n: in Integer) is
     begin
-      for sat in 0 to inputFrameSatCount loop
-        storeFrame(inputSeq(frames_send+sat));
+      for sat in 1 to inputFrameSatCount loop
+        storeFrame(inputSeq(frames_send+sat-1));
       end loop;
       frames_send <= frames_send+inputFrameSatCount;
       if n>1 then
@@ -78,7 +78,7 @@ begin
 
     procedure run10th_sec(n: in Integer) is
     begin
-      for sat in 0 to outputRate/10 loop
+      for sat in 1 to outputRate/10 loop
         step <= sat;
         clk <= '1';
         wait for (1000 ms)/outputRate/2;
@@ -109,7 +109,9 @@ begin
 
 
     storeSatsFrames(1);
+    wait for 1 ns;
     storeSatsFrames(1);
+    wait for 1 ns;
     loop
       report "loop started";
       if frames_send<inputTable'length then

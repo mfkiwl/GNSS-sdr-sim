@@ -32,10 +32,10 @@ begin -- force sum of powers to add up to a power of 2 -> 256
             total_I := (others => '0');
             total_Q := (others => '0');
             for n in IQ_s'range loop
-                total_I := total_I + IQ_s(n).i*signed('0'&powers(n));
-                total_Q := total_Q + IQ_s(n).q*signed('0'&powers(n));
+                total_I := total_I + (-IQ_s(n).i)*signed('0'&powers(n));
+                total_Q := total_Q + (-IQ_s(n).q)*signed('0'&powers(n));
             end loop;
-            IQ <= (i => total_i(15 downto 8), q => total_q(15 downto 8));
+            IQ <= (i => -total_i(15 downto 8), q => -total_q(15 downto 8));
         end if;
     end process;
 

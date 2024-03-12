@@ -5,7 +5,11 @@
 #include "IQ.h"
 #include "ChainLink.h"
 
+//#define SET_DELAY_ON_START
+
 class Resample : public ChainLink{
+	const long long PHASE_POWER = 30;
+	const long long PHASE_RANGE = (1 << PHASE_POWER);
 public:
 	long radioFrequencyOut;
 	long radioFrequencyIn;
@@ -19,7 +23,7 @@ public:
 	long long itterNStep;
 	long long bufferNStep;
 	long long delayNStep = 0;
-	int subCycles = 1000000;
+	int subCycles = 100;// 1000000;
 
 	long unitStepPhase;
 	long unitPhase;
@@ -60,7 +64,8 @@ public:
 		long targetFrequency = dopplerShift + radioFrequencyIn * scale;
 		long shift = targetFrequency - radioFrequencyOut * scale;
 		double normalPhaseSampleDelta = shift / (double)outputRate;
-		unitStepPhase = normalPhaseSampleDelta / scale * (LONG_MAX / 2);
+		unitStepPhase = normalPhaseSampleDelta / scale * PHASE_RANGE;// (LONG_MAX / 2);
+		std::cout << "   doppler: " << unitStepPhase << ", " << normalPhaseSampleDelta;
 		//std::cout << f << "_" << shift/(float)scale << ", phase normal step: " << normalPhaseSampleDelta << ", unit: " << unitStepPhase <<std::endl;
 	}
 
@@ -87,20 +92,29 @@ public:
 	}
 
 	void setDelay(double delay_ms) {
+#ifdef SET_DELAY_ON_START
 		// n time
 		long long new_delay = calcDelayNum(delay_ms);
 		//std::cout << "old: " << n;
 		n = n + last_set_delay - new_delay;
 		last_set_delay = new_delay;
+#endif
 	}
 
+
 	void setDelayTarget(double delay_ms, double time_till_next_update) {
+
+		static long long last_target = 0;
+
 		long long new_delay = calcDelayNum(delay_ms);
 		long long last_delay = this->last_set_delay;
 		long long samples_inbetween = this->outputRate * time_till_next_update;
 		long long delay_change = new_delay - last_delay;
 		//long long delay_change = last_delay - new_delay;
 		delayNStep = delay_change / samples_inbetween;
+		std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
+
+		last_target = new_delay;
 	}
 
 	IQ nextSample() {
@@ -117,14 +131,14 @@ public:
 
 		IQ sample = currentSample;
 
-		sample = sample.rotate((unitPhase / (float)(LONG_MAX / 2)) * 2 * M_PI);
+		sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
 
 		unitPhase += unitStepPhase;
-		while (unitPhase > (LONG_MAX / 2)) {
-			unitPhase -= (LONG_MAX / 2);
+		while (unitPhase > PHASE_RANGE/*(LONG_MAX / 2)*/) {
+			unitPhase -= PHASE_RANGE;// (LONG_MAX / 2);
 		}
 		while (unitPhase < 0) {
-			unitPhase += (LONG_MAX / 2);
+			unitPhase += PHASE_RANGE;// (LONG_MAX / 2);
 		}
 		return sample * power/100;
 	}

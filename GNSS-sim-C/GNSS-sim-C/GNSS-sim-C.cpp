@@ -11,7 +11,7 @@
 
 #include "DataHandler.h"
 #include "Resample.h"
-#include "GPS/L1c/PRN_Code.h"
+#include "GPS/PRN_Code.h"
 
 #include "FPGA_data.h"
 
@@ -19,7 +19,7 @@ void example_manager_galileo() {
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
     FileSource fileSource("../../data/galileo.txt");
-    FileSink fileSink("../../data/OutputIQ.sigmf-data");
+    FileSink fileSink("../../data/OutputIQ_c.sigmf-data");
     Manager manager(15000000, 1575420000);
 
     manager.run(fileSource, fileSink, 1);
@@ -28,9 +28,9 @@ void example_manager_galileo() {
 void example_manager_gps() {
     FileSource fileSource("../../data/gps.txt");
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(2600000, 1575420000);
+    Manager manager(2600000/*1023000*/, 1575420000);
 
-    manager.run(fileSource, fileSink, 1);
+    manager.run(fileSource, fileSink, 0);
 }
 
 void example_manager_gps10() {
@@ -45,9 +45,9 @@ void example_manager_glonass() {
     //FileSource fileSource("ExampleData.txt");
     FileSource fileSource("../../data/glonass.txt");
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(15000000, 1602000000);
+    Manager manager(/*15000000*/511000, 1602000000);
 
-    manager.run(fileSource, fileSink, 1);
+    manager.run(fileSource, fileSink, 0);
 }
 
 void example_manager_beidou() {
@@ -103,17 +103,18 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    gps::L1c::PRN ca(1);
-    for (int i = 0; i < 24; i++) {
+    /*gps::PRN ca(1);
+    for (int i = 0; i < 1023; i++) {
         std::cout << (int)ca.next();
     }
-    return 0;
+    std::cout << std::endl;*/
+    //return 0;
     //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();
-    //example_manager_galileo();
+    example_manager_galileo();
     //example_manager_gps();
-    example_manager_beidou();
+    //example_manager_beidou();
     //example_manager_irnss();
     //example_file();
     //example_chain();
