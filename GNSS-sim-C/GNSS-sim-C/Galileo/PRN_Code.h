@@ -34,7 +34,8 @@ namespace galileo {
 		for (int i = 0; i < code_length / 4; i++) {
 			int n = code[i] - '0';
 			if (n < 0 || n>9) {
-				n = code[i] - 'F' + 10;
+				//n = code[i] - 'F' + 10;
+				n = code[i] - 'A' + 10;
 			}
 			if (n < 0 || n>15) {
 				std::cout << "invalid char" << std::endl;

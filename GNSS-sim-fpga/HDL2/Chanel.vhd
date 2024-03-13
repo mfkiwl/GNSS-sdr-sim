@@ -93,7 +93,7 @@ architecture structural of Chanel is
   signal IQ_upsampled, IQ_modulated : IQ_t;
   
   
-  FOR mod0: Modulation USE ENTITY WORK.Modulation(galileoL1);
+  FOR mod0: Modulation USE ENTITY WORK.Modulation(beidouL1);
   
 begin
 

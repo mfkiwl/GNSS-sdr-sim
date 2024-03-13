@@ -91,17 +91,17 @@ def main():
     #rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
     #resultFile = "data/glonass.txt"
     
-    constelation = Galileo.getConstelation()
-    rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
-    resultFile = "data/galileo.txt"
+    #constelation = Galileo.getConstelation()
+    #rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
+    #resultFile = "data/galileo.txt"
 
     #constelation = GPS.getConstelation()
     #rinexFile = "data/GPS/brdc3260.23n"
     #resultFile = "data/gps.txt"
 
-    #constelation = BeiDou.getConstelation()
-    #rinexFile = "data/BeiDou/Brdc0530.24f"
-    #resultFile = "data/beidou.txt"
+    constelation = BeiDou.getConstelation()
+    rinexFile = "data/BeiDou/Brdc0530.24f"
+    resultFile = "data/beidou.txt"
 
     #constelation = IRNSS.getConstelation()
     #rinexFile = "data/IRNSS/KRGG00ATF_R_20240530000_01D_IN.rnx"
@@ -109,9 +109,9 @@ def main():
 
 
     #startTime = datetime.datetime(2024,2,21, 23,00) # IRNSS
-    #startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
+    startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
-    startTime = datetime.datetime(2023,11,22, 4, 0) # gps
+    #startTime = datetime.datetime(2023,11,22, 4, 0) # gps
 
     duration = datetime.timedelta(seconds=10)
 
@@ -123,12 +123,13 @@ def main():
     #sats = {"G01":sats["G01"]}
     #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"]}
     #sats = {"E07":sats["E07"], "E08":sats["E08"], "E12":sats["E12"], "E13":sats["E13"], "E19":sats["E19"]}
-    sats = {"E04":sats["E04"]}
+    #sats = {"E04":sats["E04"]}
     #sats = {"E04":sats["E04"], "E05":sats["E05"], "E09":sats["E09"], "E10":sats["E10"], "E11":sats["E11"], "E12":sats["E12"], "E18":sats["E18"], "E34":sats["E34"], "E36":sats["E36"]}
     #sats = {"R01":sats["R01"]}
     #sats = {"R01":sats["R01"], "R09":sats["R09"], "R17":sats["R17"], "R23":sats["R23"], "R24":sats["R24"]}
     #sats = {"I02":sats["I02"]}
-    #del sats["C01"], sats["C02"], sats["C03"], sats["C04"], sats["C05"]
+    del sats["C01"], sats["C02"], sats["C03"], sats["C04"], sats["C05"]
+    sats = {"C06":sats["C06"]}
     #sats = {"C06":sats["C06"], "C09":sats["C09"], "C12":sats["C12"], "C16":sats["C16"], "C19":sats["C19"], "C20":sats["C20"], "C22":sats["C22"]}
     setup = constelation.getSetupHeader(sats)
 

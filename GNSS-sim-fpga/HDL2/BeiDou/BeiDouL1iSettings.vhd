@@ -7,7 +7,7 @@ package constelation is
   constant constelationName : string := "BeiDouL1c";
 
   constant radioFrequencyOut : integer := 1561098000;
-  constant outputRate        : integer := 2600000;
+  constant outputRate        : integer := 2046000;--2600000;
 
   constant RadioFrequencyIn : integer := 1561098000;
   constant InputRate        : integer := 2046000;

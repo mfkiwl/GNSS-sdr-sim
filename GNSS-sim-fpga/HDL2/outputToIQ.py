@@ -9,7 +9,7 @@ with open('GNSS-sim-fpga/HDL2/signal.txt', 'r') as result_file:
             n+=1
             [i, q] = line.split(",")
             
-            i = int(i)*-1
+            i = int(i)
             if i==-1:
               i=0
             if i==1:
@@ -20,7 +20,7 @@ with open('GNSS-sim-fpga/HDL2/signal.txt', 'r') as result_file:
             if n>start:
               iq_file.write(i)
             
-            q = int(q)*-1
+            q = int(q)
             if q==-1:
               q=0
             if q==1:

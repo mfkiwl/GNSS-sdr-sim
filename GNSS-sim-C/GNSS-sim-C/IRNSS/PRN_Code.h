@@ -28,7 +28,6 @@ namespace irnss {
 
 		uint8_t next() {
 
-
 			uint8_t v = ((regG1 >> 10) & 1) ^ ((regG2 >> 10) & 1);
 
 			regG1 |= ((regG1 >> 3) & 1) ^ ((regG1 >> 10) & 1);

@@ -57,6 +57,8 @@ namespace irnss {
 
 			step++;
 
+			//std::cout << v << std::endl;
+
 			return v;
 		}
 

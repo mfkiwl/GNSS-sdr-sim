@@ -19,10 +19,10 @@ void example_manager_galileo() {
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
     FileSource fileSource("../../data/galileo.txt");
-    FileSink fileSink("../../data/OutputIQ_c.sigmf-data");
-    Manager manager(15000000, 1575420000);
+    FileSink fileSink("../../data/OutputIQ.sigmf-data");
+    Manager manager(15000000/*2 * 6138000*/, 1575420000);
 
-    manager.run(fileSource, fileSink, 1);
+    manager.run(fileSource, fileSink, 0);
 }
 
 void example_manager_gps() {
@@ -52,18 +52,18 @@ void example_manager_glonass() {
 
 void example_manager_beidou() {
     FileSource fileSource("../../data/beidou.txt");
-    FileSink fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(4000000, 1561098000);
+    FileSink fileSink("../../data/OutputIQ_c.sigmf-data");
+    Manager manager(/*4000000*/2046000, 1561098000);
 
-    manager.run(fileSource, fileSink, 2);
+    manager.run(fileSource, fileSink, 0);
 }
 
 void example_manager_irnss() {
     FileSource fileSource("../../data/irnss.txt");
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(2600000, 1176450000);
+    Manager manager(2600000/*1023000*/, 1176450000);
 
-    manager.run(fileSource, fileSink, 2);
+    manager.run(fileSource, fileSink, 0);
 }
 
 
@@ -112,10 +112,10 @@ int main()
     //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();
-    example_manager_galileo();
+    //example_manager_galileo();
     //example_manager_gps();
     //example_manager_beidou();
-    //example_manager_irnss();
+    example_manager_irnss();
     //example_file();
     //example_chain();
 }

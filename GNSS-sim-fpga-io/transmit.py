@@ -18,9 +18,21 @@ from datetime import datetime
 #datafile = "data/glonass.txt"
 
 #   galileo
-radioFrequencyOut = 1575420000
-modulationRate = 2 * 6138000
-datafile = "data/galileo.txt"
+#radioFrequencyOut = 1575420000
+#modulationRate = 2 * 6138000
+#datafile = "data/galileo.txt"
+
+#   irnss
+#radioFrequencyOut = 1176450000
+#modulationRate = 1023000
+#datafile = "data/irnss.txt"
+
+#   beidou
+radioFrequencyOut = 1561098000
+modulationRate = 2046000
+datafile = "data/beidou.txt"
+
+
 
 # general
 outputRate = modulationRate
@@ -31,7 +43,9 @@ for_vhdl_sim = True
 chanel_assignemnt = {
     "R01":0, "R07":1, "R09":2, "R11":3, "R17":4, "R23":5, "R24":6, "R10":7, "R02":8,
     "G01":0, "G02":1, "G03":2, "G04":3, "G08":4, "G14":5, "G17":6, "G19":7, "G21":8,
-    "E04":0
+    "E04":0,
+    "I02":0,
+    "C06":0
     }
 #chanel_assignemnt = {"R01":0}
 
@@ -61,6 +75,10 @@ class Sat:
             self.radioFrequency = 1575420000
         if ccode=="E":
             self.radioFrequency = 1575420000
+        if ccode=="I":
+            self.radioFrequency = 1176450000
+        if ccode=="C":
+            self.radioFrequency = 1561098000
 
 def selectSerialPort():
     ports = serial.tools.list_ports.comports()
