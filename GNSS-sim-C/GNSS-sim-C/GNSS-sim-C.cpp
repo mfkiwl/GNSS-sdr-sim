@@ -114,8 +114,8 @@ int main()
     //example_manager_glonass();
     //example_manager_galileo();
     //example_manager_gps();
-    //example_manager_beidou();
-    example_manager_irnss();
+    example_manager_beidou();
+    //example_manager_irnss();
     //example_file();
     //example_chain();
 }

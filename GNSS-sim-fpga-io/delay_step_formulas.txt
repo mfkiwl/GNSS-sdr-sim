@@ -27,5 +27,5 @@ u = added_delay/delayNStep;
 (itterNStep-delayNStep)*added_delay/delayNStep - bufferNstep*S = 0
 (T-x)*D/x - B*S = 0
 x = DT/(BS+D)
-delayNStep = added_delay*itterNStep/(BufferNstep*S+added_delay)
+delayNStep = added_delay*itterNStep/(BufferNstep*S*<interval>+added_delay)
 
