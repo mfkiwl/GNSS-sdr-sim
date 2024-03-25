@@ -20,7 +20,7 @@ namespace gps {
 		}
 
 		virtual ChainLink* getModulation(ChainLink* dataSource) {
-			Modulation* mod = new Modulation(dataSource, prn);
+			Modulation* mod = new Modulation(dataSource, (prn<1000)?prn:prn-1000);
 			return mod;
 		}
 

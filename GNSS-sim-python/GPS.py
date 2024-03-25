@@ -386,6 +386,6 @@ def getConstelation():
     constelation.getSatPosVel = getSatPosVel
     constelation.travelTimeCorection = travelTimeCorection
     constelation.fillBuffer = fillBuffer
-    constelation.getSetupHeader = lambda sats: "G:("+",".join(map(lambda name: name[-2:]+"[]", sats))+")"
+    constelation.getSetupHeader = lambda sats: "G:("+",".join(map(lambda name: name[1:]+"[]", sats))+")"
 
     return constelation

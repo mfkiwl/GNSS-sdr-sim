@@ -19,7 +19,7 @@ namespace gps {
 			int bit = 0;
 
 			int Crepeat = 1;
-			int Cchip = 12;
+			int Cchip = 2; // was 12, probely error
 			int CprnM = 10230; // data
 			int CprnL = 767250; // pilot (75x data)
 

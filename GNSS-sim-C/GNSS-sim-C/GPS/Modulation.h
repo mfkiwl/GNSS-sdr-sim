@@ -47,7 +47,7 @@ namespace gps {
 			if (repeat == Crepeat) {
 				repeat = 0;
 				currentData = dataSource->nextBit();
-				std::cout << "              " << (int)currentData << std::endl;
+				//std::cout << "              " << (int)currentData << std::endl;
 			}
 
 			float v = (currentData ^ prn.next()) * 2 - 1;
@@ -64,7 +64,7 @@ namespace gps {
 
 		void init() {
 			currentData = dataSource->nextBit();
-			std::cout << "              " << (int)currentData << std::endl;
+			//std::cout << "              " << (int)currentData << std::endl;
 		}
 
 		uint8_t nextBit() {

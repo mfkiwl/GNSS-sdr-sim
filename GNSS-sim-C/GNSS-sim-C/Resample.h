@@ -5,7 +5,7 @@
 #include "IQ.h"
 #include "ChainLink.h"
 
-//#define SET_DELAY_ON_START
+#define SET_DELAY_ON_START
 
 class Resample : public ChainLink{
 	const long long PHASE_POWER = 30;
@@ -23,7 +23,7 @@ public:
 	long long itterNStep;
 	long long bufferNStep;
 	long long delayNStep = 0;
-	int subCycles = 100;// 1000000;
+	int subCycles = 1000000;
 
 	long unitStepPhase;
 	long unitPhase;
@@ -58,14 +58,14 @@ public:
 	}
 
 	void setDopler(float f) {
-		int scale = 100;
+		int64_t scale = 100;
 		//std::cout << "setDopler" << std::endl;
-		long dopplerShift = f * scale;
-		long targetFrequency = dopplerShift + radioFrequencyIn * scale;
-		long shift = targetFrequency - radioFrequencyOut * scale;
+		int64_t dopplerShift = f * scale;
+		int64_t targetFrequency = -dopplerShift + (int64_t)radioFrequencyIn * scale;
+		int64_t shift = targetFrequency - radioFrequencyOut * scale;
 		double normalPhaseSampleDelta = shift / (double)outputRate;
 		unitStepPhase = normalPhaseSampleDelta / scale * PHASE_RANGE;// (LONG_MAX / 2);
-		std::cout << "   doppler: " << unitStepPhase << ", " << normalPhaseSampleDelta;
+		//std::cout << "   doppler: " << unitStepPhase << ", " << normalPhaseSampleDelta;
 		//std::cout << f << "_" << shift/(float)scale << ", phase normal step: " << normalPhaseSampleDelta << ", unit: " << unitStepPhase <<std::endl;
 	}
 
@@ -112,7 +112,7 @@ public:
 		long long delay_change = new_delay - last_delay;
 		//long long delay_change = last_delay - new_delay;
 		delayNStep = delay_change / samples_inbetween;
-		std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
+		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
 
 		last_target = new_delay;
 	}

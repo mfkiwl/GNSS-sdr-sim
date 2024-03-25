@@ -2,15 +2,16 @@ import serial
 import serial.tools.list_ports
 import string
 import struct
+import math
 from datetime import datetime
 
 
 
 
 #   gps
-#radioFrequencyOut = 1575420000
-#modulationRate = 1023000
-#datafile = "data/gps.txt"
+radioFrequencyOut = 1575420000
+modulationRate = 1023000
+datafile = "data/gps.txt"
 
 #   glonass
 #radioFrequencyOut = 1602000000
@@ -28,14 +29,14 @@ from datetime import datetime
 #datafile = "data/irnss.txt"
 
 #   beidou
-radioFrequencyOut = 1561098000
-modulationRate = 2046000
-datafile = "data/beidou.txt"
+#radioFrequencyOut = 1561098000
+#modulationRate = 2046000
+#datafile = "data/beidou.txt"
 
 
 
 # general
-outputRate = modulationRate
+outputRate = 2600000#modulationRate
 subCycles = 100
 for_vhdl_sim = True
 
@@ -180,9 +181,17 @@ def to_DataFrame_bytes_raw(id, data, next_data, setup, chanel_info):
     added_delay = delay_n-chanel_info["last_delay"]
     itterNStep = subCycles * modulationRate # inputRate
     bufferNStep = subCycles * outputRate
+
     delayNStep = int(added_delay*itterNStep/(bufferNStep*modulationRate/10+added_delay)) # f(delay_n)
-    u=int((bufferNStep*modulationRate/10)/(itterNStep-delayNStep))
-    print(delayNStep, delay_n, chanel_info["last_delay"])
+    ud=(bufferNStep*modulationRate/10)/(itterNStep-delayNStep) + chanel_info["step_fraction"]
+    u=math.ceil(ud)
+    uf=ud-u
+    chanel_info["step_fraction"] = uf
+    #print(delayNStep, delay_n, chanel_info["last_delay"], u, uf)
+    #print(delayNStep, end=", ")
+    #print(delay_n, end=", ")
+    #print(chanel_info["last_delay"], end=", ")
+    print(u, end=", ")
     chanel_info["last_delay"] = chanel_info["last_delay"]+u*delayNStep # delay_n # todo: account for rounding errors
     
     #unitStepPhase = 0
@@ -243,7 +252,7 @@ def main():
             if setup[sat].chanel!=0:# >= chanel_count or setup[sat].chanel<0:
                 continue
             if setup[sat].chanel not in chanel_info:
-                chanel_info[setup[sat].chanel] = {"last_delay":0}
+                chanel_info[setup[sat].chanel] = {"last_delay":0, "step_fraction":0}
 
             frames.append(to_DataFrame_bytes_raw(sat, step[sat], next_step[sat], setup[sat], chanel_info[setup[sat].chanel]))
         step = next_step
