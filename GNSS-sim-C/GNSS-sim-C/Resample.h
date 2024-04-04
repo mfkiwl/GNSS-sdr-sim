@@ -88,7 +88,19 @@ public:
 
 	long long calcDelayNum(double delay_ms) {
 		double delay_samples = delay_ms / 1000 * outputRate;
-		return ((long long)subCycles * inputRate)/*itterNStep*/ * delay_samples;
+		long delay_whole_samples = (long)delay_samples;
+		double delay_partial_samples = delay_samples - delay_whole_samples;
+
+		long long nPerSample = ((long long)subCycles * inputRate); /*itterNStep*/
+
+		long long whole_delay = delay_whole_samples * nPerSample;
+		long long partial_delay = (long long)(delay_partial_samples * nPerSample);
+
+		long long delay = whole_delay + partial_delay;
+
+		//std::cout << delay << std::endl;
+
+		return delay;
 	}
 
 	void setDelay(double delay_ms) {
@@ -104,6 +116,7 @@ public:
 
 	void setDelayTarget(double delay_ms, double time_till_next_update) {
 
+
 		static long long last_target = 0;
 
 		long long new_delay = calcDelayNum(delay_ms);
@@ -111,10 +124,26 @@ public:
 		long long samples_inbetween = this->outputRate * time_till_next_update;
 		long long delay_change = new_delay - last_delay;
 		//long long delay_change = last_delay - new_delay;
-		delayNStep = delay_change / samples_inbetween;
+		long long new_delayNStep = delay_change / samples_inbetween;
+		/*if (abs(new_delayNStep - delayNStep) < 10000) {
+			delayNStep = (new_delayNStep*2 + delayNStep) / 3;
+		}
+		else {
+			delayNStep = new_delayNStep;
+			std::cout << "overwrite smooth" << std::endl;
+		}*/
+		delayNStep = new_delayNStep;
 		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
 
 		last_target = new_delay;
+
+
+		/*long long added_delay = new_delay - this->last_set_delay;
+		long long modulationRate = this->inputRate;
+
+		//delayNStep = int(     added_delay * itterNStep     / (bufferNStep * modulationRate / 10                   + added_delay)) # f(delay_n)
+		long long test_delayNStep = (double)added_delay * itterNStep / (bufferNStep * modulationRate * time_till_next_update + added_delay);
+		std::cout << delayNStep << " - " << test_delayNStep << std::endl;*/
 	}
 
 	IQ nextSample() {

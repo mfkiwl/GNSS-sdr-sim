@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "IQ.h"
 
 class FileSink {
@@ -18,8 +19,8 @@ public:
 	}
 
 	void add(IQ iq) {
-		buffer[index + 0] = iq.I * 120;
-		buffer[index + 1] = iq.Q * 120;
+		buffer[index + 0] = round(iq.I * 120);
+		buffer[index + 1] = round(iq.Q * 120);
 
 		if (iq.I > 2 || iq.I < -2 || iq.Q > 2 || iq.Q < -2) {
 			std::cout << "overflow" << std::endl;

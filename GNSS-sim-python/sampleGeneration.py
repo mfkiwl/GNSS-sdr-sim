@@ -1,4 +1,5 @@
 import NavMessage
+import matplotlib.pyplot as plt
 
 def ensureList(input, size):
     if isinstance(input, list):
@@ -20,7 +21,7 @@ def callOrReturn(x, a):
     else:
         return x
 
-def generateDataSample(sats, data, bitsPerFrame, delay, doppler, power):
+def generateDataSample(sats, data, bitsPerFrame, delay, doppler, power, plot=True):
     n = lenOr1(sats)
     sats    = ensureList(sats, n)
     data    = ensureList(data, n)
@@ -30,13 +31,28 @@ def generateDataSample(sats, data, bitsPerFrame, delay, doppler, power):
     power   = ensureList(power, n)
 
     frames = []
-    for t in range(int(len(data[0])/bitsPerFrame[0])):
+
+    points = [[] for i in range(n)]
+
+    k = int(len(data[0])/bitsPerFrame[0])
+    for t in range(k):
         frameData = []
         for j in range(n):
             i = t*bitsPerFrame[j]
             frame = data[j][i:i+bitsPerFrame[j]]
-            frameData.append("{}:{}_{:.9f}_{:.4f}_{}".format(sats[j], NavMessage.bitsToHex(frame), callOrReturn(delay[j], t), callOrReturn(doppler[j], t), callOrReturn(power[j], t)))
+            delay_val = callOrReturn(delay[j], t)
+            doppler_val = callOrReturn(doppler[j], t)
+            power_val = callOrReturn(power[j], t)
+            frameData.append("{}:{}_{:.9f}_{:.4f}_{}".format(sats[j], NavMessage.bitsToHex(frame), delay_val, doppler_val, power_val))
+            points[j].append((delay_val, doppler_val, power_val, t))
         frames.append("data "+",".join(frameData))
+
+    if plot:
+        for data in points:
+            ranges = list(zip(*data))
+            plt.scatter(list(map(lambda x: x%1, ranges[0])), ranges[1], list(map(lambda x: x**2/50, ranges[2])), c=list(map(lambda x: x/k, ranges[3])))
+        plt.show()
+
     return "\n".join(frames)
 
 def stringToBits(s):
@@ -57,7 +73,22 @@ def main():
     D1_subframe = (stringToBits("10001011")+[1,0,1,0]*((300-8)//4))
     D2_subframe = (stringToBits("10001011")+[1,1,0,0]*((300-8)//4))
 
-    frameData = generateDataSample(sats, [D1_subframe*7, D2_subframe*7], [5, 5], [lambda x: 60.52-x/20000, lambda x: 60.5+x/20000], [20, 25], [lambda x: max(25, 100-x/2), lambda x: min(100, 25+x/2)])
+    frameData = generateDataSample(sats, [D1_subframe*8, D1_subframe*8], [5, 5], 
+                                   [lambda x: 60.5, lambda x : 60.5 if x<201 else 60.5+(x-201)/20000],
+                                   #[lambda x: 60.512-x/20000, lambda x: 60.5+x/20000], 
+                                   [lambda x: 20 if x<200 else 20-(x-200)/10, lambda x: 20 if x<200 else 20+(x-200)/10], 
+                                   [lambda x: 60, lambda x: min(100, 0+x)])
+    
+    #frameData = generateDataSample([sats[0]], [D1_subframe*8], [5], 
+    #                               [lambda x: 60.5], 
+    #                               [lambda x: 20 if x<200 else 20-(x-200)/10], 
+    #                               [lambda x: 60])
+    
+    #frameData = generateDataSample([sats[1]], [D2_subframe*8], [5], 
+    #                               [lambda x : 60.5 if x<201 else 60.5+(x-201)/20000],
+    #                               [lambda x: 20 if x<200 else 20+(x-200)/10], 
+    #                               [lambda x: min(100, 0+x)])
+
     #frameData = generateDataSample(sats, [D1_subframe*7], [5], [60], [50], [100])
     
     store("data/gps.txt", setup, frameData)

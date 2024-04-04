@@ -53,7 +53,7 @@ def postProcessRINAXData(data, header):
         sat["t_oc"] = 0 # for clock corection?
 
         sat["AODO"] = 0
-        sat["data id"] = 0b01
+        #sat["data id"] = 0b01
         sat["sv id"] = int(sat["name"][-2:])
 
         sat["a_0"] = header["alpha1"]
@@ -71,15 +71,17 @@ def postProcessRINAXData(data, header):
         sat["datetime"] = datetime.datetime(sat["year"], sat["month"], sat["day"], sat["hour"], sat["minute"], sat["second"])
         sat["t_oa"] = utcToConstelationTime(sat["datetime"])[1]
 
-        sat["A_1"] = -1
-        sat["A_0"] = -1
-        sat["t_ot"] = -1
-        sat["WN_t"] = -1
-        sat["WN_LSF"] = -1
-        sat["DN"] = -1
-        sat["t_LSF"] = -1
+        sat["A_1"] = header["A1"]
+        sat["A_0"] = header["A0"]
+        sat["t_ot"] = header["T"]
+        sat["WN_t"] = header["W"]
+        sat["WN_LSF"] = 1929%256 # week number, schedualed leep second: http://navigationservices.agi.com/GNSSWeb/
+        sat["DN"] = 7            # day number
+        sat["t_LSF"] = 18        # new leap second value
 
         sat["small delta_i"] = sat["i0"]-(0.3*math.pi)
+
+        sat["health"] = 0 # force all sats to be healthy
         
         
 
@@ -170,43 +172,93 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
         data = addParity(NavMessage.dataStructureToBits(frameLayouts123[subframe], eph, twosCompliment=True, spareData=spareData), bitBuffer)
         bits = start+data
     elif subframe==4:
-        if frame in [1, 6, 11, 16, 21]: # reserved
-            data = addParity(NavMessage.dataStructureToBits(frame4_1_6_11_16_21, eph, twosCompliment=True, spareData=spareData), bitBuffer)
-            bits = start+data
-        elif frame in [12, 19, 20, 22, 23, 24]: # reserved
-            data = addParity(NavMessage.dataStructureToBits(frame4_12_19_20_22_23_24, eph, twosCompliment=True, spareData=spareData), bitBuffer)
-            bits = start+data
-        elif frame in [18]: # ionosphere and UTC
-            data = addParity(NavMessage.dataStructureToBits(frame4_18, eph, twosCompliment=True, spareData=spareData), bitBuffer)
-            bits = start+data
-        elif frame in [25]: # flags and health
-            data = addParity(NavMessage.dataStructureToBits(frame4_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
-            bits = start+data
-        # todo: more frame 4 cases
-        elif frame in [2, 3, 4, 5, 7, 8, 9, 10]:
-            sv = [2, 3, 4, 5, 7, 8, 9, 10].index(frame)+25
-            sv = "G"+str(sv).zfill(2)
+        (data_id, sv_id) = page_ids_sf4[frame]
+        spareData["data id"] = data_id
+        spareData["sv (page) id"] = sv_id
+        if data_id==1:
+            # almonac
+            sv = "G"+str(sv_id).zfill(2)
             if sv in ephs:
                 data = addParity(NavMessage.dataStructureToBits(frame5_1to24, ephs[sv], twosCompliment=True, spareData=spareData), bitBuffer)
                 bits = start+data
             else:
                 data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
+                bits = start+data
+        elif data_id==2:
+            # other data
+            if frame==18 or sv_id==56:
+                # ionosphere and UTC
+                data = addParity(NavMessage.dataStructureToBits(frame4_18, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+                bits = start+data
+            elif frame==25 or sv_id==63:
+                # flags and health
+                data = addParity(NavMessage.dataStructureToBits(frame4_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+                bits = start+data
+            else:
+                # reserved
+                data = addParity(NavMessage.dataStructureToBits(frame4_1_6_11_16_21, eph, twosCompliment=True, spareData=spareData), bitBuffer)
                 bits = start+data
         else:
             data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
             bits = start+data
+            print("unexpected data id")
+
+        #if frame in [1, 6, 11, 16, 21]: # reserved
+        #    data = addParity(NavMessage.dataStructureToBits(frame4_1_6_11_16_21, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
+        #elif frame in [12, 19, 20, 22, 23, 24]: # reserved
+        #    data = addParity(NavMessage.dataStructureToBits(frame4_12_19_20_22_23_24, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
+        #elif frame in [18]: # ionosphere and UTC
+        #    data = addParity(NavMessage.dataStructureToBits(frame4_18, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
+        #elif frame in [25]: # flags and health
+        #    data = addParity(NavMessage.dataStructureToBits(frame4_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
+        ## todo: more frame 4 cases
+        #elif frame in [2, 3, 4, 5, 7, 8, 9, 10]:
+        #    sv = [2, 3, 4, 5, 7, 8, 9, 10].index(frame)+25
+        #    sv = "G"+str(sv).zfill(2)
+        #    if sv in ephs:
+        #        data = addParity(NavMessage.dataStructureToBits(frame5_1to24, ephs[sv], twosCompliment=True, spareData=spareData), bitBuffer)
+        #        bits = start+data
+        #    else:
+        #        data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #        bits = start+data
+        #
+        #else:
+        #    data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
     elif subframe==5:
-        if frame==25:
-            data = addParity(NavMessage.dataStructureToBits(frame5_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
-            bits = start+data
-        else:
-            sv = "G"+str(frame).zfill(2)
+        (data_id, sv_id) = page_ids_sf5[frame]
+        spareData["data id"] = data_id
+        spareData["sv (page) id"] = sv_id
+        if data_id==1:
+            # almonac
+            sv = "G"+str(sv_id).zfill(2)
             if sv in ephs:
                 data = addParity(NavMessage.dataStructureToBits(frame5_1to24, ephs[sv], twosCompliment=True, spareData=spareData), bitBuffer)
                 bits = start+data
             else:
                 data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
                 bits = start+data
+        elif data_id==2:
+            # other data
+            if frame==25 or sv_id==51:
+                data = addParity(NavMessage.dataStructureToBits(frame5_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+                bits = start+data
+
+        #if frame==25:
+        #    data = addParity(NavMessage.dataStructureToBits(frame5_25, eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #    bits = start+data
+        #else:
+        #    sv = "G"+str(frame).zfill(2)
+        #    if sv in ephs:
+        #        data = addParity(NavMessage.dataStructureToBits(frame5_1to24, ephs[sv], twosCompliment=True, spareData=spareData), bitBuffer)
+        #        bits = start+data
+        #    else:
+        #        data = addParity(NavMessage.dataStructureToBits([0, 8*24], eph, twosCompliment=True, spareData=spareData), bitBuffer)
+        #        bits = start+data
     
         
 
@@ -215,6 +267,21 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
     return bits
 
 PI = math.pi
+
+# data id, sv id*
+page_ids_sf4 = [(), 
+                (2, 57), (1, 25), (1, 26), (1, 27), (1, 28), 
+                (2, 57), (1, 29), (1, 30), (1, 31), (1, 32), 
+                (2, 57), (2, 62), (2, 52), (2, 53), (2, 54), 
+                (2, 57), (2, 55), (2, 56), (2, 58), (2, 59), 
+                (2, 57), (2, 60), (2, 61), (2, 62), (2, 63)]
+
+page_ids_sf5 = [(),
+                (1,  1), (1,  2), (1,  3), (1,  4), (1,  5),
+                (1,  6), (1,  7), (1,  8), (1,  9), (1, 10),
+                (1, 11), (1, 12), (1, 13), (1, 14), (1, 15),
+                (1, 16), (1, 17), (1, 18), (1, 19), (1, 20),
+                (1, 21), (1, 22), (1, 23), (1, 24), (2, 51)]
 
 frameStart = [
     [0b10001011, 8], ["TLM Message", 14], ["Integrity Status Flag", 1], ["reserved", 1],
@@ -246,8 +313,8 @@ frameLayouts123 = [
     ]
 ]
 
-frame5_1to24 = [ # todo: scaling for almonac
-    ["data id", 2], ["sv id", 6], ["e", 16, 2**21],
+frame5_1to24 = [
+    ["data id", 2], ["sv (page) id", 6], ["e", 16, 2**21],
     ["t_oa", 8, 2**-12], ["small delta_i", 16, 2**19],
     ["omegaDot", 16, 2**38], ["health", 8],
     ["sqrt_a", 24, 2**11],
@@ -259,7 +326,7 @@ frame5_1to24 = [ # todo: scaling for almonac
 ]
 
 frame4_1_6_11_16_21 = [
-    ["data id", 2], ["sv id", 6], [0, 16],
+    ["data id", 2], ["sv (page) id", 6], [0, 16],
     [0, 24], [0, 24], [0, 24], [0, 24], [0, 24], 
     [0, 8], [0, 16], 
     [0, 22], ["t", 2]
@@ -268,11 +335,11 @@ frame4_12_19_20_22_23_24 = frame4_1_6_11_16_21
 
 # check unit might need to multiply or devide by pi for 1-3 (/semi-circle)
 frame4_18 = [
-    ["data id", 2], ["sv id", 6], ["a_0", 8, 2**30], ["a_1", 8, 2**27],
-    ["a_2", 8, 2**24], ["a_3", 8, 2*24], ["b_0", 8, 2**-11], 
+    ["data id", 2], ["sv (page) id", 6], ["a_0", 8, 2**30], ["a_1", 8, 2**27],
+    ["a_2", 8, 2**24], ["a_3", 8, 2**24], ["b_0", 8, 2**-11], 
     ["b_1", 8, 2**-14], ["b_2", 8, 2**-16], ["b_3", 8, 2**-16],
-    ["A_1", 24],
-    ["A_0", 32], ["t_ot", 8], ["WN_t", 8],
+    ["A_1", 24, 2**50],
+    ["A_0", 32, 2**30], ["t_ot", 8, 2**-12], ["WN_t", 8],
     ["t_LS", 8], ["WN_LSF", 8], ["DN", 8],
     ["t_LSF", 8], [0, 14], ["t", 2]
 ]

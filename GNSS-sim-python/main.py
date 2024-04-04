@@ -84,6 +84,12 @@ def printResults(time, results, userPos):
         #print(name, ":", result["power"], "@", result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], result["data"], " "*10)
     
 
+def selectSats(sats, names):
+    newSats = {}
+    for satName in names:
+        newSats[satName] = sats[satName]
+    return newSats
+
 def main():
     print("main")
 
@@ -113,13 +119,16 @@ def main():
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
     startTime = datetime.datetime(2023,11,22, 4, 0) # gps
 
-    duration = datetime.timedelta(seconds=38)
+    duration = datetime.timedelta(seconds=60*5)
 
 
 
     sats, headerData = constelation.loadSatsFromRinax(rinexFile)
     #sats = { "G02":sats["G02"], "G1002":sats["G03"]} #
-    #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"], "G21":sats["G21"], "G22":sats["G22"], "G27":sats["G27"], "G32":sats["G32"]}
+    sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19", "G21", "G22", "G28", "G31", "G32"])
+    #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
+    #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14"])
+    #sats = selectSats(sats, ["G04"])
     #sats = {"G01":sats["G01"]}
     #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"]}
     #sats = {"E07":sats["E07"], "E08":sats["E08"], "E12":sats["E12"], "E13":sats["E13"], "E19":sats["E19"]}

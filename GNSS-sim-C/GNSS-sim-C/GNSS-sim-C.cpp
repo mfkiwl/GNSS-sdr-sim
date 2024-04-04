@@ -30,7 +30,7 @@ void example_manager_gps() {
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(2600000/*1023000*/, 1575420000);
 
-    manager.run(fileSource, fileSink, 2);
+    manager.run(fileSource, fileSink, 3);
 }
 
 void example_manager_gps10() {
