@@ -3,14 +3,16 @@
 
 #include <iostream>
 
+
+#include "DataHandler.h"
+//#include "Resample2.h"
+
 #include "ChainLink.h"
 #include "DataFrame.h"
 #include "Manager.h"
 #include "FileSource.h"
 #include "FileSink.h"
 
-#include "DataHandler.h"
-#include "Resample.h"
 #include "GPS/PRN_Code.h"
 
 #include "FPGA_data.h"
@@ -22,13 +24,13 @@ void example_manager_galileo() {
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(15000000/*2 * 6138000*/, 1575420000);
 
-    manager.run(fileSource, fileSink, 0);
+    manager.run(fileSource, fileSink, 3);
 }
 
 void example_manager_gps() {
     FileSource fileSource("../../data/gps.txt");
     FileSink fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(2600000/*1023000*/, 1575420000);
+    Manager manager(15000000/*1023000*/, 1575420000);
 
     manager.run(fileSource, fileSink, 3);
 }

@@ -168,7 +168,7 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
     # encode page
 
     # +datetime.timedelta(seconds=1)
-    (TOW, WN) = utcToConstelationTime(dateTime+datetime.timedelta(seconds=1))
+    (TOW, WN) = utcToConstelationTime(dateTime) #+datetime.timedelta(seconds=1)
 
     word = getWord(subFrame, page, eph, ephs, {"TOW":TOW, "WN":WN})
     #assert(len(word), 128)
@@ -275,7 +275,7 @@ words0to6dataStructure = [
     [[0, 6], [int(0b10), 2], [0, 88], ["WN", 12], ["TOW", 20]],
     [[1, 6], ["IODnav", 10], ["toe", 14, 1/60], ["M0", 32, 2**31/math.pi], ["e", 32, 2**33], ["sqrt_a", 32, 2**19], [0, 2]],
     [[2, 6], ["IODnav", 10], ["omega0", 32, 2**31/math.pi], ["i0", 32, 2**31/math.pi], ["omega", 32, 2**31/math.pi], ["IDot", 14, 2**43/math.pi], [0, 2]],
-    [[3, 6], ["IODnav", 10], ["omegaDot", 24, 2**43/math.pi], ["deltan", 16, 2**43/math.pi], ["Cuc", 16, 2**29/math.pi], ["Cus", 16, 2**29/math.pi], ["Crc", 16, 2**5], ["Crs", 16, 2**5], [0, 8]],
+    [[3, 6], ["IODnav", 10], ["omegaDot", 24, 2**43/math.pi], ["deltan", 16, 2**43/math.pi], ["Cuc", 16, 2**29], ["Cus", 16, 2**29], ["Crc", 16, 2**5], ["Crs", 16, 2**5], [0, 8]],
     [[4, 6], ["IODnav", 10], ["prn", 6], ["Cic", 16, 2**29], ["Cis", 16, 2**29], [-1, 14, 1/60], ["clockbias", 31, 2**34], ["clockdrift", 21, 2**46], ["clockdriftrate", 6, 2**59], [0, 2]], # check(-1),  t0c -> calculate, when corection param starts
     [[5, 6], ["a_i0", 11, 10**9 * 2**2], ["a_i1", 11, 10**9 * 2**8], ["a_i2", 14, 10**9 * 2**15], [0, 5], ["BGDE5aE1", 10, 2**32], ["BGDE5bE1", 10, 2**32], ["E5b_HS", 2], ["E1B_HS", 2], ["E5b_DVS", 1], ["E1B_DVS", 1], ["WN", 12], ["TOW", 20], [0, 23]],
     [[6, 6], ["a0", 32, 10**9 * 2**30], ["a1", 24, 10**15 * 2**50], ["t_LS", 8], [0*3600, 8], [-1, 8], [-1, 8], [-1, 3], [-1, 8], ["TOW", 20], [0, 3]]

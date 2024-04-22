@@ -68,7 +68,7 @@ namespace galileo {
 					bit = 0;
 				}
 				currentData = dataSource->nextBit();
-				std::cout << "v: " << (int)currentData << ", p: " << (int)pilotData[bit] <<std::endl;
+				//std::cout << "v: " << (int)currentData << ", p: " << (int)pilotData[bit] <<std::endl;
 				//std::cout << "next bit: " << bit % length << " data: " << (data[bit%length] == 1 ? -1 : 1) << std::endl;
 			}
 
@@ -106,7 +106,7 @@ namespace galileo {
 
 		void init() {
 			currentData = dataSource->nextBit();
-			std::cout << "v: " << (int)currentData << ", p: " << (int)pilotData[bit] << std::endl;
+			//std::cout << "v: " << (int)currentData << ", p: " << (int)pilotData[bit] << std::endl;
 		}
 
 		uint8_t nextBit() {

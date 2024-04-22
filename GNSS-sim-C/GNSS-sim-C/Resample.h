@@ -58,7 +58,10 @@ public:
 	}
 
 	void setDopler(float f) {
-		int64_t scale = 100;
+
+		//std::cout << "doppler s: " << f << std::endl;
+
+		int64_t scale = 1000;
 		//std::cout << "setDopler" << std::endl;
 		int64_t dopplerShift = f * scale;
 		int64_t targetFrequency = -dopplerShift + (int64_t)radioFrequencyIn * scale;
@@ -136,6 +139,11 @@ public:
 		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
 
 		last_target = new_delay;
+
+		// calculate doppler form delay
+		//double speedup = (double)-new_delayNStep / itterNStep;
+		//std::cout << "doppler d: " << speedup * this->radioFrequencyOut << std::endl;
+
 
 
 		/*long long added_delay = new_delay - this->last_set_delay;

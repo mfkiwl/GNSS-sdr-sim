@@ -9,7 +9,7 @@
     "captures": [
         {
             "core:sample_start": 0,
-            "core:frequency": 1602000000
+            "core:frequency": 1575420000
         }
     ],
     "annotations": []

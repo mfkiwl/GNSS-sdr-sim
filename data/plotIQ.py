@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 
-file_name = "data/OutputIQ_c.sigmf-data"
+file_name = "data/OutputIQ.sigmf-data"
 
 file_stats = os.stat(file_name)
 IQ_samples = file_stats.st_size/2

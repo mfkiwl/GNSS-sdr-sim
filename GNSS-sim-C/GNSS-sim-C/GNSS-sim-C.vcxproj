@@ -151,6 +151,7 @@
     <ClInclude Include="ChainLink.h" />
     <ClInclude Include="DataFrame.h" />
     <ClInclude Include="DataHandler.h" />
+    <ClInclude Include="DataHandler2.h" />
     <ClInclude Include="FPGA_data.h" />
     <ClInclude Include="Galileo\Carrier.h" />
     <ClInclude Include="Galileo\CBOC.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="IRNSS\Sat.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Resample.h" />
+    <ClInclude Include="Resample2.h" />
     <ClInclude Include="Satellite.h" />
     <ClInclude Include="WeilCode.h" />
   </ItemGroup>

@@ -11,6 +11,7 @@ struct IQ {
 
 	IQ(double I, double Q) : I(I), Q(Q) {}
 	IQ(double I           ) : I(I), Q(0) {}
+	IQ() : I(0), Q(0) {}
 
 	IQ rotate(double phase) {
 		//std::cout << phase << " : " << cos(phase) << ", " << sin(phase) << " @ (" << I << ", " << Q << ")" << std::endl;

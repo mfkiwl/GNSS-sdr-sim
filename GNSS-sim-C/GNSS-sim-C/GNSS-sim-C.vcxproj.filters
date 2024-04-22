@@ -128,5 +128,11 @@
     <ClInclude Include="GPS\L5\Sat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DataHandler2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resample2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

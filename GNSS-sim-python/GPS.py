@@ -155,7 +155,7 @@ def fillBuffer(bitBuffer, dateTime:datetime.datetime, eph, ephs):
 
     spareData={
         "TLM Message":0, 
-        "Integrity Status Flag": 1,
+        "Integrity Status Flag": 0,
         "reserved": 0,
         "Alert Flag":0,
         "Anti-Spoof Flag": 0,
@@ -344,8 +344,8 @@ frame4_18 = [
     ["t_LSF", 8], [0, 14], ["t", 2]
 ]
 
-frame4_25 = [0, 8*24]
-frame5_25 = [0, 8*24]
+frame4_25 = [["data id", 2], ["sv (page) id", 6], [0, 8*23]]
+frame5_25 = [["data id", 2], ["sv (page) id", 6], [0, 8*23]]
 
 
 
