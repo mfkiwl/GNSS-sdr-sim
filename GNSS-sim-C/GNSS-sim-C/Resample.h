@@ -23,7 +23,7 @@ public:
 	long long itterNStep;
 	long long bufferNStep;
 	long long delayNStep = 0;
-	int subCycles = 1000000;
+	int subCycles = 10000;
 
 	long unitStepPhase;
 	long unitPhase;
@@ -64,7 +64,7 @@ public:
 		int64_t scale = 1000;
 		//std::cout << "setDopler" << std::endl;
 		int64_t dopplerShift = f * scale;
-		int64_t targetFrequency = -dopplerShift + (int64_t)radioFrequencyIn * scale;
+		int64_t targetFrequency = dopplerShift + (int64_t)radioFrequencyIn * scale;
 		int64_t shift = targetFrequency - radioFrequencyOut * scale;
 		double normalPhaseSampleDelta = shift / (double)outputRate;
 		unitStepPhase = normalPhaseSampleDelta / scale * PHASE_RANGE;// (LONG_MAX / 2);
@@ -139,6 +139,7 @@ public:
 		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
 
 		last_target = new_delay;
+		//std::cout << std::setprecision(10) << delay_ms << " <> " << new_delay*1000.0 / subCycles / inputRate / outputRate << std::endl;
 
 		// calculate doppler form delay
 		//double speedup = (double)-new_delayNStep / itterNStep;
@@ -167,6 +168,20 @@ public:
 
 
 		IQ sample = currentSample;
+
+		/*double current_delay = (double)last_set_delay / subCycles / inputRate / outputRate;
+		double num_lambda = current_delay * radioFrequencyIn;
+		double lambda_fraction = fmod(num_lambda, 1);
+		sample = sample.rotate(lambda_fraction * 2 * M_PI);*/
+
+		/*static long long timer = 0;
+		if (timer < 15000000) {
+			timer++;
+		}
+		else {
+			std::cout << num_lambda << " _ " << lambda_fraction << " _ " << lambda_fraction*2*M_PI << " / " << (unitPhase / (float)PHASE_RANGE) * 2 * M_PI << std::endl;
+		}*/
+
 
 		sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
 
