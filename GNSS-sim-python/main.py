@@ -41,6 +41,9 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             transmitTime = sat.constelation.clockCorection(eph, syncTime)
             satPos, satVel = sat.constelation.getSatPosVel(eph, transmitTime)
             travelTime = orbit.getTravelTime(userPos, satPos, eph)
+            travelTimeDx = orbit.getTravelTime(userPos+np.array([[1],[0],[0]]), satPos, eph)-travelTime
+            travelTimeDy = orbit.getTravelTime(userPos+np.array([[0],[1],[0]]), satPos, eph)-travelTime
+            travelTimeDz = orbit.getTravelTime(userPos+np.array([[0],[0],[1]]), satPos, eph)-travelTime
             doplerShift = orbit.getDoplerShift(userPos, userVel, satPos, satVel, eph)  # add user pos and vel
             power = orbit.getVisability(userPos, satPos, eph) # how visable was the currect location at the of transmition
             #arivelTime = transmitTime + travelTime
@@ -65,18 +68,19 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
 
             data = sat.bitBuffer.getBits(sat.constelation.bitsPerFrame, dateTime, eph, ephs)
             frameData.append("{}:{}_{:.9f}_{:.4f}_{}".format(name, NavMessage.bitsToHex(data), delay*1000, doplerShift, power))
-            results[name] = {"data":data, "delay":delay*1000, "shift":doplerShift, "power":power, "eph":eph, "constelation":sat.constelation, "satPos":satPos}
+            #frameData.append("{}:{}_{:.9f}_{:.4f}_{}_{:.4f}_{:.4f}_{:.4f}".format(name, NavMessage.bitsToHex(data), delay*1000, doplerShift, power, travelTimeDx*1000000000, travelTimeDy*1000000000, travelTimeDz*1000000000))
+            results[name] = {"data":data, "delay":delay*1000, "shift":doplerShift, "power":power, "eph":eph, "constelation":sat.constelation, "satPos":satPos, "D":[travelTimeDx, travelTimeDy, travelTimeDz]}
         i+=1
     return ("data "+",".join(frameData)+"\n", results)
 
-def printResults(time, results, userPos):
-    userPos = np.array([[4687282.796],[1840346.018],[4055083.320]])
+def printResults(time, results, userPos, userVel):
+    #userPos = np.array([[4687282.796],[1840346.018],[4055083.320]])
     for name in results:
         print("\033[F", end="")
     print("\033[F", end="")
     print("\033[F", " "*50)
 
-    print("time:", time, " "*10)
+    print("time:", time.strftime('%F %T.%f')[:-3], "@", userPos.T[0], "v:", userVel.T[0], " "*10)
     for name in results:
         result = results[name]
         elevation, azimuth, alivation = orbit.calcAzimElevDist(userPos, result["satPos"]-userPos)
@@ -120,14 +124,14 @@ def main():
     startTime = datetime.datetime(2023,11,22, 4, 0) # gps
     #startTime = datetime.datetime(2023,11,21, 23, 59, 54) # gps
 
-    duration = datetime.timedelta(seconds=40)
+    duration = datetime.timedelta(seconds=121)
 
 
 
     sats, headerData = constelation.loadSatsFromRinax(rinexFile)
     #sats = { "G02":sats["G02"], "G1002":sats["G03"]} #
-    sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19", "G21", "G22", "G28", "G31", "G32"])
-    #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
+    #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19", "G21", "G22", "G28", "G31", "G32"])
+    sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14"])
     #sats = selectSats(sats, ["G05"])
     #sats = {"G01":sats["G01"]}
@@ -138,6 +142,7 @@ def main():
     #sats = selectSats(sats, ["E04", "E05", "E09", "E10", "E11", "E12", "E34", "E36"])
     #sats = {"R01":sats["R01"]}
     #sats = {"R01":sats["R01"], "R09":sats["R09"], "R17":sats["R17"], "R23":sats["R23"], "R24":sats["R24"]}
+    #sats = selectSats(sats, ["R01", "R02", "R07", "R09", "R10", "R11", "R17", "R23", "R24"])
     #sats = {"I02":sats["I02"]}
     #del sats["C01"], sats["C02"], sats["C03"], sats["C04"], sats["C05"]
     #sats = {"C06":sats["C06"]}
@@ -157,6 +162,37 @@ def main():
     #userPos = np.array([[-2758918.635941], [4772301.120089], [3197889.437237]]) # gps-sdr-sim
     userVel = np.array([[0],[0],[0]])
 
+    perpPos = np.array([userPos[0], -userPos[2], userPos[1]])
+    perpPos /= math.sqrt(perpPos[0][0]**2 + perpPos[1][0]**2 + perpPos[2][0]**2)
+    syncErrorPos = np.array([[0.1], [0.05], [0.15]])
+
+    # fixed position
+    posVelFunc = simplePathInterpolation([(startTime, userPos)])
+
+    # slow move away
+    #posVelFunc = simplePathInterpolation([
+    #    #(startTime+datetime.timedelta(seconds=0),  userPos+1000*perpPos), 
+    #    (startTime+datetime.timedelta(seconds=37), userPos             +syncErrorPos),  
+    #    (startTime+datetime.timedelta(seconds=38), userPos-1*perpPos   +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=39), userPos-3*perpPos   +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=40), userPos-6*perpPos   +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=41), userPos-10*perpPos  +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=60), userPos-105*perpPos +syncErrorPos)
+    #    #(startTime+datetime.timedelta(seconds=45), userPos), 
+    #    #(startTime+datetime.timedelta(seconds=60), userPos-300*perpPos)
+    #])
+
+    # sweep past
+    #posVelFunc = simplePathInterpolation([
+    #    (startTime+datetime.timedelta(seconds=10), userPos-200*perpPos  +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=30), userPos-90*perpPos  +syncErrorPos),
+    #    (startTime+datetime.timedelta(seconds=60), userPos+90*perpPos  +syncErrorPos)
+    #    #(startTime+datetime.timedelta(seconds=45), userPos), 
+    #    #(startTime+datetime.timedelta(seconds=60), userPos-300*perpPos)
+    #])
+
+    
+
     outputFile = open(resultFile, "w")
     outputFile.write("setup "+setup+"\n")
 
@@ -168,8 +204,9 @@ def main():
         #print(t)
         #posOscillation = np.array([[math.sin(2*t/math.pi)],[math.sin(2*t/math.pi)],[math.sin(2*t/math.pi)]]) * 25
         #print(posOscillation)
-        (dataString, result) = generateFrame(userPos, userVel, sats, time)
-        printResults(time, result, userPos)
+        (pos, vel) = posVelFunc(time)
+        (dataString, result) = generateFrame(pos, vel, sats, time)
+        printResults(time, result, pos, vel)
         outputFile.write(dataString)
         time += timestep
 
@@ -178,6 +215,28 @@ def main():
     #print(generateFrame(userPos, userVel, sats, time)[0])
 
     print("Done")
+
+def simplePathInterpolation(timePosPairs: tuple[datetime.datetime, np.ndarray]):
+    timePosPairs = sorted(timePosPairs)
+    def getPosVelAtTime(time):
+        index = 0
+        for timePos in timePosPairs:
+            if timePos[0]>time:
+                break
+            index+=1
+        start = timePosPairs[index-1] if index>0 else (time, timePosPairs[0][1])
+        end   = timePosPairs[index] if index<len(timePosPairs) else (start[0]+datetime.timedelta(seconds=1), start[1])
+        span = (end[0]-start[0])
+        span_s = span.microseconds/1000000 + span.seconds + span.days*24*60*60
+
+        current = (time-start[0])
+        current_s = current.microseconds/1000000 + current.seconds + current.days*24*60*60
+
+        posNow = start[1] + current_s/span_s * (end[1]-start[1])
+        velNow = (end[1]-start[1])/span_s
+
+        return (posNow, velNow)
+    return getPosVelAtTime
 
 if __name__ == "__main__":
     main()

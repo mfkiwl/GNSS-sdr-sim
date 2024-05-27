@@ -73,11 +73,17 @@ def main():
     D1_subframe = (stringToBits("10001011")+[1,0,1,0]*((300-8)//4))
     D2_subframe = (stringToBits("10001011")+[1,1,0,0]*((300-8)//4))
 
+    #frameData = generateDataSample(sats, [D1_subframe*8, D1_subframe*8], [5, 5], 
+    #                               [lambda x: 60.5, lambda x : 60.5 if x<201 else 60.5+(x-201)/20000],
+    #                               #[lambda x: 60.512-x/20000, lambda x: 60.5+x/20000], 
+    #                               [lambda x: 20 if x<200 else 20-(x-200)/10, lambda x: 20 if x<200 else 20+(x-200)/10], 
+    #                               [lambda x: 60, lambda x: min(100, 0+x)])
+
     frameData = generateDataSample(sats, [D1_subframe*8, D1_subframe*8], [5, 5], 
-                                   [lambda x: 60.5, lambda x : 60.5 if x<201 else 60.5+(x-201)/20000],
-                                   #[lambda x: 60.512-x/20000, lambda x: 60.5+x/20000], 
-                                   [lambda x: 20 if x<200 else 20-(x-200)/10, lambda x: 20 if x<200 else 20+(x-200)/10], 
-                                   [lambda x: 60, lambda x: min(100, 0+x)])
+                                   #[lambda x: 60.5, lambda x : 60.5 if x<201 else 60.5+(x-201)/20000],
+                                   [lambda x: 60.512-x/20000, lambda x: 60.112-x/20000], 
+                                   [lambda x: 30 if x<300 else 30-(x-300)/10, lambda x: 400-(x/2-200)/10 if x <400 else 400], 
+                                   [lambda x: max(0,min(100, -50+x)), lambda x: 60])
     
     #frameData = generateDataSample([sats[0]], [D1_subframe*8], [5], 
     #                               [lambda x: 60.5], 

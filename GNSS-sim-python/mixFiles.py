@@ -1,4 +1,5 @@
 import string
+import re
 
 class Sat:
     ccode : str = ""
@@ -11,7 +12,13 @@ class Sat:
         self.id = id
         self.arg = arg
 
-def parseFile(filePath):
+def addToPRN(id, v):
+    parts = re.split("(\d+)$", id)
+    code = parts[0]
+    prn = int(parts[1])+v
+    return code+(str(prn).zfill(2))
+
+def parseFile(filePath, PRN_shift = 0, power_factor = lambda x: 1):
     with open(filePath) as file:
         setup = {}
         line = next(file, None) # next -> getline
@@ -23,7 +30,7 @@ def parseFile(filePath):
                     sats = sats[1:-1]
                     for sat in sats.split(","):
                         o = sat.find("[")
-                        id = sat[0:o]
+                        id = str(int( sat[0:o] )+PRN_shift).zfill(2)
                         arg = sat[o+1:-1]
                         setup[ccode+id]=Sat(ccode, id, arg)
                 break
@@ -31,6 +38,7 @@ def parseFile(filePath):
         yield setup
 
         line = next(file, None) # next -> getline
+        i=0
         while line != None:
             line = line.split()
             data = {}
@@ -38,9 +46,10 @@ def parseFile(filePath):
                 for sat in line[1].split(","):
                     (name, info) = sat.split(":")
                     ccode = name.rstrip(string.digits)
-                    id = name[len(ccode):]
+                    id = str(int( name[len(ccode):] )+PRN_shift).zfill(2)
                     vals = info.split("_")
-                    data[name] = {"data": vals[0], "delay":float(vals[1]), "shift":float(vals[2]), "power":int(float(vals[3]))}
+                    data[ccode+id] = {"data": vals[0], "delay":float(vals[1]), "shift":float(vals[2]), "power":int(float(vals[3])*power_factor(i))}
+                i+=1
             yield data
             line = next(file, None) # next -> getline
 
@@ -55,11 +64,11 @@ def formatSatData(name, hex, delay, shift, power):
 
 def main():
     fileA = "data/gps.txt"
-    fileB = "data/glonass.txt"
+    fileB = "data/gps_spoof.txt"
     fileOut = "data/mix.txt"
 
-    streamA = parseFile(fileA)
-    streamB = parseFile(fileB)
+    streamA = parseFile(fileA, PRN_shift=0,    power_factor=lambda t:0.6)
+    streamB = parseFile(fileB, PRN_shift=1000, power_factor=lambda t:max(min(1, (t-360)/30), 0))
 
     streams = zip(streamA, streamB)
 

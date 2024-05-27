@@ -6,11 +6,12 @@
 #include <math.h>
 #include "IQ.h"
 
+template<typename T>
 class FileSink {
 
-	std::basic_ofstream<int8_t> output;
+	std::basic_ofstream<T> output;
 
-	int8_t buffer[512];
+	T buffer[512];
 	int index = 0;
 
 public:
@@ -19,8 +20,8 @@ public:
 	}
 
 	void add(IQ iq) {
-		buffer[index + 0] = round(iq.I * 120);
-		buffer[index + 1] = round(iq.Q * 120);
+		buffer[index + 0] = round(iq.I * (1<<(sizeof(int8_t/*T*/) * 8 - 1) * 120 / 128));
+		buffer[index + 1] = round(iq.Q * (1 << (sizeof(int8_t/*T*/) * 8 - 1) * 120 / 128));
 
 		if (iq.I > 2 || iq.I < -2 || iq.Q > 2 || iq.Q < -2) {
 			std::cout << "overflow" << std::endl;

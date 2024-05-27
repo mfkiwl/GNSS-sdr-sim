@@ -109,16 +109,40 @@ public:
 					std::string entry;
 					while (std::getline(entries_ss, entry, ',')) {
 						int split_id = entry.find(":");
+						// hex data
 						int split_data_1 = entry.find("_");
-						int split_data_2 = entry.find("_", split_data_1+1);
-						int split_data_3 = entry.find("_", split_data_2+1);
+						// delay
+						int split_data_2 = entry.find("_", split_data_1 + 1);
+						// shift
+						int split_data_3 = entry.find("_", split_data_2 + 1);
+						// power
+						int split_data_4 = entry.find("_", split_data_3 + 1);
+						int split_data_5 = -1;
+						int split_data_6 = -1;
 						int end = entry.length();
+						float dx = 0, dy = 0, dz = 0;
+						if (split_data_4 == std::string::npos) {
+							split_data_4 = end;
+						}
+						else {
+							// dx
+							int split_data_5 = entry.find("_", split_data_4 + 1);
+							// dy
+							int split_data_6 = entry.find("_", split_data_5 + 1);
+							// dz
+
+							if (split_data_5 != std::string::npos && split_data_6 != std::string::npos) {
+								dx = std::stof(entry.substr(split_data_4 + 1, split_data_5 - split_data_4));
+								dy = std::stof(entry.substr(split_data_5 + 1, split_data_6 - split_data_5));
+								dz = std::stof(entry.substr(split_data_6 + 1, end          - split_data_6));
+							}
+						}
 
 						std::string name = entry.substr(0, split_id);
 						std::string dataHex = entry.substr(split_id+1, split_data_1 - split_id-1);
 						std::string delayS = entry.substr(split_data_1+1, split_data_2 - split_data_1-1);
 						std::string shiftS = entry.substr(split_data_2+1, split_data_3 - split_data_2-1);
-						std::string powerS = entry.substr(split_data_3+1, end - split_data_3);
+						std::string powerS = entry.substr(split_data_3+1, split_data_4 - split_data_3);
 
 						unsigned long long data = std::stoull(dataHex, nullptr, 16);
 						double delay = std::stod(delayS);
@@ -133,6 +157,9 @@ public:
 						frame.delay = delay;
 						frame.doppler = shift;
 						frame.power = power;
+						frame.dx = dx;
+						frame.dy = dy;
+						frame.dz = dz;
 
 						map[name] = frame;
 					}

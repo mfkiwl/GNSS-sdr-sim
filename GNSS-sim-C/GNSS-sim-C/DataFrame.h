@@ -7,4 +7,7 @@ struct DataFrame {
 	double delay;
 	double doppler;
 	int power;
+	float dx;
+	float dy;
+	float dz;
 };

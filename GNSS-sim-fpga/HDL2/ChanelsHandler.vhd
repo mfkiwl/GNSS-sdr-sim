@@ -104,3 +104,57 @@ begin
   RESULT: Mixer port map(clk, reset, IQ_s, power_s, IQ_tmp);
 
 end structural;
+
+library ieee;
+use ieee.std_logic_1164.all;
+USE ieee.numeric_std.ALL;
+use work.settings.all;
+
+entity ChanelsHandlerWrapper is
+  port
+  (
+    clk    : in std_logic;
+    reset  : in std_logic;
+
+    enable : in std_logic;
+    I : out std_logic_vector(15 downto 0);
+    Q : out std_logic_vector(15 downto 0);
+
+    store  : in std_logic;
+    frame : in std_logic_vector(frameWidth - 1 downto 0)
+  );
+end ChanelsHandlerWrapper;
+
+architecture structural of ChanelsHandlerWrapper is
+
+    -- Declare attributes for clocks and resets
+    ATTRIBUTE X_INTERFACE_INFO : STRING; 
+    ATTRIBUTE X_INTERFACE_INFO of clk: SIGNAL is "xilinx.com:signal:clock:1.0 clk CLK";
+    ATTRIBUTE X_INTERFACE_INFO of reset : SIGNAL is "xilinx.com:signal:reset:1.0 reset RST";
+    ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
+    ATTRIBUTE X_INTERFACE_PARAMETER of clk : SIGNAL is "ASSOCIATED_RESET reset, FREQ_HZ 30000000";
+    ATTRIBUTE X_INTERFACE_PARAMETER of reset : SIGNAL is "POLARITY ACTIVE_HIGH";
+
+    component ChanelsHandler
+    port (
+    clk    : in std_logic;
+    reset  : in std_logic;
+
+    enable : in std_logic;
+    IQ : out IQ_t;
+
+    store  : in std_logic;
+    frame : in Frame_t;
+
+    debug  : out std_logic_vector(7 downto 0);
+    debug2 : out std_logic_vector(2 downto 0)
+    );
+    end component;
+    signal debug : std_logic_vector(7 downto 0);
+    signal debug2 : std_logic_vector(2 downto 0);
+    signal IQ : IQ_t;
+begin
+I <= std_logic_vector(IQ.i) & "00000000";
+Q <= std_logic_vector(IQ.q) & "00000000";
+CH: ChanelsHandler port map (clk, reset, enable, IQ, store, frame, debug, debug2);
+end structural;

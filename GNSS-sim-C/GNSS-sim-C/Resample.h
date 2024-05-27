@@ -63,8 +63,8 @@ public:
 
 		int64_t scale = 1000;
 		//std::cout << "setDopler" << std::endl;
-		int64_t dopplerShift = f * scale;
-		int64_t targetFrequency = dopplerShift + (int64_t)radioFrequencyIn * scale;
+		int64_t dopplerShift = (double)f * scale;
+		int64_t targetFrequency = -dopplerShift + (int64_t)radioFrequencyIn * scale;
 		int64_t shift = targetFrequency - radioFrequencyOut * scale;
 		double normalPhaseSampleDelta = shift / (double)outputRate;
 		unitStepPhase = normalPhaseSampleDelta / scale * PHASE_RANGE;// (LONG_MAX / 2);

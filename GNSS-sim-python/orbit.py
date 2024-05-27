@@ -40,7 +40,7 @@ def getDoplerShift(userPos, userVel, satPos, satVel, sat):
     #f_shift = (c+v_reciever)/(c+vel_k)*f_k - f_k
 
     dPos = satPos-userPos
-    dopp = np.sum(dPos*satVel)
+    dopp = np.sum(dPos*(satVel+userVel))
     dopp = dopp / np.linalg.norm(dPos)
     doppler = -dopp*f_k/c
 

@@ -1,6 +1,10 @@
 #pragma once
 
 #include <map>
+#include <iostream>
+#include <iterator>
+#include <random>
+#include <math.h>
 
 #include "Satellite.h"
 #include "IQ.h"
@@ -42,10 +46,19 @@ private:
 	unsigned long sampleRate = 20000000;
 	unsigned long radioFrequency = 1575420000;
 
+	std::default_random_engine generator;
+	std::normal_distribution<float> dist;
+	float SNR = 1;
+
 public:
 
-	Manager(unsigned long sampleRate, unsigned long radioFrequency): sampleRate(sampleRate), radioFrequency(radioFrequency) {
+	Manager(unsigned long sampleRate, unsigned long radioFrequency): sampleRate(sampleRate), radioFrequency(radioFrequency), dist(0.0f, 1.0f / 4.2f) {
+		
+	}
 
+	void setNoise(float SNR_db) {
+		float factor = powf(10.0f, SNR_db / 10);
+		SNR = 1- (1 / (factor + 1));
 	}
 
 	bool addData(std::map<std::string, DataFrame> satsData) {
@@ -68,7 +81,8 @@ public:
 		return iq / n;
 	}
 
-	void run(FileSource& source, FileSink& sink, int skip10th = 0) {
+	template<typename T>
+	void run(FileSource& source, FileSink<T>& sink, int skip10th = 0) {
 		std::vector<Satellite*> sats = source.getSats();
 		for (auto& sat : sats) {
 			activeSats[sat->getName()] = setupChain(sat, sampleRate, radioFrequency);
@@ -90,7 +104,7 @@ public:
 			t++;
 			for (int i = 0; i < sampleRate / 10; i++) {
 				IQ iq = next();
-				sink.add(iq);
+				sink.add(iq*SNR + IQ(dist(generator), dist(generator))* (1 - SNR));
 			}
 			printf("\r %.1f s", (float)t / 10.0);
 			std::cout << std::flush;
