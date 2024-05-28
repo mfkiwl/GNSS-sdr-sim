@@ -5,6 +5,8 @@
 #include <iterator>
 #include <random>
 #include <math.h>
+#include <algorithm>
+#include <execution>
 
 #include "Satellite.h"
 #include "IQ.h"
@@ -99,6 +101,8 @@ public:
 			}
 		}
 
+		// back buffer and frond buffer, fill back buffer 1 thread per each chanel, front buffer merge the chanels
+
 		int t = 0;
 		while (addData(source.nextData())) {
 			t++;
@@ -121,6 +125,115 @@ public:
 			delete sat;
 		}
 		activeSats.clear();
+	}
+
+	template<typename T>
+	void run_paralell(FileSource& source, FileSink<T>& sink, int skip10th = 0) {
+		std::vector<Satellite*> sats = source.getSats();
+		int numSats = sats.size();
+		for (auto& sat : sats) {
+			activeSats[sat->getName()] = setupChain(sat, sampleRate, radioFrequency);
+		}
+		addData(source.nextData());
+		addData(source.nextData());
+		for (auto& sat : sats) {
+			activeSats[sat->getName()]->init();
+		}
+
+		size_t buffer_size = sampleRate/10;
+		std::map<std::string, IQ*>* backbuffer;
+		std::map<std::string, IQ*>* frontbuffer;
+		IQ* merged_buffer;
+		init_paralell(buffer_size, &backbuffer, &frontbuffer, &merged_buffer);
+
+		for (int j = 0; j < skip10th && addData(source.nextData()); j++) {
+			run_paralell(buffer_size, frontbuffer);
+		}
+
+
+		int t = 0;
+		while (addData(source.nextData())) {
+			t++;
+			run_paralell(buffer_size, frontbuffer);
+			merge(buffer_size, frontbuffer, merged_buffer); // run merge+sink in paralell with run_paralell
+			for (int i = 0; i < buffer_size; i++) {
+				sink.add(merged_buffer[i]/numSats);
+			}
+
+			printf("\r %.1f s", (float)t / 10.0);
+			std::cout << std::flush;
+
+			//std::cout << "\r" << (float)t / 10.0 << " s";
+			//std::cout << "line" << std::endl;
+		}
+		sink.close();
+
+		for (auto& sat : activeSats) {
+			deleteChain(sat.second);
+		}
+		for (auto& sat : sats) {
+			delete sat;
+		}
+		activeSats.clear();
+
+		free_paralell(buffer_size, backbuffer, frontbuffer, merged_buffer);
+	}
+
+	void init_paralell(size_t buffer_size, std::map<std::string, IQ*>** backbuffer, std::map<std::string, IQ*>** frontbuffer, IQ** merged_buffer) {
+		*merged_buffer = new IQ[buffer_size];
+		*backbuffer = new std::map<std::string, IQ*>;
+		*frontbuffer = new std::map<std::string, IQ*>;
+	}
+
+	void free_paralell(size_t buffer_size, std::map<std::string, IQ*>* backbuffer, std::map<std::string, IQ*>* frontbuffer, IQ* merged_buffer) {
+		delete merged_buffer;
+		for (auto& chanel : *backbuffer) {
+			delete chanel.second;
+		}
+		delete backbuffer;
+		for (auto& chanel : *frontbuffer) {
+			delete chanel.second;
+		}
+		delete frontbuffer;
+	}
+
+	void run_paralell(size_t buffer_size, std::map<std::string, IQ*>* buffer) {
+		for (auto& sat : activeSats) {
+			if (buffer->find(sat.first) == buffer->end()) {
+				buffer->insert(std::make_pair(sat.first, new IQ[buffer_size]));
+			}
+		}
+		std::for_each(
+			std::execution::par,
+			activeSats.begin(),
+			activeSats.end(),
+			[&](std::pair<std::string, DataHandler*>&& sat)
+			{
+				std::string satName = sat.first;
+				IQ* chanel = buffer->at(satName);
+				for (int i = 0; i < buffer_size; i++) {
+					chanel[i] = sat.second->nextSample();
+				}
+			});
+
+		//std::map<std::string, IQ*>* tmp = backbuffer;
+		//backbuffer = frontbuffer;
+		//frontbuffer = tmp;
+
+	}
+
+	void merge(size_t buffer_size, std::map<std::string, IQ*>* buffers, IQ* merged_buffer) {
+		for (int i = 0; i < buffer_size; i++) {
+			merged_buffer[i] = 0;
+		}
+		for (auto& sat : *buffers) {
+			for (int i = 0; i < buffer_size; i++) {
+				merged_buffer[i] = merged_buffer[i]+sat.second[i];
+			}
+		}
+		//for (int i = 0; i < buffer_size; i++) {
+		//	merged_buffer[i] = merged_buffer[i]/256;
+		//}
 	}
 
 };

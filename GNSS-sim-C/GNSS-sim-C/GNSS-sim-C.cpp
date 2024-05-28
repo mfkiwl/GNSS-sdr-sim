@@ -33,7 +33,7 @@ void example_manager_gps() {
     Manager manager(2600000/*1023000*/, 1575420000);
 
     //manager.setNoise(-2);
-    manager.run(fileSource, fileSink, 3);
+    manager.run_paralell(fileSource, fileSink, 3);
 }
 
 void example_manager_gps15() {
