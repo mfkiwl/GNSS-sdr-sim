@@ -45,7 +45,7 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             travelTimeDy = orbit.getTravelTime(userPos+np.array([[0],[1],[0]]), satPos, eph)-travelTime
             travelTimeDz = orbit.getTravelTime(userPos+np.array([[0],[0],[1]]), satPos, eph)-travelTime
             doplerShift = orbit.getDoplerShift(userPos, userVel, satPos, satVel, eph)  # add user pos and vel
-            power = orbit.getVisability(userPos, satPos, eph) # how visable was the currect location at the of transmition
+            power = 2.5*orbit.getVisability(userPos, satPos, eph) # how visable was the currect location at the of transmition
             #arivelTime = transmitTime + travelTime
             #delay = arivelTime - transmitTime
             delay = travelTime + sat.constelation.timeDifference(transmitTime, syncTime)
@@ -101,13 +101,14 @@ def main():
     #rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
     #resultFile = "data/glonass.txt"
     
-    #constelation = Galileo.getConstelation()
-    #rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
-    #resultFile = "data/galileo.txt"
+    constelation = Galileo.getConstelation()
+    rinexFile = "data/Galileo/IZMI00TUR_S_20233320000_01D_EN.rnx"
+    rinexFile = "\\\\wsl.localhost\\Ubuntu\\home\\mike\\galileo-sdr-sim\\rinex_files\\week171.rnx"
+    resultFile = "data/galileo.txt"
 
-    constelation = GPS.getConstelation()
-    rinexFile = "data/GPS/brdc3260.23n"
-    resultFile = "data/gps.txt"
+    #constelation = GPS.getConstelation()
+    #rinexFile = "data/GPS/brdc3260.23n"
+    #resultFile = "data/gps.txt"
 
     #constelation = BeiDou.getConstelation()
     #rinexFile = "data/BeiDou/Brdc0530.24f"
@@ -121,23 +122,26 @@ def main():
     #startTime = datetime.datetime(2024,2,21, 23,00) # IRNSS
     #startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
-    startTime = datetime.datetime(2023,11,22, 4, 0) # gps
+    #startTime = datetime.datetime(2023,11,22, 4, 0) # gps
     #startTime = datetime.datetime(2023,11,21, 23, 59, 54) # gps
-
-    duration = datetime.timedelta(seconds=121)
+    #startTime = datetime.datetime(2023,11,27, 23, 45) # galileo?
+    startTime = datetime.datetime(2021,6,20, 0, 0) # galileo week 171?
+    
+    
+    duration = datetime.timedelta(seconds=181)
 
 
 
     sats, headerData = constelation.loadSatsFromRinax(rinexFile)
     #sats = { "G02":sats["G02"], "G1002":sats["G03"]} #
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19", "G21", "G22", "G28", "G31", "G32"])
-    sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
+    #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14"])
     #sats = selectSats(sats, ["G05"])
     #sats = {"G01":sats["G01"]}
     #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"]}
     #sats = {"E07":sats["E07"], "E08":sats["E08"], "E12":sats["E12"], "E13":sats["E13"], "E19":sats["E19"]}
-    #sats = {"E36":sats["E36"]}
+    #sats = {"E02":sats["E02"]}
     #sats = {"E04":sats["E04"], "E05":sats["E05"], "E09":sats["E09"], "E10":sats["E10"], "E11":sats["E11"], "E12":sats["E12"], "E18":sats["E18"], "E34":sats["E34"], "E36":sats["E36"]}
     #sats = selectSats(sats, ["E04", "E05", "E09", "E10", "E11", "E12", "E34", "E36"])
     #sats = {"R01":sats["R01"]}
@@ -157,7 +161,8 @@ def main():
     timestep = datetime.timedelta(milliseconds=100) # hardcoded 0.1s
     endTime = startTime+duration
 
-    userPos = np.array([[4541995.72232094],[833907.206476633],[4384738.7981905]]) # piza
+    userPos = np.array([[3992112.0],[4929847.0],[-662268.0]])
+    #userPos = np.array([[4541995.72232094],[833907.206476633],[4384738.7981905]]) # piza
     #userPos = np.array([[1239522], [5463155], [3039514]]) # new deli
     #userPos = np.array([[-2758918.635941], [4772301.120089], [3197889.437237]]) # gps-sdr-sim
     userVel = np.array([[0],[0],[0]])

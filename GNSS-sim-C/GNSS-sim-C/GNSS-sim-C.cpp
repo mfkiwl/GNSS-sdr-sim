@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+//#define USE_CBOC
 
 #include "DataHandler.h"
 //#include "Resample2.h"
@@ -18,13 +19,14 @@
 #include "FPGA_data.h"
 
 void example_manager_galileo() {
+
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
     FileSource fileSource("../../data/galileo.txt");
     FileSink<int8_t> fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(15000000/*2 * 6138000*/, 1575420000);
+    Manager manager(2600000/*2 * 6138000*/, 1575420000);
 
-    manager.run(fileSource, fileSink, 5);
+    manager.run_paralell(fileSource, fileSink, 5);
 }
 
 void example_manager_gps() {
@@ -115,8 +117,8 @@ int main()
     //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
     //example_manager_glonass();
-    //example_manager_galileo();
-    example_manager_gps();
+    example_manager_galileo();
+    //example_manager_gps();
     //example_manager_beidou();
     //example_manager_irnss();
     //example_file();

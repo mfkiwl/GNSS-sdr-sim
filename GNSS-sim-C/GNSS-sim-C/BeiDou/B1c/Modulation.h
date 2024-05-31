@@ -10,17 +10,17 @@
 namespace beidou {
 	namespace B1c {
 
-		float s_B1C_data[12];
-		float s_B1C_pilot_a[12];
-		float s_B1C_pilot_b[12];
+		IQ_v s_B1C_data[12];
+		IQ_v s_B1C_pilot_a[12];
+		IQ_v s_B1C_pilot_b[12];
 
 		void initModulationPaterns() {
 			for (int i = 0; i < 12; i++) {
 				int sign_sin_a = ((i / 6) * 2 - 1);
 				int sign_sin_b = ((i % 2) * 2 - 1);
-				s_B1C_data[i] = sign_sin_a * 0.5f;
-				s_B1C_pilot_a[i] = sign_sin_a * sqrt(29.0 / 44.0);
-				s_B1C_pilot_b[i] = sign_sin_b * sqrt(1.0 / 11.0);
+				s_B1C_data[i] = sign_sin_a * 0.5f * IQ_v_unit;
+				s_B1C_pilot_a[i] = sign_sin_a * sqrt(29.0 / 44.0) * IQ_v_unit;
+				s_B1C_pilot_b[i] = sign_sin_b * sqrt(1.0 / 11.0) * IQ_v_unit;
 
 				std::cout << s_B1C_data[i] << ", " << s_B1C_pilot_a[i] << ", " << s_B1C_pilot_b[i] << std::endl;
 			}
@@ -75,9 +75,9 @@ namespace beidou {
 				if (repeat == Crepeat) { repeat = 0; bit++;    currentData = dataSource->nextBit(); }
 				if (bit == length)     { bit    = 0; }
 
-				float s_data = s_B1C_data[step];
-				float s_pilot_a = s_B1C_pilot_a[step];
-				float s_pilot_b = s_B1C_pilot_b[step];
+				IQ_v s_data = s_B1C_data[step];
+				IQ_v s_pilot_a = s_B1C_pilot_a[step];
+				IQ_v s_pilot_b = s_B1C_pilot_b[step];
 
 				int8_t d_data = -currentData * 2 + 1;
 
@@ -85,8 +85,8 @@ namespace beidou {
 				int8_t c_pilot = -nextPRN_pilot() * 2 + 1;
 
 				IQ v(
-					s_data * d_data * c_data + s_pilot_b * c_pilot,
-					s_pilot_a * c_pilot
+					s_data * d_data * c_data / (IQ_v_unit*IQ_v_unit) + s_pilot_b * c_pilot / IQ_v_unit,
+					s_pilot_a * c_pilot / IQ_v_unit
 				);
 
 				step++;

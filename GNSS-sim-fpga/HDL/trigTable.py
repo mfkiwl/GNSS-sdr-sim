@@ -28,7 +28,8 @@ def tableSin(x):
 
 for i in range(16):
     for j in range(16):
-        print("X\""+hex(sinTable[16*i+j])[2:].zfill(2)+"\"", end=", ")
+        #print("X\""+hex(sinTable[16*i+j])[2:].zfill(2)+"\"", end=", ")
+        print(sinTable[16*i+j], end=", ")
     print()
 
 xs = np.linspace(-2*math.pi, 4*math.pi, 10000)

@@ -31,6 +31,7 @@ public:
 	int power = 1;
 
 	long long last_set_delay = 0;
+	long long last_target = 0;
 
 	ChainLink* dataSource;
 	ChainLink* sampleSource;
@@ -64,7 +65,7 @@ public:
 		int64_t scale = 1000;
 		//std::cout << "setDopler" << std::endl;
 		int64_t dopplerShift = (double)f * scale;
-		int64_t targetFrequency = -dopplerShift + (int64_t)radioFrequencyIn * scale;
+		int64_t targetFrequency = dopplerShift + (int64_t)radioFrequencyIn * scale;
 		int64_t shift = targetFrequency - radioFrequencyOut * scale;
 		double normalPhaseSampleDelta = shift / (double)outputRate;
 		unitStepPhase = normalPhaseSampleDelta / scale * PHASE_RANGE;// (LONG_MAX / 2);
@@ -120,7 +121,7 @@ public:
 	void setDelayTarget(double delay_ms, double time_till_next_update) {
 
 
-		static long long last_target = 0;
+		//static long long last_target = 0;
 
 		long long new_delay = calcDelayNum(delay_ms);
 		long long last_delay = this->last_set_delay;
@@ -137,6 +138,8 @@ public:
 		}*/
 		delayNStep = new_delayNStep;
 		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
+		//std::cout << last_target - last_delay << std::endl;
+
 
 		last_target = new_delay;
 		//std::cout << std::setprecision(10) << delay_ms << " <> " << new_delay*1000.0 / subCycles / inputRate / outputRate << std::endl;
@@ -156,7 +159,7 @@ public:
 	}
 
 	IQ nextSample() {
-		if (n >= bufferNStep) {
+		while (n >= bufferNStep) {
 			n -= bufferNStep;
 			currentSample = sampleSource->nextSample();
 		}
@@ -183,7 +186,8 @@ public:
 		}*/
 
 
-		sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
+		//sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
+		sample = sample.rotate(unitPhase);
 
 		unitPhase += unitStepPhase;
 		while (unitPhase > PHASE_RANGE/*(LONG_MAX / 2)*/) {

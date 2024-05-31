@@ -14,7 +14,11 @@ namespace galileo {
 		const int Rb = 6138000;
 		const int Rchip = 1023000;
 
+#ifdef USE_CBOC
 		const int frequency = 2 * Rb;
+#else
+		const int frequency = 2 * Ra;
+#endif
 
 		ChainLink* dataSource;
 		uint8_t currentData;
@@ -26,13 +30,18 @@ namespace galileo {
 		size_t pilotLength;
 
 
-		float alpha = sqrt(10.0f / 11.0f);
-		float beta = sqrt(1.0f / 11.0f);
+		const float alpha = sqrt(10.0f / 11.0f);
+		const float beta = sqrt(1.0f / 11.0f);
 
-		int Ca = frequency / Ra / 2;
-		int Cb = frequency / Rb / 2;
+		const int Ca = frequency / Ra / 2;
+		const int Cb = frequency / Rb / 2;
 
-		int Cchip = 12;
+#ifdef USE_CBOC
+		int Cchip = 12; // CBOC
+#else
+		int Cchip = 2; // BOC(1,1)
+#endif // USE_CBOC
+
 		int Cprn = 4092;
 
 		int step;
@@ -54,11 +63,10 @@ namespace galileo {
 
 
 
-		float next() {
+		IQ_v next() {
 			if (step == Cchip) {
 				chip++;
 				step = 0;
-				//std::cout << "next chip: " << chip % Cprn << " prn: " << (prn.test(chip%Cprn) ? -1 : 1) << std::endl;
 			}
 
 			if (chip == Cprn) {
@@ -68,18 +76,19 @@ namespace galileo {
 					bit = 0;
 				}
 				currentData = dataSource->nextBit();
-				//std::cout << "v: " << (int)currentData << ", p: " << (int)pilotData[bit] <<std::endl;
-				//std::cout << "next bit: " << bit % length << " data: " << (data[bit%length] == 1 ? -1 : 1) << std::endl;
 			}
 
-			//if (bit == pilotLength) {
-			//	bit = 0;
-			//}
 
-			float sub_carrier_data = (((step / Ca) % 2 == 0) ? alpha : -alpha)
-				+ (((step / Cb) % 2 == 0) ? beta : -beta);
-			float sub_carrier_pilot = (((step / Ca) % 2 == 0) ? alpha : -alpha)
-				- (((step / Cb) % 2 == 0) ? beta : -beta);
+#ifdef USE_CBOC // CBOC
+			IQ_v sub_carrier_data = (((step / Ca) % 2 == 0) ? alpha * IQ_v_unit : -alpha * IQ_v_unit)
+				+ (((step / Cb) % 2 == 0) ? beta * IQ_v_unit : -beta * IQ_v_unit);
+			IQ_v sub_carrier_pilot = (((step / Ca) % 2 == 0) ? alpha * IQ_v_unit : -alpha * IQ_v_unit)
+				- (((step / Cb) % 2 == 0) ? beta * IQ_v_unit : -beta * IQ_v_unit);
+#else
+			IQ_v sub_carrier_data = (((step / Ca) % 2 == 0) ? alpha * IQ_v_unit : -alpha * IQ_v_unit);
+			IQ_v sub_carrier_pilot = (((step / Ca) % 2 == 0) ? alpha * IQ_v_unit : -alpha * IQ_v_unit);
+#endif
+
 			step++;
 
 			//std::cout << (int)(sub_carrier_data*60) << " _ " << (int)(sub_carrier_pilot*60) << std::endl;
@@ -90,14 +99,21 @@ namespace galileo {
 			//	std::cout << "D:" << (int)prn_data << "  P:" << (int)prn_pilot << " S:" << (int)pilotData[pilotLength] << " v:" << (int)currentData << std::endl;
 			//}
 
+#ifdef USE_CBOC // CBOC
 			return (
-					sub_carrier_data  * (prn_data  ? -1 : 1) * (currentData            == 1 ? -1 : 1)
-				  + sub_carrier_pilot * (prn_pilot ? -1 : 1) * (pilotData[bit] == 1 ? -1 : 1)
+					sub_carrier_data  * (prn_data  ? -1 : 1) * (currentData    == 1 ? -1 : 1)
+				  - sub_carrier_pilot * (prn_pilot ? -1 : 1) * (pilotData[bit] == 1 ? -1 : 1) // + or - ?
 				  )/2;
+#else
+			return (
+				sub_carrier_data * (prn_data ? -1 : 1) * (currentData == 1 ? -1 : 1)
+				- sub_carrier_pilot * (prn_pilot ? -1 : 1) * (pilotData[bit] == 1 ? -1 : 1)
+				) / 2;
+#endif
 		}
 
 		IQ nextSample() {
-			float v = next();
+			IQ_v v = next();
 			//std::cout << (int)(v*120) << std::endl;
 			IQ iq(v);
 			//std::cout << step << iq << std::endl;

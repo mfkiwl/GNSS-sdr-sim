@@ -31,7 +31,7 @@ namespace gps {
 			chip = 0;
 		}
 
-		float next() {
+		IQ_v next() {
 			if (step == Cchip) {
 				chip++;
 				step = 0;
@@ -50,7 +50,7 @@ namespace gps {
 				//std::cout << "              " << (int)currentData << std::endl;
 			}
 
-			float v = (currentData ^ prn.next()) * 2 - 1;
+			IQ_v v = ((currentData ^ prn.next()) * 2 - 1)*IQ_v_unit;
 
 			step++;
 

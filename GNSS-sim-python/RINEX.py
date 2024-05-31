@@ -112,15 +112,20 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
             entry[0][0] = constelationPrefix+(entry[0][0].strip().zfill(2))
         if entry[0][0][0]==constelationPrefix:
             for row in range(len(dataDescription)):
+                rowDataDescription = dataDescription[row]
                 if len(entry[row])-1 == len(dataDescription[row]) and len(entry[row][0])==1 and entry[row][1].strip().isnumeric():
                     entry[row] = [entry[row][0]+"0"+entry[row][1]]+entry[row][2:]
-                assert len(entry[row]) == len(dataDescription[row])
-                for column in range(len(dataDescription[row])):
-                    if isinstance(dataDescription[row][column], list):
-                        f = dataDescription[row][column][1]
-                        sat[dataDescription[row][column][0]] = f(entry[row][column])
+                if len(entry[row]) < len(rowDataDescription):
+                    rowDataDescription = [x for x in rowDataDescription if not isinstance(x, str) or x.find("spare")==-1]
+                    assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match even after removing spares"
+                else:
+                    assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match"
+                for column in range(len(rowDataDescription)):
+                    if isinstance(rowDataDescription[column], list):
+                        f = rowDataDescription[column][1]
+                        sat[rowDataDescription[column][0]] = f(entry[row][column])
                     else:
-                        sat[dataDescription[row][column]] = float(entry[row][column].replace("D", "E"))
+                        sat[rowDataDescription[column]] = float(entry[row][column].replace("D", "E"))
         satsList.append(sat)
     
     return satsList, headerData

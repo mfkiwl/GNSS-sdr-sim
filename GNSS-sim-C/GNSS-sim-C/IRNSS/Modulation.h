@@ -35,7 +35,7 @@ namespace irnss {
 			chip = 0;
 		}
 
-		float next() {
+		IQ_v next() {
 			if (step == Cchip) {
 				chip++;
 				step = 0;
@@ -53,7 +53,7 @@ namespace irnss {
 				currentData = dataSource->nextBit();
 			}
 
-			float v = (currentData ^ prn.next()) * 2 - 1;
+			IQ_v v = ((currentData ^ prn.next()) * 2 - 1)*IQ_v_unit;
 
 			step++;
 

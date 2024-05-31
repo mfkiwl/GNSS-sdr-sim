@@ -47,7 +47,7 @@ namespace beidou {
 			}
 		}
 
-		float next() {
+		IQ_v next() {
 			if (step == Cchip) {
 				chip++;
 				step = 0;
@@ -65,7 +65,7 @@ namespace beidou {
 			}
 
 			uint8_t prn_chip = prn.next();
-			float v = (currentData ^ NH_code[repeat] ^ prn_chip) * 2 - 1;
+			IQ_v v = ((currentData ^ NH_code[repeat] ^ prn_chip) * 2 - 1)*IQ_v_unit;
 			//std::cout << v << std::endl;
 			//float v = (((currentData>>1)&1) ^ (currentData&1) ^ NH_code[repeat] ^ prn_chip) * 2 - 1; // is this how i want to handle the 2 data streams?
 

@@ -20,10 +20,11 @@ public:
 	}
 
 	void add(IQ iq) {
-		buffer[index + 0] = round(iq.I * (1<<(sizeof(int8_t/*T*/) * 8 - 1) * 120 / 128));
-		buffer[index + 1] = round(iq.Q * (1 << (sizeof(int8_t/*T*/) * 8 - 1) * 120 / 128));
+		int bitshiftmult = 1 << (sizeof(int8_t/*T*/) * 8 - 1);
+		buffer[index + 0] = round(iq.I * bitshiftmult * 120 / 128 / IQ_v_unit);
+		buffer[index + 1] = round(iq.Q * bitshiftmult * 120 / 128 / IQ_v_unit);
 
-		if (iq.I > 2 || iq.I < -2 || iq.Q > 2 || iq.Q < -2) {
+		if (iq.I > 2 * IQ_v_unit || iq.I < -2 * IQ_v_unit || iq.Q > 2 * IQ_v_unit || iq.Q < -2 * IQ_v_unit) {
 			std::cout << "overflow" << std::endl;
 		}
 

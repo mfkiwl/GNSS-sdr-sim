@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iomanip>
 
+//#define USE_CBOC
+
 #include "../Satellite.h"
 #include "CBOC.h"
 #include "PRN_Code.h"
@@ -32,7 +34,11 @@ namespace galileo {
 		}
 
 		int getModulationRate() {
+#ifdef USE_CBOC
 			return 2 * 6138000;
+#else
+			return 2 * 1023000;
+#endif
 		}
 
 		long getRadioFrequency() {

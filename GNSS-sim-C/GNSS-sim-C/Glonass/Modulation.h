@@ -49,7 +49,7 @@ namespace glonass {
 			//bit = 0;
 		}
 
-		float next() {
+		IQ_v next() {
 			if (step == Cchip) {
 				chip++;
 				step = 0;
@@ -72,7 +72,7 @@ namespace glonass {
 			//}
 
 
-			float v = (currentData ^ ranging_code[chip]) * 2 - 1;
+			IQ_v v = ((currentData ^ ranging_code[chip]) * 2 - 1)*IQ_v_unit;
 
 			step++;
 
