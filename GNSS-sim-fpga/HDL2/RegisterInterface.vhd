@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.settings.all;
+use work.GNSSsettings.all;
 
 entity RegInterface is
   port
@@ -25,21 +25,32 @@ end RegInterface;
 
 architecture structural of RegInterface is
 	
+	ATTRIBUTE X_INTERFACE_INFO : STRING; 
+    ATTRIBUTE X_INTERFACE_INFO of gnss_reset : SIGNAL is "xilinx.com:signal:reset:1.0 reset RST";
+    ATTRIBUTE X_INTERFACE_INFO of clock_reset : SIGNAL is "xilinx.com:signal:reset:1.0 reset RST";
+    ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
+    ATTRIBUTE X_INTERFACE_PARAMETER of gnss_reset : SIGNAL is "POLARITY ACTIVE_HIGH";
+    ATTRIBUTE X_INTERFACE_PARAMETER of clock_reset : SIGNAL is "POLARITY ACTIVE_HIGH";
+	
 	signal frame_record : FrameRecord_t;
-
+    
+    signal delay_step : std_logic_vector(64-8-1 downto 0);
+    
 begin
 
-	frame_record.chanel <= reg0( 7 downto  0);
-    frame_record.prn    <= reg0(15 downto  8);
-	frame_record.power  <= reg0(23 downto 16);
+	frame_record.chanel <= unsigned(reg0( 7 downto  0));
+    frame_record.prn    <= unsigned(reg0(15 downto  8));
+	frame_record.power  <= unsigned(reg0(23 downto 16));
 	
-    bits(31 downto  0)  <= reg1;
-	bits(63 downto 32)  <= reg2;
+    frame_record.bits(31 downto  0)  <= reg1;
+	frame_record.bits(63 downto 32)  <= reg2;
+	
+	frame_record.delay_step <= signed(delay_step);
 	
 	delay_step(31 downto  0)   <= reg3;
 	delay_step(63-8 downto 32) <= reg4(31-8 downto 0);
 	
-    phase_step  <= reg5;
+    frame_record.phase_step  <= to_integer(signed(reg5));
 	
 	gnss_store  <= reg6(0);
 	

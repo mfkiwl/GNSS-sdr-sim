@@ -1,11 +1,19 @@
 #pragma once
 
 #include <climits>
+#include <algorithm>
 
 #include "IQ.h"
 #include "ChainLink.h"
 
-#define SET_DELAY_ON_START
+//#define SET_DELAY_ON_START
+//#define RELATIVE_MOVE
+//#define TRIG_LOOKUP
+
+#ifdef RELATIVE_MOVE
+//long dxmm = 0, dymm = 10000, dzmm = 0; // offset in mm
+#endif // RELATIVE_MOVE
+
 
 class Resample : public ChainLink{
 	const long long PHASE_POWER = 30;
@@ -23,7 +31,7 @@ public:
 	long long itterNStep;
 	long long bufferNStep;
 	long long delayNStep = 0;
-	int subCycles = 10000;
+	const int subCycles = 10000;
 
 	long unitStepPhase;
 	long unitPhase;
@@ -32,6 +40,13 @@ public:
 
 	long long last_set_delay = 0;
 	long long last_target = 0;
+
+	long long dx = 0, dy = 0, dz = 0; // offset n per meter
+#ifdef RELATIVE_MOVE
+	long long dxn = 0, dyn = 0, dzn = 0; // current ofset in n
+	long long dnstep = 1; // how fast to go to target
+	long long dxmm = 0, dymm = 0, dzmm = 0; // offset in mm
+#endif
 
 	ChainLink* dataSource;
 	ChainLink* sampleSource;
@@ -46,6 +61,11 @@ public:
 	void init() {
 		itterNStep = subCycles * (long long)inputRate;// *(targetFrequency / (double)radioFrequency); // might trow of updating of delay
 		bufferNStep = subCycles * (long long)outputRate;
+
+#ifdef RELATIVE_MOVE
+
+		dnstep = bufferNStep / 3 / 10230;
+#endif
 
 		//n = 0;
 		//last_set_delay = 0;
@@ -77,6 +97,12 @@ public:
 		this->power = power;
 	}
 
+	void setDxyz(float dx, float dy, float dz) { // in ms
+		this->dx = calcDelayNum(dx);
+		this->dy = calcDelayNum(dy);
+		this->dz = calcDelayNum(dz);
+	}
+
 	void print_info() {
 		//std::cout << targetFrequency << "/" << radioFrequencyOut << std::endl;
 		//std::cout << std::setprecision(15) << targetFrequency / (double)radioFrequencyOut << std::endl;
@@ -87,6 +113,7 @@ public:
 	}
 
 	uint8_t nextBit() {
+		//std::cout << "offset(mm): " << dymm << ", n/m: " << dy << ", target: " << dymm*dy/1000 << ", current(n): " << dyn << std::endl;
 		return dataSource->nextBit();
 	}
 
@@ -105,6 +132,24 @@ public:
 		//std::cout << delay << std::endl;
 
 		return delay;
+	}
+
+	long long numToPhaseStep(long long n) {
+		//long long nPerSample = ((long long)subCycles * inputRate); /*itterNStep*/
+		//long long samples = n / (subCycles * inputRate);
+		//double delay_ms = samples * 1000 / outputRate;
+
+
+		//double delay_ms = n / (subCycles * inputRate * outputRate) * 1000;
+
+		//double waveLength_ms = 1 / radioFrequencyOut * 1000;
+
+		//double phase_step = delay_ms / waveLength_ms;
+		//long long phase_step = n * radioFrequencyOut * PHASE_RANGE / (subCycles * inputRate * outputRate);//2^80 / ...
+		long long phase_step = n * radioFrequencyOut / (subCycles * inputRate) * PHASE_RANGE / outputRate;
+		//std::cout << phase_step / (double)PHASE_RANGE << std::endl;
+		return phase_step;
+		//return PHASE_RANGE * phase_step;
 	}
 
 	void setDelay(double delay_ms) {
@@ -159,6 +204,23 @@ public:
 	}
 
 	IQ nextSample() {
+
+#ifdef RELATIVE_MOVE
+		long dxnstep = std::clamp((dx * dxmm / 1000) - dxn, -dnstep, dnstep);
+		dxn += dxnstep;
+		long dynstep = std::clamp((dy * dymm / 1000) - dyn, -dnstep, dnstep);
+		dyn += dynstep;
+		long dznstep = std::clamp((dz * dzmm / 1000) - dzn, -dnstep, dnstep);
+		dzn += dznstep;
+		long dxyznstep = dxnstep + dynstep + dznstep;
+		n += dxyznstep;
+
+		//if (dynstep != 0) {
+		//	std::cout << "step y " << dynstep << std::endl;
+		//}
+#endif
+
+
 		while (n >= bufferNStep) {
 			n -= bufferNStep;
 			currentSample = sampleSource->nextSample();
@@ -187,9 +249,17 @@ public:
 
 
 		//sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
+#ifdef TRIG_LOOKUP
 		sample = sample.rotate(unitPhase);
+#else
+		sample = sample.rotate((unitPhase / (float)PHASE_RANGE/*(LONG_MAX / 2)*/) * 2 * M_PI);
+#endif
 
+#ifdef RELATIVE_MOVE
+		unitPhase += unitStepPhase+numToPhaseStep(dxyznstep);
+#else
 		unitPhase += unitStepPhase;
+#endif
 		while (unitPhase > PHASE_RANGE/*(LONG_MAX / 2)*/) {
 			unitPhase -= PHASE_RANGE;// (LONG_MAX / 2);
 		}

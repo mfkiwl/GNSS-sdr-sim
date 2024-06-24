@@ -5,11 +5,18 @@
 #include <math.h>
 #include <type_traits>
 
-//typedef double IQ_v;
-//const double IQ_v_unit = 1.0;
+//#define IQ_FLOATS
 
+#ifdef IQ_FLOATS
+typedef double IQ_v;
+const double IQ_v_unit = 1.0;
+#else
 typedef int IQ_v;
 const int IQ_v_unit = 512;
+#endif
+
+
+
 
 const size_t TRIG_TABLE_SIZE = 256;
 const int SIN_TABLE[256] = {
@@ -43,7 +50,7 @@ struct IQ {
 		//std::cout << phase << " : " << cos(phase) << ", " << sin(phase) << " @ (" << I << ", " << Q << ")" << std::endl;
 		return IQ(
 			cos(phase) * I + sin(phase) * Q,
-			sin(phase) * I + cos(phase) * Q
+			sin(phase) * I - cos(phase) * Q
 		);
 	}
 
@@ -73,7 +80,7 @@ struct IQ {
 
 		return IQ(
 			(cosPhase * I + sinPhase * Q)/256, 
-			(sinPhase * I + cosPhase * Q)/256
+			(sinPhase * I - cosPhase * Q)/256
 		);
 	}
 

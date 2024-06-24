@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_std.ALL;
-use work.settings.all;
+use work.GNSSsettings.all;
 use work.constelation.all;
 
 entity Chanel is
@@ -93,7 +93,7 @@ architecture structural of Chanel is
   signal IQ_upsampled, IQ_modulated : IQ_t;
   
   
-  FOR mod0: Modulation USE ENTITY WORK.Modulation(beidouL1);
+  FOR mod0: Modulation USE ENTITY WORK.Modulation(gpsL1);
   
 begin
 

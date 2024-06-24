@@ -185,6 +185,7 @@
     <ClInclude Include="Resample.h" />
     <ClInclude Include="Resample2.h" />
     <ClInclude Include="Satellite.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="WeilCode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

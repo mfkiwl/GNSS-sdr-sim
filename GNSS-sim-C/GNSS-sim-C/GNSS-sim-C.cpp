@@ -3,7 +3,13 @@
 
 #include <iostream>
 
-//#define USE_CBOC
+/* Settings */
+
+#define USE_CBOC
+#define SET_DELAY_ON_START
+//#define RELATIVE_MOVE
+//#define TRIG_LOOKUP
+#define IQ_FLOATS
 
 #include "DataHandler.h"
 //#include "Resample2.h"
@@ -18,13 +24,30 @@
 
 #include "FPGA_data.h"
 
+void example_manager_config(std::string file) {
+    FileSource fileSource(file);
+    
+    int frequency = 0;
+    int samplingRate = 0;
+    std::string outputFile;
+
+    if (fileSource.getConfig(&samplingRate, &frequency, &outputFile)) {
+        FileSink<int8_t> fileSink(outputFile);
+        Manager manager(samplingRate, frequency);
+        manager.run_paralell(fileSource, fileSink, 4);
+    }
+    else {
+        std::cerr << "No configuration data found in file: " << file << std::endl;
+    }
+}
+
 void example_manager_galileo() {
 
     //FileSource fileSource("ExampleData.txt");
     //FileSource fileSource("GalileoData.txt");
     FileSource fileSource("../../data/galileo.txt");
     FileSink<int8_t> fileSink("../../data/OutputIQ.sigmf-data");
-    Manager manager(2600000/*2 * 6138000*/, 1575420000);
+    Manager manager(15000000/*2 * 6138000*/, 1575420000);
 
     manager.run_paralell(fileSource, fileSink, 5);
 }
@@ -52,7 +75,7 @@ void example_manager_glonass() {
     FileSink<int8_t> fileSink("../../data/OutputIQ.sigmf-data");
     Manager manager(15000000/*511000*/, 1602000000);
 
-    manager.run(fileSource, fileSink, 5);
+    manager.run_paralell(fileSource, fileSink, 5);
 }
 
 void example_manager_beidou() {
@@ -116,9 +139,11 @@ int main()
     //return 0;
     //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
+    //example_manager_config("../../data/gps.txt");
+
     //example_manager_glonass();
-    example_manager_galileo();
-    //example_manager_gps();
+    //example_manager_galileo();
+    example_manager_gps();
     //example_manager_beidou();
     //example_manager_irnss();
     //example_file();

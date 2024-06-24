@@ -52,6 +52,39 @@ public:
 
 	}
 
+	bool getConfig(int* samplingRate, int* frequency, std::string* fileName) {
+		if (file.is_open()) {
+			std::string line;
+			std::streampos oldpos = file.tellg();
+			while (std::getline(file, line))
+			{
+
+				if (line.rfind("config") == 0) {
+					
+					std::string config_string = line.substr(7);
+					int split = config_string.find(" ");
+					*frequency = std::stoi(config_string.substr(0, split));
+					config_string = config_string.substr(split + 1);
+					split = config_string.find(" ");
+					if (split >= 0) {
+						*fileName = config_string.substr(split + 1);
+					}
+					*samplingRate = std::stoi(config_string.substr(0, split));
+
+					//file.seekg(oldpos);
+					return true;
+				}
+				if (line.rfind("setup") == 0 || line.rfind("data") == 0) {
+
+					file.seekg(oldpos);
+					return false;
+				}
+			}
+			throw std::invalid_argument("File does not contain setup data");
+		}
+		throw std::invalid_argument("File not open");
+	}
+
 	std::vector<Satellite*> getSats() {
 		if (file.is_open()) {
 			std::string line;

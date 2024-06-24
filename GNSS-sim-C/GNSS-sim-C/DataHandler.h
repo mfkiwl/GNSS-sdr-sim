@@ -80,6 +80,7 @@ private:
 		last_frame_delay = currentData.delay;
 		currentData = data.front();
 		data.pop();
+		resample->setDxyz(currentData.dx / 1000000, currentData.dy / 1000000, currentData.dz / 1000000);
 	}
 
 	void setBitData() {

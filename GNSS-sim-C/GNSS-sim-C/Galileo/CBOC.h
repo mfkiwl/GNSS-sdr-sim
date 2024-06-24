@@ -6,6 +6,8 @@
 #include"PRN_Code.h"
 #include "../ChainLink.h"
 
+//#define USE_CBOC
+
 namespace galileo {
 
 	class CBOC : public ChainLink {

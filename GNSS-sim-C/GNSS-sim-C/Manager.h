@@ -107,6 +107,13 @@ public:
 		int t = 0;
 		while (addData(source.nextData())) {
 			t++;
+
+			// temp test for dxmm
+			//if (t > 150 && t < 152) {
+			//	dymm = -10000;
+			//	std::cout << "change offset target" << std::endl;
+			//}
+
 			for (int i = 0; i < sampleRate / 10; i++) {
 				IQ iq = next();
 				sink.add(iq*SNR + IQ(dist(generator), dist(generator))* (1 - SNR));
@@ -182,6 +189,15 @@ public:
 				}
 			}
 			t++;
+
+#ifdef RELATIVE_MOVE
+			if (t > 150 && t < 152) {
+				std::cout << "targed modified" << std::endl;
+				for (auto& sat : activeSats) {
+					sat.second->resample->dymm = -10000;
+				}
+			}
+#endif
 			
 			std::future<void> run = std::async(std::launch::async, [&, buffer_size, frontbuffer]() {
 				run_paralell(buffer_size, frontbuffer);

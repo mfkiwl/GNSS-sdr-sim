@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.settings.all;
+use work.GNSSsettings.all;
 
 entity FIFO is
     generic (

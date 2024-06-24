@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package settings is
+package GNSSsettings is
 
   --constant radioFrequencyOut : integer := 1602000000;
   --constant outputRate        : integer := 15000000;
@@ -14,7 +14,7 @@ package settings is
   constant subCycles        : integer := 100;
   constant frameWidth       : integer := 176;
   constant frameBufferDepth : integer := 6;
-  constant chanel_count     : integer := 1;
+  constant chanel_count     : integer := 10;
   constant itterNStepWidth  : integer := 64 - 8;
 
   subtype IQ_s_t is signed(7 downto 0);
@@ -92,7 +92,7 @@ package settings is
 
 end package;
 
-package body settings is
+package body GNSSsettings is
  
   function rotate_IQ(
     IQ : in IQ_t;
@@ -182,4 +182,4 @@ package body settings is
       end if;
   end function To_Std_Logic;
 
-end package body settings;
+end package body GNSSsettings;

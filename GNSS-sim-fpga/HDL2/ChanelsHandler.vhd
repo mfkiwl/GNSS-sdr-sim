@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_std.ALL;
-use work.settings.all;
+use work.GNSSsettings.all;
 
 entity ChanelsHandler is
   port
@@ -108,7 +108,7 @@ end structural;
 library ieee;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_std.ALL;
-use work.settings.all;
+use work.GNSSsettings.all;
 
 entity ChanelsHandlerWrapper is
   port
@@ -132,7 +132,7 @@ architecture structural of ChanelsHandlerWrapper is
     ATTRIBUTE X_INTERFACE_INFO of clk: SIGNAL is "xilinx.com:signal:clock:1.0 clk CLK";
     ATTRIBUTE X_INTERFACE_INFO of reset : SIGNAL is "xilinx.com:signal:reset:1.0 reset RST";
     ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
-    ATTRIBUTE X_INTERFACE_PARAMETER of clk : SIGNAL is "ASSOCIATED_RESET reset, FREQ_HZ 30000000";
+    --ATTRIBUTE X_INTERFACE_PARAMETER of clk : SIGNAL is "ASSOCIATED_RESET reset, FREQ_HZ 20000000";
     ATTRIBUTE X_INTERFACE_PARAMETER of reset : SIGNAL is "POLARITY ACTIVE_HIGH";
 
     component ChanelsHandler
@@ -153,8 +153,26 @@ architecture structural of ChanelsHandlerWrapper is
     signal debug : std_logic_vector(7 downto 0);
     signal debug2 : std_logic_vector(2 downto 0);
     signal IQ : IQ_t;
+    signal IQ_buffer : IQ_t;
 begin
-I <= std_logic_vector(IQ.i) & "00000000";
-Q <= std_logic_vector(IQ.q) & "00000000";
+
+  process (clk, reset)
+  begin
+    if reset = '1' then
+      IQ_buffer.i <= "00000000";
+      IQ_buffer.q <= "00000000";
+
+    elsif rising_edge(clk) then
+      if enable = ENABLED then
+        IQ_buffer <= IQ;
+      else
+        IQ_buffer.i <= "00000000";
+        IQ_buffer.q <= "00000000";
+      end if;
+    end if;
+  end process;
+
+I <= std_logic_vector(IQ_buffer.i) & "00000000";
+Q <= std_logic_vector(IQ_buffer.q) & "00000000";
 CH: ChanelsHandler port map (clk, reset, enable, IQ, store, frame, debug, debug2);
 end structural;
