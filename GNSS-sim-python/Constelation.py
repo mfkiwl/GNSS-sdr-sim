@@ -45,3 +45,25 @@ class Constelation:
         self.addTimeStamp(ephList)
         sats = self.ephsToSats(ephList)
         return sats, headerData
+
+def loadSats(files: list[tuple[Constelation, str]]):
+    sats = {}
+    constSats = {}
+    consts : list[Constelation] = []
+    for file in files:
+        newSats, _ = file[0].loadSatsFromRinax(file[1])
+        for sat in newSats:
+            if sat in sats:
+                sats[sat].add(newSats[sat])
+            else:
+                sats[sat] = newSats[sat]
+            if file[0].prefix not in constSats:
+                constSats[file[0].prefix] = {}
+                consts.append(file[0])
+            constSats[file[0].prefix][sat] = sats[sat]
+
+    setup = "setup"
+    for const in consts:
+        setup = setup+" "+const.getSetupHeader(constSats[file[0].prefix])
+
+    return sats, setup

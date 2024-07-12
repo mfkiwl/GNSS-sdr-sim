@@ -153,18 +153,48 @@ public:
 	}
 
 	void setDelay(double delay_ms) {
+		//std::cout << "start delay: " << std::setprecision(10) << delay_ms << std::endl;
 #ifdef SET_DELAY_ON_START
 		// n time
 		long long new_delay = calcDelayNum(delay_ms);
 		//std::cout << "old: " << n;
 		n = n + last_set_delay - new_delay;
 		last_set_delay = new_delay;
+		lastDelay = new_delay;
+		last_target = new_delay;
 #endif
 	}
 
 
 	void setDelayTarget(double delay_ms, double time_till_next_update) {
+		setDelayTargetClosedLoop(delay_ms, time_till_next_update);
+	}
 
+	long long lastDelay = 0;
+	double stepFraction = 0;
+	void setDelayTargetOpenLoop(double delay_ms, double time_till_next_update) {
+
+
+		//std::cout << "Predicted: " << lastDelay << ", Real:" << last_set_delay << ", pred error: " << last_set_delay-lastDelay << ", target: " << std::setprecision(12) << delay_ms << std::endl;
+
+		long long nextDelay = calcDelayNum(delay_ms);
+		long long addedDelay = nextDelay - last_set_delay;// lastDelay; // --> use lastDelay for actualy open loop, and last_set_delay for closed loop
+		long long nStep = ((double)addedDelay * itterNStep) / (bufferNStep * inputRate * time_till_next_update + addedDelay);
+		double ud = (bufferNStep * inputRate * time_till_next_update) / (itterNStep - nStep)+stepFraction;
+		long long u = ceil(ud);
+		stepFraction = ud - u;
+		lastDelay = lastDelay + u * nStep;
+
+		delayNStep = nStep;
+
+		//std::cout << "target error: " << last_target - last_set_delay << ", target change: " << last_target - nextDelay << std::endl;
+
+		last_target = nextDelay;
+
+		//std::cout << "step: " << nStep << ", addedDelay: " << addedDelay << ", loops:" << u << std::endl;
+	}
+
+	void setDelayTargetClosedLoop(double delay_ms, double time_till_next_update) {
 
 		//static long long last_target = 0;
 
@@ -184,7 +214,7 @@ public:
 		delayNStep = new_delayNStep;
 		//std::cout << "   delayNStep: " << delayNStep << " " << new_delay << " " << last_target << " " << last_target-last_delay << std::endl;
 		//std::cout << last_target - last_delay << std::endl;
-
+		//std::cout << delayNStep << std::endl;
 
 		last_target = new_delay;
 		//std::cout << std::setprecision(10) << delay_ms << " <> " << new_delay*1000.0 / subCycles / inputRate / outputRate << std::endl;

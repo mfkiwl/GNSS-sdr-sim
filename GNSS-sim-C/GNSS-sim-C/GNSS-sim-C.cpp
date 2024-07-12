@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+//#include <boost/program_options.hpp>
 
 /* Settings */
 
@@ -19,6 +20,8 @@
 #include "Manager.h"
 #include "FileSource.h"
 #include "FileSink.h"
+
+#include "Server.h"
 
 #include "GPS/PRN_Code.h"
 
@@ -127,27 +130,61 @@ void example_chain() {
     deleteChain(dataHandler);
 }
 
-int main()
+int main(int argc, char**argv)
 {
-    std::cout << "Hello World!\n";
+    /*namespace po = boost::program_options;
 
-    /*gps::PRN ca(1);
-    for (int i = 0; i < 1023; i++) {
-        std::cout << (int)ca.next();
-    }
-    std::cout << std::endl;*/
-    //return 0;
-    //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "Produce help message")
+        ("server", "Alows for making signal generation requests over the network")
+        ("file", po::value<std::string>(), "Generate based on a file that includes configuration")
+        ("gps", "use default configuration for gps")
+        ("galileo", "use default configuration for galileo")
+        ("glonass", "use default configuration for glonass")
+        ("beidou", "use default configuration for beidou")
+        ("irnss", "use default configuration for irnss")
+    ;
 
-    //example_manager_config("../../data/gps.txt");
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
 
-    //example_manager_glonass();
-    //example_manager_galileo();
-    example_manager_gps();
-    //example_manager_beidou();
-    //example_manager_irnss();
-    //example_file();
-    //example_chain();
+    if      (vm.count("help"))    { std::cout << desc << "\n"; }
+    else if (vm.count("server"))  { startServer2(); }
+    else if (vm.count("file"))    { example_manager_config(vm["file"].as<std::string>()); }
+    else if (vm.count("gps"))     { example_manager_gps();     }
+    else if (vm.count("galileo")) { example_manager_galileo(); }
+    else if (vm.count("glonass")) { example_manager_glonass(); }
+    else if (vm.count("beidou"))  { example_manager_beidou();  }
+    else if (vm.count("irnss"))   { example_manager_irnss();   }
+    else {
+
+
+
+        std::cout << "No arguments found\n";
+        */
+        startServer2();
+
+        /*gps::PRN ca(1);
+        for (int i = 0; i < 1023; i++) {
+            std::cout << (int)ca.next();
+        }
+        std::cout << std::endl;*/
+        //return 0;
+        //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
+
+        //example_manager_config("../../data/gps.txt");
+
+        //example_manager_glonass();
+        //example_manager_galileo();
+        //example_manager_gps();
+        //example_manager_beidou();
+        //example_manager_irnss();
+        //example_file();
+        //example_chain()
+
+    //}
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

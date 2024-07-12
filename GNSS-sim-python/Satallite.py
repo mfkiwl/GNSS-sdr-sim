@@ -1,6 +1,7 @@
 import datetime
 import Constelation
 import NavMessage
+from typing import Self
 
 class TimedEfemris:
     ephs = []
@@ -21,6 +22,10 @@ class TimedEfemris:
                 self.lastIndex = i
                 return self.ephs[i]
     
+    def add(self, other: Self):
+        self.ephs = self.ephs+other.ephs
+        self.ephs = sorted(self.ephs, key=lambda obj: obj["datetime"])
+
     def getEarliest(self):
         return self.ephs[0]
     
@@ -39,6 +44,12 @@ class Satallite:
         self.eph = TimedEfemris(ephs)
         self.bitBuffer = NavMessage.BitBuffer()
         self.bitBuffer.fillBuffer = constelation.fillBuffer
+
+    def add(self, other: Self):
+        if self.name!=other.name:
+            print("merge rejected diffrent satalite")
+        else:
+            self.eph.add(other.eph)
 
 def getGoodRange(sats: dict[str, Satallite]):
     earliest = []

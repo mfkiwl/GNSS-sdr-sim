@@ -11,7 +11,9 @@
 #include "Satellite.h"
 #include "DataFrame.h"
 
-#include "Galileo/Sat.h"
+#include "Parse.h"
+
+/*#include "Galileo/Sat.h"
 #include "Glonass/Sat.h"
 #include "GPS/Sat.h"
 #include "BeiDou/Sat.h"
@@ -40,7 +42,7 @@ Satellite* constructSat(std::string constelationCode, std::string id, std::strin
 		return sat;
 	}
 	throw std::invalid_argument("Unexpeced constelation code");
-}
+}*/
 
 class FileSource {
 	std::ifstream file;

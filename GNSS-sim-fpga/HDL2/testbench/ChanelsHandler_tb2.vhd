@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 use ieee.std_logic_textio.all;
 library std;
 use STD.textio.all;
-use work.settings.all;
+use work.GNSSsettings.all;
 use work.input.all;
 use work.constelation.all;
 
@@ -108,14 +108,14 @@ begin
     wait for 1 us;
 
 
-    storeSatsFrames(1);
+    storeSatsFrames(inputFrameSatCount);
     wait for 1 ns;
-    storeSatsFrames(1);
+    storeSatsFrames(inputFrameSatCount);
     wait for 1 ns;
     loop
       report "loop started";
       if frames_send<inputTable'length then
-        storeSatsFrames(1);
+        storeSatsFrames(inputFrameSatCount);
         report "uploaded";
       else
         report "end reached";

@@ -37,7 +37,7 @@ datafile = "data/gps.txt"
 
 # general
 outputRate = 2600000#modulationRate
-subCycles = 100
+subCycles = 10000
 for_vhdl_sim = True
 
 
@@ -248,9 +248,9 @@ def main():
     step = next(source)
     for i in range(10):
         next_step = next(source)
-        for sat in step:
-            if setup[sat].chanel!=0:# >= chanel_count or setup[sat].chanel<0:
-                continue
+        for sat in setup:#step:
+            #if setup[sat].chanel!=0:# >= chanel_count or setup[sat].chanel<0:
+            #    continue
             if setup[sat].chanel not in chanel_info:
                 chanel_info[setup[sat].chanel] = {"last_delay":0, "step_fraction":0}
 
@@ -259,9 +259,9 @@ def main():
     if for_vhdl_sim:
         #step = next(source)
         for next_step in source:
-            for sat in step:
-                if setup[sat].chanel!=0:
-                    continue
+            for sat in setup:#step:
+                #if setup[sat].chanel!=0:
+                #    continue
                 frames.append(to_DataFrame_bytes_raw(sat, step[sat], next_step[sat], setup[sat], chanel_info[setup[sat].chanel]))
             step = next_step
         vhdl_template = """library ieee;

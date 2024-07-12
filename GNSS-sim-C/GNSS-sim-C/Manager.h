@@ -84,8 +84,8 @@ public:
 		return iq / n;
 	}
 
-	template<typename T>
-	void run(FileSource& source, FileSink<T>& sink, int skip10th = 0) {
+	template<typename SRC, typename T>
+	void run(SRC& source, FileSink<T>& sink, int skip10th = 0) {
 		std::vector<Satellite*> sats = source.getSats();
 		for (auto& sat : sats) {
 			activeSats[sat->getName()] = setupChain(sat, sampleRate, radioFrequency);
@@ -137,8 +137,8 @@ public:
 
 	typedef std::map<std::string, std::pair<bool, IQ*>>* SatSampBuffer;
 
-	template<typename T>
-	void run_paralell(FileSource& source, FileSink<T>& sink, int skip10th = 0) {
+	template<typename SRC, typename T>
+	void run_paralell(SRC& source, FileSink<T>& sink, int skip10th = 0) {
 		const size_t batches = 1;
 		std::vector<Satellite*> sats = source.getSats();
 		int numSats = sats.size();
