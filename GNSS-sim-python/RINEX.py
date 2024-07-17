@@ -9,7 +9,22 @@ def split(y):
 def parse_float(x):
     return float(x.replace("D", "E"))
 
-def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
+def matchHeader(line, header, headerData):
+    # check if header matches
+    if len(line)==len(header):
+        for i in range(len(header)):
+            if isinstance(header[i], str):
+                if header[i]!=line[i]:
+                    return
+    else:
+        return
+    
+    #header matches, store results
+    for i in range(len(header)):
+        if isinstance(header[i], list):
+            headerData[header[i][0]] = header[i][1](line[i])
+
+def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix="R"):
     file = open(fileName, 'r')
     lines = file.readlines()
     
@@ -18,6 +33,9 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
     header = itertools.takewhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
     for line in header:
         fields = split(line.strip())
+
+        for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
+            matchHeader(fields, header, headerData)
 
         # for galileo
         if fields[0].upper() == "GAL":
@@ -37,7 +55,7 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
             headerData["h3"] = int(  fields[3])
             headerData["h4"] = int(  fields[4])
 
-        # for GPS
+        # for GPS / Rinex V2
         if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
             headerData["alpha1"] = parse_float(fields[0])
             headerData["alpha2"] = parse_float(fields[1])
@@ -107,17 +125,25 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
     satsList = []
 
     for entry in list(batchedLines):
+        valid = False
         sat = {}
         if entry[0][0].strip().isnumeric():
+            valid = True
             entry[0][0] = constelationPrefix+(entry[0][0].strip().zfill(2))
         if entry[0][0][0]==constelationPrefix:
+            valid = True
             for row in range(len(dataDescription)):
                 rowDataDescription = dataDescription[row]
                 if len(entry[row])-1 == len(dataDescription[row]) and len(entry[row][0])==1 and entry[row][1].strip().isnumeric():
                     entry[row] = [entry[row][0]+"0"+entry[row][1]]+entry[row][2:]
                 if len(entry[row]) < len(rowDataDescription):
-                    rowDataDescription = [x for x in rowDataDescription if not isinstance(x, str) or x.find("spare")==-1]
-                    assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match even after removing spares"
+                    rowDataDescription = [x for x in rowDataDescription if not isinstance(x, str) or (x.find("spare")==-1 and x.find("blank")==-1)]
+                    if len(entry[row]) < len(rowDataDescription):
+                        rowDataDescription2 = [x for x in rowDataDescription if not isinstance(x, str) or x.find("BNK")==-1] # Blank Not Known -> need to find previus value
+                        assert len(entry[row]) == len(rowDataDescription2), "Data desciption and rinex data don't match even after removing spares"
+                        for i in range(len(rowDataDescription)-len(entry[row])):
+                            entry[row].append("0")
+                            print("BNK: Blank Not Known found setting to 0")
                 else:
                     assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match"
                 for column in range(len(rowDataDescription)):
@@ -126,7 +152,8 @@ def parseRINEX(fileName, dataDescription, constelationPrefix="R"):
                         sat[rowDataDescription[column][0]] = f(entry[row][column])
                     else:
                         sat[rowDataDescription[column]] = float(entry[row][column].replace("D", "E"))
-        satsList.append(sat)
+        if valid:
+            satsList.append(sat)
     
     return satsList, headerData
 

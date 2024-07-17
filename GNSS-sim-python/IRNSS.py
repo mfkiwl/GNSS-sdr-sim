@@ -9,6 +9,7 @@ import Galileo
 import const
 import mulSatpos
 import ionosphere
+import RINEX
 
 ###########################
 #                         #
@@ -234,6 +235,11 @@ def getConstelation():
     constelation.prefix="I"
     constelation.bitsPerFrame = 5
     constelation.RINEXDataRecordDesciption = getRINEXDataRecordDesciption()
+    constelation.RINEXheaderDescription = [
+        ["IRNA", ["alpha1", RINEX.parse_float], ["alpha2", RINEX.parse_float], ["alpha3", RINEX.parse_float], ["alpha4", RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["IRNB", ["beta1",  RINEX.parse_float], ["beta2",  RINEX.parse_float], ["beta3",  RINEX.parse_float], ["beta4",  RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["IRUT", ["a0", RINEX.parse_float], ["a1", RINEX.parse_float], ["TOW", int], ["WN", int], "TIME", "SYSTEM", "CORR"],
+    ]
     constelation.postProcessRINAXData = postProcessRINAXData
     constelation.utcToConstelationTime = utcToConstelationTime
     constelation.clockCorection = clockCorection

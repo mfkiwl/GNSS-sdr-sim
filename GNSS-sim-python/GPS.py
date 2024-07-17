@@ -3,6 +3,7 @@ import math
 import numpy as np
 from scipy.integrate import odeint
 
+import RINEX
 import NavMessage
 import Constelation
 import Galileo
@@ -446,6 +447,11 @@ def getConstelation():
     constelation.prefix="G"
     constelation.bitsPerFrame = 5
     constelation.RINEXDataRecordDesciption = getRINEXDataRecordDesciption()
+    constelation.RINEXheaderDescription = [
+        ["GPSA", ["alpha1", RINEX.parse_float], ["alpha2", RINEX.parse_float], ["alpha3", RINEX.parse_float], ["alpha4", RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["GPSB", ["beta1",  RINEX.parse_float], ["beta2",  RINEX.parse_float], ["beta3",  RINEX.parse_float], ["beta4",  RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["GPUT", ["A0", RINEX.parse_float], ["A1", RINEX.parse_float], ["T", int], ["W", int], "TIME", "SYSTEM", "CORR"], #UTC
+    ]
     constelation.postProcessRINAXData = postProcessRINAXData
     constelation.utcToConstelationTime = utcToConstelationTime
     constelation.clockCorection = clockCorection

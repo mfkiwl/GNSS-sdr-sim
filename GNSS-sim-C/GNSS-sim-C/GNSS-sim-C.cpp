@@ -6,7 +6,7 @@
 
 /* Settings */
 
-#define USE_CBOC
+//#define USE_CBOC
 #define SET_DELAY_ON_START
 //#define RELATIVE_MOVE
 //#define TRIG_LOOKUP

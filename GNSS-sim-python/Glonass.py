@@ -5,6 +5,7 @@ from scipy.integrate import odeint
 
 import NavMessage
 import Constelation
+import RINEX
 
 ###########################
 #                         #
@@ -270,6 +271,9 @@ def getConstelation():
     constelation.prefix="R"
     constelation.bitsPerFrame = 10
     constelation.RINEXDataRecordDesciption = getRINEXDataRecordDesciption()
+    constelation.RINEXheaderDescription = [
+        ["GLUT", ["h1", RINEX.parse_float], ["h2", RINEX.parse_float], ["h3", RINEX.parse_float], ["h4", RINEX.parse_float], "TIME", "SYSTEM", "CORR"],
+    ]
     constelation.postProcessRINAXData = postProcessRINAXData
     constelation.utcToConstelationTime = utcToConstelationTime
     constelation.clockCorection = clockCorection

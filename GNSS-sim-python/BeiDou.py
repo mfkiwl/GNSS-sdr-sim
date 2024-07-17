@@ -3,6 +3,7 @@ import math
 import numpy as np
 from scipy.integrate import odeint
 
+import RINEX
 import NavMessage
 import Constelation
 import Galileo
@@ -31,7 +32,7 @@ def getRINEXDataRecordDesciption():
         ["i0", "Crc", "omega", "omegaDot"],
         ["IDot", "spare1", "WN", "spare2"],
         ["SV accuracy", "health", "T_GD1", "T_GD2"],
-        ["transmit time"]
+        ["transmit time", "AODC (BNK)"]
         #["transmit time", "AODC", "spare3", "spare4"]
     ]
 
@@ -296,11 +297,23 @@ def BCH(data):
 #                           #
 #############################
 
+def checkEphemeris(eph, t):
+    if int(eph["name"][-2:])>=6:
+        return eph
+    else:
+        return None
+
 def getConstelation():
     constelation = Constelation.Constelation()
     constelation.prefix="C"
     constelation.bitsPerFrame = lambda eph: 50 if eph["sv id"]<6 else 5
     constelation.RINEXDataRecordDesciption = getRINEXDataRecordDesciption()
+    constelation.RINEXheaderDescription = [
+        ["BDSA", ["alpha1", RINEX.parse_float], ["alpha2", RINEX.parse_float], ["alpha3", RINEX.parse_float], ["alpha4", RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["BDSB", ["beta1",  RINEX.parse_float], ["beta2",  RINEX.parse_float], ["beta3",  RINEX.parse_float], ["beta4",  RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["BDUT", ["a0", RINEX.parse_float], ["a1", RINEX.parse_float], ["TOW", int], ["WN", int], "TIME", "SYSTEM", "CORR"], # UTC
+    ]
+    constelation.checkEphemeris = checkEphemeris
     constelation.postProcessRINAXData = postProcessRINAXData
     constelation.utcToConstelationTime = utcToConstelationTime
     constelation.clockCorection = clockCorection

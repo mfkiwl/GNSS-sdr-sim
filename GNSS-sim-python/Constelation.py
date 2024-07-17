@@ -7,6 +7,7 @@ class Constelation:
 
     prefix = ""
     RINEXDataRecordDesciption = []
+    RINEXheaderDescription = []
     postProcessRINAXData = lambda data, header: None
     getSatPosVel = lambda eph, t : (np.zeros(1,3), np.zeros(1,3))
 
@@ -40,7 +41,7 @@ class Constelation:
         return sats
 
     def loadSatsFromRinax(self, filename):
-        ephList, headerData = RINEX.parseRINEX(filename, self.RINEXDataRecordDesciption, self.prefix)
+        ephList, headerData = RINEX.parseRINEX(filename, self.RINEXDataRecordDesciption, self.RINEXheaderDescription, self.prefix)
         self.postProcessRINAXData(ephList, headerData)
         self.addTimeStamp(ephList)
         sats = self.ephsToSats(ephList)

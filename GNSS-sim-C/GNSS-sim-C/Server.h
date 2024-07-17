@@ -89,6 +89,10 @@ void startServer2() {
 			int samplingRate = 0;
 			std::string outputFile;
 			if (source.getConfig(&samplingRate, &frequency, &outputFile)) {
+				outputFile.erase(std::find_if(outputFile.rbegin(), outputFile.rend(), [](unsigned char ch) {
+					return !std::isspace(ch);
+					}).base(), outputFile.end());
+				std::cout << "Output File: '" << outputFile << "'" << std::endl;
 				FileSink<int8_t> fileSink(outputFile);
 				Manager manager(samplingRate, frequency);
 				std::cout << "Starting" << std::endl;

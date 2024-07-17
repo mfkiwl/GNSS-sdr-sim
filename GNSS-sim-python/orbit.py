@@ -178,6 +178,34 @@ def wgsxyz2lla(pos):
 
     return (lat, lon, alt)
 
+#def wgsllatoxyz(lat, lon, h):
+#    a = const.EARTH_SEMIMAJORAXIS
+#    b = 
+#    def N(lat):
+#        a/math.sqrt(1-(math.e**2)*(math.sin(lat)**2))
+#    return np.array([
+#        [(N(lat)+h)*math.cos(lat)*math.cos(lon)],
+#        [(N(lat)+h)*math.cos(lat)*math.sin(lon)],
+#        [(((b**2)/(a**2))*N(lat)+h)*math.sin(lat)]
+#    ])
+
+#ported from FGI-GSRx
+def wgslla2xyz(wlat, wlon, walt):
+    A_EARTH = const.EARTH_SEMIMAJORAXIS
+    flattening = const.EARTH_FLATTENING
+
+    NAV_E2 = (2-flattening)*flattening # also e^2
+    deg2rad = math.pi/180
+
+    slat = math.sin(wlat*deg2rad)
+    clat = math.cos(wlat*deg2rad)
+    r_n = A_EARTH/math.sqrt(1 - NAV_E2*slat*slat)
+    return np.array([
+        [ (r_n + walt)*clat*math.cos(wlon*deg2rad)],
+        [(r_n + walt)*clat*math.sin(wlon*deg2rad)],
+        [(r_n*(1 - NAV_E2) + walt)*slat ]
+    ])
+
 #ported from FGI-GSRx
 def calcAzimElevDist(ref_xyz, los_xyz):
 
