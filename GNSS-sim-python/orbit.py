@@ -172,11 +172,13 @@ def wgsxyz2lla(pos):
     # The iteration of latitude and altitude is started at zero latitude
     p = math.sqrt(pos[0][0]*pos[0][0] + pos[1][0]*pos[1][0])
     for iteration in range(10):
-        N = A / math.sqrt( 1 - E2 * math.sin( lat )**2 )
-        alt = p / math.cos( lat ) - N
+        N = A / math.sqrt( 1 - E2 * math.sin( lat/180*math.pi )**2 )
+        alt = p / math.cos( lat/180*math.pi ) - N
         lat = math.atan( pos[2][0] / p / (1 - E2 * (N / (N + alt ) ) ) )*180/math.pi
 
     return (lat, lon, alt)
+
+#wgsxyz2lla(np.array([[1240086.0809232316], [5460846.6217572605], [3043453.7728881533]]))
 
 #def wgsllatoxyz(lat, lon, h):
 #    a = const.EARTH_SEMIMAJORAXIS

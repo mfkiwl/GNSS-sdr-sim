@@ -186,6 +186,7 @@
     <ClInclude Include="IRNSS\PRN_Code.h" />
     <ClInclude Include="IRNSS\Sat.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="NetworkSink.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="Resample.h" />
     <ClInclude Include="Resample2.h" />

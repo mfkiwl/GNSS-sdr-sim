@@ -51,7 +51,6 @@ def postProcessRINAXData(data, header):
         sat["a_f0"] = sat["clockbias"]
         sat["a_f1"] = sat["clockdrift"]
         sat["a_f2"] = sat["clockdriftrate"]
-        sat["t_oc"] = 0 # for clock corection?
 
         sat["AODO"] = 0
         #sat["data id"] = 0b01
@@ -71,6 +70,7 @@ def postProcessRINAXData(data, header):
         
         sat["datetime"] = datetime.datetime(sat["year"], sat["month"], sat["day"], sat["hour"], sat["minute"], sat["second"])
         sat["t_oa"] = utcToConstelationTime(sat["datetime"])[1]
+        sat["t_oc"] = utcToConstelationTime(sat["datetime"])[0]
 
         sat["A_1"] = header["A1"]
         sat["A_0"] = header["A0"]
@@ -114,8 +114,8 @@ def utcToConstelationTime(dateTime : datetime.datetime):
     return (TOW, WN)
 
 def clockCorection(sat, syncTime):
-    t_oc = 0
-    dt = syncTime[0] - t_oc
+    #t_oc = 0
+    dt = syncTime[0] - sat["t_oc"]
     satClkCorr = (sat["clockdriftrate"] * dt + sat["clockdrift"]) * dt + sat["clockbias"]
 
     t_GD = sat["T_GD"]

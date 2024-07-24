@@ -34,9 +34,6 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
     for line in header:
         fields = split(line.strip())
 
-        for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
-            matchHeader(fields, header, headerData)
-
         # for galileo
         if fields[0].upper() == "GAL":
             headerData["a_i0"] = float(fields[1])
@@ -114,6 +111,9 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
         if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
             headerData["t_LS"] = int(fields[0])
             #print("Leap Seconds")
+        
+        for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
+            matchHeader(fields, header, headerData)
     
     lines = itertools.dropwhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
     lines = itertools.islice(lines, 1, None)
@@ -123,6 +123,7 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
     batchedLines = map(lambda x: list(map(lambda y: [m[0] for m in re.findall(expr, y) if m[0]!=""], list(x))), batchedLines)
     
     satsList = []
+    satsMap = {}
 
     for entry in list(batchedLines):
         valid = False
@@ -142,8 +143,18 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
                         rowDataDescription2 = [x for x in rowDataDescription if not isinstance(x, str) or x.find("BNK")==-1] # Blank Not Known -> need to find previus value
                         assert len(entry[row]) == len(rowDataDescription2), "Data desciption and rinex data don't match even after removing spares"
                         for i in range(len(rowDataDescription)-len(entry[row])):
-                            entry[row].append("0")
-                            print("BNK: Blank Not Known found setting to 0")
+                            #entry[row].append("0")
+                            if entry[0][0] in satsMap.keys():
+                                oldv = satsMap[entry[0][0]][row][len(entry[row])+i]
+                                entry[row].append(oldv)
+                                print("BNK: Blank Not Known found setting to previusly read value: "+str(oldv))
+                            elif len(satsMap.keys()) > 0:
+                                oldv = satsMap[list(satsMap.keys())[0]][row][len(entry[row])+i]
+                                entry[row].append(oldv)
+                                print("BNK: Blank Not Known found, and no previus value for this satalite, using value from "+list(satsMap.keys())[0]+": "+oldv)
+                            else:
+                                print("BNK: Blank Not Known found, no previus values, setting to 0")
+                                entry[row].append("0")
                 else:
                     assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match"
                 for column in range(len(rowDataDescription)):
@@ -154,6 +165,7 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
                         sat[rowDataDescription[column]] = float(entry[row][column].replace("D", "E"))
         if valid:
             satsList.append(sat)
+            satsMap[entry[0][0]] = entry
     
     return satsList, headerData
 

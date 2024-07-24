@@ -164,7 +164,7 @@ int main(int argc, char**argv)
 
         std::cout << "No arguments found\n";
         */
-        startServer2();
+        startServer();
 
         /*gps::PRN ca(1);
         for (int i = 0; i < 1023; i++) {

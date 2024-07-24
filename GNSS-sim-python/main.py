@@ -65,6 +65,9 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             #print(name, delay*SPEED_OF_LIGHT-21807950.99675922+25386264.284501)
             #delay = 0
             #doplerShift = 0
+            #doplerShift = 0
+            #delay=0
+            #power=100
 
             data = sat.bitBuffer.getBits(sat.constelation.bitsPerFrame, dateTime, eph, ephs)
             #frameData.append("{}:{}_{:.9f}_{:.4f}_{}".format(name, NavMessage.bitsToHex(data), delay*1000, doplerShift, power))
@@ -75,18 +78,23 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
 
 def printResults(time, results, userPos, userVel):
     #userPos = np.array([[4687282.796],[1840346.018],[4055083.320]])
+    ps = ""
     for name in results:
-        print("\033[F", end="")
-    print("\033[F", end="")
-    print("\033[F", " "*50)
+        #print("\033[F", end="")
+        ps = ps+"\033[F"
+    ps = ps+"\033[F\033[F\033[J" + (" "*150) + "\n"
+    #print("\033[F", end="")
+    #print("\033[F", " "*50)
 
-    print("time:", time.strftime('%F %T.%f')[:-3], "@", userPos.T[0], "v:", userVel.T[0], " "*10)
+    #print("time:", time.strftime('%F %T.%f')[:-3], "@", userPos.T[0], "v:", userVel.T[0], " "*10)
+    ps = ps + "time:" + time.strftime('%F %T.%f')[:-3] + "@" + str(userPos.T[0]) + "v:" + str(userVel.T[0]) + (" "*15)
     for name in results:
         result = results[name]
         elevation, azimuth, alivation = orbit.calcAzimElevDist(userPos, result["satPos"]-userPos)
-        print("{} : {:3.0f} @ {} {:10.6f} {:10.4f}, {} ([{:11.1f} {:11.1f} {:11.1f}], [{:9.6f} {:9.6f} {:5.1f}])".format(name, result["power"], result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], "".join(map(str,result["data"])), result["satPos"][0][0], result["satPos"][1][0], result["satPos"][2][0], elevation, azimuth, alivation))
+        ps = ps + ("\n{} : {:3.0f} @ {} {:10.6f} {:10.4f}, {} ([{:11.1f} {:11.1f} {:11.1f}], [{:9.6f} {:9.6f} {:5.1f}])   ".format(name, result["power"], result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], "".join(map(str,result["data"])), result["satPos"][0][0], result["satPos"][1][0], result["satPos"][2][0], elevation, azimuth, alivation))
+        #print("{} : {:3.0f} @ {} {:10.6f} {:10.4f}, {} ([{:11.1f} {:11.1f} {:11.1f}], [{:9.6f} {:9.6f} {:5.1f}])".format(name, result["power"], result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], "".join(map(str,result["data"])), result["satPos"][0][0], result["satPos"][1][0], result["satPos"][2][0], elevation, azimuth, alivation))
         #print(name, ":", result["power"], "@", result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], result["data"], " "*10)
-    
+    print(ps, end="")
 
 def selectSats(sats, names):
     newSats = {}
@@ -107,7 +115,7 @@ def main():
     #resultFile = "data/galileo.txt"
 
     constelation = GPS.getConstelation()
-    rinexFile = "data/GPS/brdc3260.23n"
+    rinexFile = "data/GPS/brdc3240.23n"
     resultFile = "data/gps.txt"
 
     #constelation = BeiDou.getConstelation()
@@ -122,7 +130,7 @@ def main():
     #startTime = datetime.datetime(2024,2,21, 23,00) # IRNSS
     #startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
-    startTime = datetime.datetime(2023,11,22, 0, 0) # gps
+    startTime = datetime.datetime(2023,11,20, 0, 0) # gps
     #startTime = datetime.datetime(2023,11,21, 23, 59, 54) # gps
     #startTime = datetime.datetime(2023,11,27, 23, 45) # galileo?
     #startTime = datetime.datetime(2021,6,20, 0, 0) # galileo week 171?
@@ -137,7 +145,7 @@ def main():
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19", "G21", "G22", "G28", "G31", "G32"])
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14", "G17", "G19"])
     #sats = selectSats(sats, ["G01", "G02", "G03", "G04", "G08", "G14"])
-    #sats = selectSats(sats, ["G05"])
+    #sats = selectSats(sats, ["G01"])
     #sats = {"G01":sats["G01"]}
     #sats = {"G02":sats["G02"], "G03":sats["G03"], "G08":sats["G08"], "G10":sats["G10"], "G14":sats["G14"]}
     #sats = {"E07":sats["E07"], "E08":sats["E08"], "E12":sats["E12"], "E13":sats["E13"], "E19":sats["E19"]}

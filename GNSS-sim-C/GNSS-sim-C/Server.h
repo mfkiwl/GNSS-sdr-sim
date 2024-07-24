@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <boost/asio.hpp>
+#include "NetworkSink.h"
 #include "Parse.h"
 
 /*std::string read_(boost::asio::ip::tcp::socket& socket) {
@@ -68,7 +69,7 @@ public:
 	}
 };
 
-void startServer2() {
+void startServer() {
 	using namespace boost::asio;
 	using ip::tcp;
 	try {
@@ -92,12 +93,28 @@ void startServer2() {
 				outputFile.erase(std::find_if(outputFile.rbegin(), outputFile.rend(), [](unsigned char ch) {
 					return !std::isspace(ch);
 					}).base(), outputFile.end());
-				std::cout << "Output File: '" << outputFile << "'" << std::endl;
-				FileSink<int8_t> fileSink(outputFile);
-				Manager manager(samplingRate, frequency);
-				std::cout << "Starting" << std::endl;
-				manager.run_paralell(source, fileSink, 4);
-				std::cout << "Done" << std::endl;
+
+				if (outputFile.substr(0, 6) == "tcp://") {
+					std::string ipport = outputFile.substr(6);
+					int split = ipport.find(":");
+					std::string ip = ipport.substr(0, split);
+					int port = atoi(ipport.substr(split + 1, -1).c_str());
+					std::cout << "ip: " << ip << ", port: " << port << std::endl;
+					NetworkSink<int8_t> sink(ip, port);
+					Manager manager(samplingRate, frequency);
+					std::cout << "Starting" << std::endl;
+					manager.run_paralell(source, sink, 4);
+					std::cout << "Done" << std::endl;
+				}
+				else {
+
+					std::cout << "Output File: '" << outputFile << "'" << std::endl;
+					FileSink<int8_t> fileSink(outputFile);
+					Manager manager(samplingRate, frequency);
+					std::cout << "Starting" << std::endl;
+					manager.run_paralell(source, fileSink, 4);
+					std::cout << "Done" << std::endl;
+				}
 			}
 			else {
 				std::cout << "error: first line was not configuration" << std::endl;
@@ -110,6 +127,7 @@ void startServer2() {
 	}
 }
 
+/*
 void startServer() {
 	using namespace boost::asio;
 	using ip::tcp;
@@ -124,9 +142,9 @@ void startServer() {
 			std::cout << "Waiting for connection" << std::endl;
 			acceptor.accept(socket); // <-- blocking
 			
-			/*
-				config
-			*/
+			//
+			//	config
+			//
 			std::string message = "config\n";
 			boost::system::error_code ignored_error;
 			boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
@@ -152,9 +170,9 @@ void startServer() {
 			}
 			std::cout << "config: " << samplingRate << " " << frequency << " " << saveFile << std::endl;
 
-			/*
-				setup
-			*/
+			//
+			//	setup
+			//
 			message = "setup\n";
 			boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
 
@@ -172,9 +190,9 @@ void startServer() {
 			}
 			std::cout << "Satalite Count: " << sats.size() << std::endl;
 
-			/*
-				data
-			*/
+			//
+			//	data
+			//
 			for (;;) {
 				std::string message = "next\n";
 				boost::system::error_code ignored_error;
@@ -207,3 +225,4 @@ void startServer() {
 		std::cerr << e.what() << std::endl;
 	}
 }
+*/

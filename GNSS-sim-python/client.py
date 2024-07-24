@@ -1,5 +1,6 @@
 import main
 import orbit
+import steering
 
 import datetime
 import numpy as np
@@ -49,36 +50,43 @@ def startClient():
 
 def init():
     sats, setup = Constelation.loadSats([
-        (GPS.getConstelation(), "data/GPS/brdc3260.23n"),
+        #(GPS.getConstelation(), "data/GPS/brdc3260.23n"),
         #(GPS.getConstelation(), "data/GPS/Brdc3250.23n"),
+        #(GPS.getConstelation(), "data/GPS/Brdc3240.23n"),
 
         
-        #(GPS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        (GPS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(Glonass.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(Galileo.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(BeiDou.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(IRNSS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
     ])
+    #sats = main.selectSats(sats, ["G13", "G15", "G16", "G18", "G23", "G24", "G27", "G29", "G32"])
+    #sats = main.selectSats(sats, ["G16", "G24", "G29", "G32"])
+
 
     centerFrequency = 1575420000 # L1  gps / galileo
     #centerFrequency = 1602000000 # L1  glonass
     #centerFrequency = 1561098000 # B1i beidou
     #centerFrequency = 1176450000 # L5  irnss
     #sampleRate = 2600000
-    sampleRate = 15000000
-    #IQFile = "../../data/OutputIQ.sigmf-data"
-    IQFile = "D:/data/iq/gps_oldbrdc15.bin"
+    #sampleRate = 15000000
+    sampleRate = 7000000
+    IQFile = "../../data/OutputIQ.sigmf-data"
+    #IQFile = "D:/data/iq/gps_oldbrdc15.bin"
+    #IQFile = "tcp://127.0.0.1:12345"
 
     config = "config "+str(centerFrequency)+" "+str(sampleRate)+" "+IQFile
 
-    #startTime = datetime.datetime(2023,11,22, 0, 0) # brdc3260.23n
-    startTime = datetime.datetime(2024,7,16, 0, 0) # BRDM00DLR_S_20241970000_01D_MN.rnx
-    duration = datetime.timedelta(seconds=60*5+1)
+    #startTime = datetime.datetime(2023,11,20, 0, 0) # brdc3240.23n
+    startTime = datetime.datetime(2024,7,15, 2, 0) # BRDM00DLR_S_20241970000_01D_MN.rnx
+    duration = datetime.timedelta(seconds=60*10+1)
 
     #userPos = np.array([[-2758918.635941], [4772301.120089], [3197889.437237]]) # gps-sdr-sim
     #userPos = np.array([[1240086], [5460847], [3043454]]) # University of Delhi, New Delhi, India : 28.685194, 77.205865, 240
     userPos = orbit.wgslla2xyz(28.685194, 77.205865, 240)
     posVelFunc = main.simplePathInterpolation([(startTime, userPos)])
+    #posVelFunc = steering.Steering(userPos)
 
     return (startTime, duration, posVelFunc, sats, setup, config)
 
