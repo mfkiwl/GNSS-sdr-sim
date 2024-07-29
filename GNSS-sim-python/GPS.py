@@ -72,13 +72,13 @@ def postProcessRINAXData(data, header):
         sat["t_oa"] = utcToConstelationTime(sat["datetime"])[1]
         sat["t_oc"] = utcToConstelationTime(sat["datetime"])[0]
 
-        sat["A_1"] = header["A1"]
-        sat["A_0"] = header["A0"]
+        sat["A_1"] = 0 # header["A1"] # 0s make GPS-time equal to UTC-leap seconds 
+        sat["A_0"] = 0 # header["A0"]
         sat["t_ot"] = header["T"]
         sat["WN_t"] = header["W"]
         sat["WN_LSF"] = 1929%256 # week number, schedualed leep second: http://navigationservices.agi.com/GNSSWeb/
         sat["DN"] = 7            # day number
-        sat["t_LSF"] = 18        # new leap second value
+        sat["t_LSF"] = header["t_LS"] #18        # new leap second value
 
         sat["small delta_i"] = sat["i0"]-(0.3*math.pi)
 

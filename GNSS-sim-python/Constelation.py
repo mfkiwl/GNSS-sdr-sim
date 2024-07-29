@@ -42,7 +42,8 @@ class Constelation:
 
     def loadSatsFromRinax(self, filename):
         ephList, headerData = RINEX.parseRINEX(filename, self.RINEXDataRecordDesciption, self.RINEXheaderDescription, self.prefix)
-        self.postProcessRINAXData(ephList, headerData)
+        newList = self.postProcessRINAXData(ephList, headerData)
+        ephList = newList if newList is not None else ephList
         self.addTimeStamp(ephList)
         sats = self.ephsToSats(ephList)
         return sats, headerData

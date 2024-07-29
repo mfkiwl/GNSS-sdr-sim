@@ -17,13 +17,13 @@ def float_int(x):
     return int(float(x))
 
 def getRINEXDataRecordDesciption():
-    #"-tau(t_b)" : negative clock corection, "gamma(t_b)" : requency corection
+    #"-tau(t_b)" : negative clock corection, "gamma(t_b)" : frequency corection
     #"message frame time" second in week
-    #"n" : transmition index
+    #"k" : transmition index
     return [
         [["name", str], ["year", int], ["month", int], ["day", int], ["hour", int], ["minute", int], ["second", int], "-tau(t_b)", "gamma(t_b)", ["message frame time", float_int]],
         ["x(t_b)", "x'(t_b)", "x''(t_b)", ["health", float_int]],
-        ["y(t_b)", "y'(t_b)", "y''(t_b)", ["n", float_int]],
+        ["y(t_b)", "y'(t_b)", "y''(t_b)", ["k", float_int]],
         ["z(t_b)", "z'(t_b)", "z''(t_b)", ["age of info", float_int]]
     ]
 
@@ -40,7 +40,9 @@ def postProcessRINAXData(data, header):
         sat["N_T"] = 12 # day if 4 year periode staring from leap year (hard coded at day i write this)
         sat["F_T"] = 11 # i picked 64 meter accuracy
         sat["delta tau"] = 0 # time delay between L1 and L2, i only do L1 at the moment so just 0
-        sat["frequency"] = 1602000000 + sat["n"]*562500
+        sat["frequency"] = 1602000000 + sat["k"]*562500
+        sat["n"] = int(sat["name"][1:])
+        sat["prn"] = int(sat["name"][1:])
         
 ##############################
 #                            #
@@ -200,7 +202,7 @@ def generateAlmonac(sat, stringnumber, framenumber):
     tau_lambda_time_ascending_node = 0
     delta_T_period_corection = 0
     delta_T_period_corection_change = 0
-    H_carrier_frequency_number = 0
+    H_carrier_frequency_number = sat["n"]
 
     datastructure = [
         [[stringnumber, 4], ["l", 1], ["M", 2], ["n", 5], [tau, 10], [lambda_longitude_ascending_node, 21], [delta_i_mean_inclination, 18], [epsilon_eccentricity, 15]],
@@ -281,7 +283,7 @@ def getConstelation():
     constelation.getSatPosVel = getSatPos
     constelation.fillBuffer = fillBuffer
     constelation.checkEphemeris = checkEphemeris
-    constelation.getIdString = lambda eph: eph["name"]+" ["+str(eph["n"])+"]"
-    constelation.getSetupHeader = lambda sats: "R:("+",".join(map(lambda name: name[-2:]+"["+str(sats[name].eph.getEarliest()["n"])+"]", sats))+")"
+    constelation.getIdString = lambda eph: eph["name"]+" ["+str(eph["k"])+"]"
+    constelation.getSetupHeader = lambda sats: "R:("+",".join(map(lambda name: name[-2:]+"["+str(sats[name].eph.getEarliest()["k"])+"]", sats))+")"
 
     return constelation

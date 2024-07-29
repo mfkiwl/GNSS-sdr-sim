@@ -19,7 +19,7 @@ def startClient():
 
     (startTime, duration, posVelFunc, sats, setup, config) = init()
 
-    sim = run(startTime, duration, posVelFunc, sats)
+    sim = run(startTime, duration, posVelFunc, sats, powerFactor=3) # assume atmoost 1/3 of satalites are visable, otherwise interger overflow is possible
 
     with socket.socket() as sock:
         print("connecting")
@@ -55,8 +55,8 @@ def init():
         #(GPS.getConstelation(), "data/GPS/Brdc3240.23n"),
 
         
-        (GPS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
-        #(Glonass.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        #(GPS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        (Glonass.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(Galileo.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(BeiDou.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
         #(IRNSS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
@@ -65,13 +65,13 @@ def init():
     #sats = main.selectSats(sats, ["G16", "G24", "G29", "G32"])
 
 
-    centerFrequency = 1575420000 # L1  gps / galileo
-    #centerFrequency = 1602000000 # L1  glonass
+    #centerFrequency = 1575420000 # L1  gps / galileo
+    centerFrequency = 1602000000 # L1  glonass
     #centerFrequency = 1561098000 # B1i beidou
     #centerFrequency = 1176450000 # L5  irnss
-    #sampleRate = 2600000
+    sampleRate = 2600000
     #sampleRate = 15000000
-    sampleRate = 7000000
+    #sampleRate = 6000000
     IQFile = "../../data/OutputIQ.sigmf-data"
     #IQFile = "D:/data/iq/gps_oldbrdc15.bin"
     #IQFile = "tcp://127.0.0.1:12345"
@@ -90,7 +90,7 @@ def init():
 
     return (startTime, duration, posVelFunc, sats, setup, config)
 
-def run(startTime, duration, posVelFunc, sats):
+def run(startTime, duration, posVelFunc, sats, powerFactor=1):
     timestep = datetime.timedelta(milliseconds=100) # hardcoded 0.1s
     endTime = startTime+duration
     time = startTime
@@ -98,7 +98,7 @@ def run(startTime, duration, posVelFunc, sats):
     while time <= endTime:
         t = time.second+time.microsecond/1000000
         (pos, vel) = posVelFunc(time)
-        (dataString, result) = main.generateFrame(pos, vel, sats, time)
+        (dataString, result) = main.generateFrame(pos, vel, sats, time, powerFactor=1)
         main.printResults(time, result, pos, vel)
         yield dataString
         time += timestep

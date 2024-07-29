@@ -44,7 +44,7 @@ def postProcessRINAXData(data, header):
 
         sat["affTocSISA_E5aE1"] = dataSources[0]&1<<0==1<<0
         sat["affTocSISA_E5bE1"] = dataSources[0]&1<<1==1<<1
-        
+
         health = sat["health"]
         sat["E1B_DVS"] = health[1]&1<<0==1<<0
         sat["E1B_HS"]  = int(health[1]&0b11<<1)
@@ -53,12 +53,18 @@ def postProcessRINAXData(data, header):
         sat["E5b_DVS"] = health[1]&1<<6==1<<6
         sat["E5b_HS"]  = int((health[1]&1<<7)>>7 | (health[0]&1)<<1)
 
-        sat["a0"] = header["a0"]
-        sat["a1"] = header["a1"]
+        sat["a0"] = 0 #header["a0"] # 0s make GST equal to UTC-leap seconds 
+        sat["a1"] = 0 #header["a1"]
         sat["t_LS"] = header["t_LS"]
         sat["a_i0"] = header["a_i0"]
         sat["a_i1"] = header["a_i1"]
         sat["a_i2"] = header["a_i2"]
+
+        sat["datetime"] = datetime.datetime(sat["year"], sat["month"], sat["day"], sat["hour"], sat["minute"], sat["second"])
+        sat["t_oa"] = utcToConstelationTime(sat["datetime"])[1]
+        sat["t_oc"] = utcToConstelationTime(sat["datetime"])[0]
+    
+    return [sat for sat in data if sat["INAV_E1B"]]
 
 ##############################
 #                            #
@@ -140,7 +146,7 @@ def utcToConstelationTime(dateTime : datetime.datetime):
     return (tow, wn)
 
 def clockCorection(sat, syncTime):
-    t_oc = 0
+    t_oc = 0 #sat["t_oc"]
     dt = syncTime[0] - t_oc
     satClkCorr = (sat["clockdriftrate"] * dt + sat["clockdrift"]) * dt + sat["clockbias"]
 

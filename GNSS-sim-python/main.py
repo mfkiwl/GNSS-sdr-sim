@@ -14,7 +14,7 @@ import IRNSS
 
 SPEED_OF_LIGHT = 299792458
 
-def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTime: datetime.datetime):
+def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTime: datetime.datetime, powerFactor=1):
     
     frameData = []
     
@@ -45,7 +45,7 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             travelTimeDy = orbit.getTravelTime(userPos+np.array([[0],[1],[0]]), satPos, eph)-travelTime
             travelTimeDz = orbit.getTravelTime(userPos+np.array([[0],[0],[1]]), satPos, eph)-travelTime
             doplerShift = orbit.getDoplerShift(userPos, userVel, satPos, satVel, eph)  # add user pos and vel
-            power = orbit.getVisability(userPos, satPos, eph) # how visable was the currect location at the of transmition
+            power = orbit.getVisability(userPos, satPos, eph)*powerFactor # how visable was the currect location at the of transmition
             #arivelTime = transmitTime + travelTime
             #delay = arivelTime - transmitTime
             delay = travelTime + sat.constelation.timeDifference(transmitTime, syncTime)
@@ -53,8 +53,10 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             delay += travelTimeCorrection
             earthRotationCorection = orbit.earthRotationCorrection(satPos, userPos)
             delay += earthRotationCorection
-            #print(earthRotationCorection)
 
+            delay -= 60/1000
+            
+            #print(earthRotationCorection)
 
             #delay = i/50/20/5 + i/50/20
 
