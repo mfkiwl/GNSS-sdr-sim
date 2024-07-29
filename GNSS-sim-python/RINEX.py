@@ -117,7 +117,18 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
     
     lines = itertools.dropwhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
     lines = itertools.islice(lines, 1, None)
-    batchedLines = itertools.batched(lines, 8) #CHECK: is 8 standered?
+
+    def batch(lines):
+        next = []
+        for line in lines:
+            if line[0] not in [" ", "\t"] and len(next)>0:
+                yield next
+                next = []
+            next.append(line)
+        yield next
+
+    #batchedLines = itertools.batched(lines, 8) #CHECK: is 8 standered?
+    batchedLines = batch(lines)
     #batchedLines = map(lambda x: list(map(lambda y: y.strip().split(), list(x))), batchedLines)
     expr = r"((-?\d*)(\.\d*([EeDd][+-]?\d*)?)?|[^\s]*)"
     batchedLines = map(lambda x: list(map(lambda y: [m[0] for m in re.findall(expr, y) if m[0]!=""], list(x))), batchedLines)
