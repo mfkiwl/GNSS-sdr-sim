@@ -49,7 +49,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '7000000'
+    value: '2600000'
   states:
     bus_sink: false
     bus_source: false
@@ -86,7 +86,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: C:\Users\Mike\Desktop\Thesis\GNSS-sdr-sim\data\OutputIQ.sigmf-data
+    file: E:\Thesis\GNSS-sdr-sim\data\OutputIQ.sigmf-data
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -115,7 +115,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 180.0]
+    coordinate: [272, 180.0]
     rotation: 0
     state: enabled
 - name: blocks_message_debug_0
@@ -130,7 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [752, 312.0]
+    coordinate: [984, 312.0]
     rotation: 0
     state: enabled
 - name: blocks_probe_rate_0
@@ -150,9 +150,30 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 324.0]
+    coordinate: [696, 324.0]
     rotation: 0
     state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 76.0]
+    rotation: 0
+    state: disabled
 - name: iio_fmcomms2_sink_0
   id: iio_fmcomms2_sink
   parameters:
@@ -175,12 +196,12 @@ blocks:
     tx1_en: 'True'
     tx2_en: 'False'
     type: fc32
-    uri: ip:192.168.2.19
+    uri: ip:192.168.1.131
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 116.0]
+    coordinate: [696, 116.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -261,7 +282,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 516.0]
+    coordinate: [696, 516.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -358,7 +379,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 420.0]
+    coordinate: [696, 420.0]
     rotation: 0
     state: disabled
 
@@ -367,8 +388,6 @@ connections:
 - [blocks_file_source_0_0, '0', blocks_interleaved_char_to_complex_0, '0']
 - [blocks_interleaved_char_to_complex_0, '0', blocks_probe_rate_0, '0']
 - [blocks_interleaved_char_to_complex_0, '0', iio_fmcomms2_sink_0, '0']
-- [blocks_interleaved_char_to_complex_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_interleaved_char_to_complex_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_probe_rate_0, rate, blocks_message_debug_0, print]
 
 metadata:

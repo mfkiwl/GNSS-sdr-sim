@@ -399,7 +399,7 @@ def getConstelation():
     constelation.bitsPerFrame = 25
     constelation.RINEXDataRecordDesciption = getRINEXDataRecordDesciption()
     constelation.RINEXheaderDescription = [
-        ["GAL", ["a_i0", RINEX.parse_float], ["a_i0", RINEX.parse_float], ["a_i0", RINEX.parse_float], "IONOSPHERIC", "CORR"],
+        ["GAL", ["a_i0", RINEX.parse_float], ["a_i1", RINEX.parse_float], ["a_i2", RINEX.parse_float], "IONOSPHERIC", "CORR"],
         ["GAUT", ["a0", RINEX.parse_float], ["a1", RINEX.parse_float], ["TOW", int], ["WN", int], "TIME", "SYSTEM", "CORR"], #UTC
     ]
     constelation.postProcessRINAXData = postProcessRINAXData

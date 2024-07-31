@@ -35,82 +35,82 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
         fields = split(line.strip())
 
         # for galileo
-        if fields[0].upper() == "GAL":
-            headerData["a_i0"] = float(fields[1])
-            headerData["a_i1"] = float(fields[2])
-            headerData["a_i2"] = float(fields[3])
-        if fields[0].upper() == "GAUT": # GAL-UTC(a0, a1)
-            headerData["a0"]   = float(fields[1])
-            headerData["a1"]   = float(fields[2])
-            headerData["TOW"]  = int(  fields[3])
-            headerData["WN"]   = int(  fields[4])
+        #if fields[0].upper() == "GAL":
+        #    headerData["a_i0"] = float(fields[1])
+        #    headerData["a_i1"] = float(fields[2])
+        #    headerData["a_i2"] = float(fields[3])
+        #if fields[0].upper() == "GAUT": # GAL-UTC(a0, a1)
+        #    headerData["a0"]   = float(fields[1])
+        #    headerData["a1"]   = float(fields[2])
+        #    headerData["TOW"]  = int(  fields[3])
+        #    headerData["WN"]   = int(  fields[4])
         
         # for glonass
-        if fields[0].upper() == "GLUT": # TIME SYSTEM CORR
-            headerData["h1"] = float(fields[1])
-            headerData["h2"] = float(fields[2])
-            headerData["h3"] = int(  fields[3])
-            headerData["h4"] = int(  fields[4])
+        #if fields[0].upper() == "GLUT": # TIME SYSTEM CORR
+        #    headerData["h1"] = float(fields[1])
+        #    headerData["h2"] = float(fields[2])
+        #    headerData["h3"] = int(  fields[3])
+        #    headerData["h4"] = int(  fields[4])
 
         # for GPS / Rinex V2
-        if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
-            headerData["alpha1"] = parse_float(fields[0])
-            headerData["alpha2"] = parse_float(fields[1])
-            headerData["alpha3"] = parse_float(fields[2])
-            headerData["alpha4"] = parse_float(fields[3])
-            #print("ION Alpha")
-        if fields[-1].upper() == "BETA" and fields[-2].upper() == "ION":
-            headerData["beta1"] = parse_float(fields[0])
-            headerData["beta2"] = parse_float(fields[1])
-            headerData["beta3"] = parse_float(fields[2])
-            headerData["beta4"] = parse_float(fields[3])
-            #print("ION Beta")
-        if fields[-1].upper() == "A0,A1,T,W" and fields[-2].upper() == "DELTA-UTC:":
-            headerData["A0"] = parse_float(fields[0])
-            headerData["A1"] = parse_float(fields[1])
-            headerData["T"] = parse_float(fields[2])
-            headerData["W"] = parse_float(fields[3])
-            #print("Delta UTC")
+        #if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
+        #    headerData["alpha1"] = parse_float(fields[0])
+        #    headerData["alpha2"] = parse_float(fields[1])
+        #    headerData["alpha3"] = parse_float(fields[2])
+        #    headerData["alpha4"] = parse_float(fields[3])
+        #    #print("ION Alpha")
+        #if fields[-1].upper() == "BETA" and fields[-2].upper() == "ION":
+        #    headerData["beta1"] = parse_float(fields[0])
+        #    headerData["beta2"] = parse_float(fields[1])
+        #    headerData["beta3"] = parse_float(fields[2])
+        #    headerData["beta4"] = parse_float(fields[3])
+        #    #print("ION Beta")
+        #if fields[-1].upper() == "A0,A1,T,W" and fields[-2].upper() == "DELTA-UTC:":
+        #    headerData["A0"] = parse_float(fields[0])
+        #    headerData["A1"] = parse_float(fields[1])
+        #    headerData["T"] = parse_float(fields[2])
+        #    headerData["W"] = parse_float(fields[3])
+        #    #print("Delta UTC")
 
         # for beidou
-        if fields[0].upper() == "BDSA":
-            headerData["alpha1"] = parse_float(fields[1])
-            headerData["alpha2"] = parse_float(fields[2])
-            headerData["alpha3"] = parse_float(fields[3])
-            headerData["alpha4"] = parse_float(fields[4])
-        if fields[0].upper() == "BDSB":
-            headerData["beta1"] = parse_float(fields[1])
-            headerData["beta2"] = parse_float(fields[2])
-            headerData["beta3"] = parse_float(fields[3])
-            headerData["beta4"] = parse_float(fields[4])
-        if fields[0].upper() == "BDUT": # GAL-UTC(a0, a1)
-            headerData["a0"]   = float(fields[1])
-            headerData["a1"]   = float(fields[2])
-            headerData["TOW"]  = int(  fields[3])
-            headerData["WN"]   = int(  fields[4])
+        #if fields[0].upper() == "BDSA":
+        #    headerData["alpha1"] = parse_float(fields[1])
+        #    headerData["alpha2"] = parse_float(fields[2])
+        #    headerData["alpha3"] = parse_float(fields[3])
+        #    headerData["alpha4"] = parse_float(fields[4])
+        #if fields[0].upper() == "BDSB":
+        #    headerData["beta1"] = parse_float(fields[1])
+        #    headerData["beta2"] = parse_float(fields[2])
+        #    headerData["beta3"] = parse_float(fields[3])
+        #    headerData["beta4"] = parse_float(fields[4])
+        #if fields[0].upper() == "BDUT": # GAL-UTC(a0, a1)
+        #    headerData["a0"]   = float(fields[1])
+        #    headerData["a1"]   = float(fields[2])
+        #    headerData["TOW"]  = int(  fields[3])
+        #    headerData["WN"]   = int(  fields[4])
 
         # for irnss
-        if fields[0].upper() == "IRNA":
-            headerData["alpha1"] = parse_float(fields[1])
-            headerData["alpha2"] = parse_float(fields[2])
-            headerData["alpha3"] = parse_float(fields[3])
-            headerData["alpha4"] = parse_float(fields[4])
-        if fields[0].upper() == "IRNB":
-            headerData["beta1"] = parse_float(fields[1])
-            headerData["beta2"] = parse_float(fields[2])
-            headerData["beta3"] = parse_float(fields[3])
-            headerData["beta4"] = parse_float(fields[4])
-        if fields[0].upper() == "IRUT": # GAL-UTC(a0, a1)
-            headerData["a0"]   = parse_float(fields[1])
-            headerData["a1"]   = parse_float(fields[2])
-            headerData["TOW"]  = int(  fields[3])
-            headerData["WN"]   = int(  fields[4])
+        #if fields[0].upper() == "IRNA":
+        #    headerData["alpha1"] = parse_float(fields[1])
+        #    headerData["alpha2"] = parse_float(fields[2])
+        #    headerData["alpha3"] = parse_float(fields[3])
+        #    headerData["alpha4"] = parse_float(fields[4])
+        #if fields[0].upper() == "IRNB":
+        #    headerData["beta1"] = parse_float(fields[1])
+        #    headerData["beta2"] = parse_float(fields[2])
+        #    headerData["beta3"] = parse_float(fields[3])
+        #    headerData["beta4"] = parse_float(fields[4])
+        #if fields[0].upper() == "IRUT": # GAL-UTC(a0, a1)
+        #    headerData["a0"]   = parse_float(fields[1])
+        #    headerData["a1"]   = parse_float(fields[2])
+        #    headerData["TOW"]  = int(  fields[3])
+        #    headerData["WN"]   = int(  fields[4])
 
 
         # all
-        if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
-            headerData["t_LS"] = int(fields[0])
-            #print("Leap Seconds")
+        #if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
+        #    headerData["t_LS"] = int(fields[0])
+        #    #print("Leap Seconds")
         
         for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
             matchHeader(fields, header, headerData)
