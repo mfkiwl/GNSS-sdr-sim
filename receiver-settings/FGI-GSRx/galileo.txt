@@ -1,0 +1,68 @@
+% System parameters
+%sys,enabledSignals,[ {['gpsl1']} {['gale1b']}], % List of enabled signals
+sys,enabledSignals,[ {['gale1b']}], % List of enabled signals
+%sys,enabledSignals,[ {['gpsl1']} ], % List of enabled signals
+sys,msToProcess,45000
+%sys,msToProcess,80000,       % Number of ms to process in total from data file. If 0 the maximum number of ms will be processed
+sys,msToSkip,1000,             % Number of ms to skip from beginning of file
+
+% Input/Output file names
+sys,loadDataFile,false,     % Defines if data file is to be loaded
+sys,dataFileIn,'.\trackData_GalileoE1_my_sim15sinBOC.mat',          % Datafile to load of enabled
+sys,saveDataFile,true,     % Defines if data should be stored to file
+sys,dataFileOut,'.\trackData_GalileoE1_my_sim15sinBOC.mat',  % Data file for storing output
+sys,loadIONMetaDataReading,false,
+sys,metaDataFileIn,''
+
+
+% Galileo E1B Settings
+% Input RF file
+% gale1b,rfFileName,'C:\Users\Mike\Desktop\Thesis\Galileo\GalileoC\GalileoC\GalileoTest2.sigmf-data',               % Name of RF data file used for Galileo E1B signal
+% gale1b,rfFileName,'C:\Users\Mike\Desktop\Thesis\GNSS-sim-C\GNSS-sim-C\ExampleOutput.sigmf-data',               % Name of RF data file used for Galileo E1B signal
+% gale1b,rfFileName,'..\GNSS-sdr-sim\data\OutputIQ.sigmf-data',
+gale1b,rfFileName,'..\GNSS-sdr-sim\data\Evaluation\myGalileo_15_sinBOC.sigmf-data',
+%gale1b,rfFileName,'..\galileo_sdr_sim_home.bin',
+
+% Radio front end configurations
+gale1b,centerFrequency,1575420000,   % Radio center frequency [Hz]
+%gale1b,samplingFreq,2.6e6,          % Sampling frequency [Hz]
+gale1b,samplingFreq,15e6,          % Sampling frequency [Hz]
+%gale1b,samplingFreq,30e6,          % Sampling frequency [Hz]
+%gale1b,samplingFreq,12276000,       % Sampling frequency [Hz]
+%gale1b,samplingFreq,24552000,       % Sampling frequency [Hz]
+gale1b,bandWidth,10e6,              % Bandwidth of the front end [Hz]
+gale1b,sampleSize,16,               % Number of bits for one sample. For complex data this is the size for I+Q.
+%gale1b,sampleSize,32,               % galileo-sdr-sim
+gale1b,complexData,true,            % Complex or real data
+gale1b,iqSwap,false, 
+
+%Signal Modulation
+gale1b,modType,'CBOC', 			%Can take input either of the two types: 'CBOC' or 'SinBOC'
+
+% Acquisition parameters
+gale1b,acqSatelliteList,[1:36],       % Specify what GPS satellites to search for [PRN numbers]          
+gale1b,nonCohIntNumber,2,           % Number of non-coherent integration rounds for signal acquisition
+gale1b,cohIntNumber,1,              % Coherent integration time for signal acquisition [ms]
+gale1b,acqThreshold,20,             % Threshold for the signal presence decision rule
+gale1b,maxSearchFreq,6000,          % Maximum search frequency in one direction 
+
+% Signal specific observation parameters
+gale1b,enableIonoCorrections,false,      % Use iono corrections or not
+gale1b,enableTropoCorrections,false,     % Use tropo corrections or not
+gale1b,ionomodel,'gale1b',             % Iono model to use (default,gale1b,beib1,glol1, ionex)
+gale1b,ionexFile,''                     % Filename for ionex file if ionomodel is = ionex
+
+% True/reference user position, if available
+% nav,trueLat,43.70853,    
+% nav,trueLong,10.4036,
+% nav,trueHeight,0.2,
+
+% home
+nav,trueLat,52.150197,
+nav,trueLong,4.666391,
+nav,trueHeight,44.17,
+
+% india
+%nav,trueLat,28.685194,
+%nav,trueLong,77.205865,
+%nav,trueHeight,240,

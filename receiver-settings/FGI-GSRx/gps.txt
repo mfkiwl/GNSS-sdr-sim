@@ -1,0 +1,53 @@
+% System parameters
+sys,enabledSignals,[ {['gpsl1']} ], % List of enabled signals
+%sys,msToProcess,37000,       % Number of ms to process in total from data file. If 0 the maximum number of ms will be processed
+sys,msToProcess,90000,       % Number of ms to process in total from data file. If 0 the maximum number of ms will be processed
+%sys,msToProcess,437000,       % Number of ms to process in total from data file. If 0 the maximum number of ms will be processed
+sys,msToSkip,0,             % Number of ms to skip from beginning of file
+
+% Input/Output file names
+sys,loadDataFile,true,     % Defines if data file is to be loaded
+sys,dataFileIn,'.\trackData_GPS_L1_sim_8.mat',          % Datafile to load of enabled
+sys,saveDataFile,false,     % Defines if data should be stored to file
+sys,dataFileOut,'.\trackData_GPS_L1_my_sim26.mat',  % Data file for storing output
+sys,loadIONMetaDataReading,false,
+sys,metaDataFileIn,''
+
+
+% GPS L1 Settings
+% Input RF file
+% gpsl1,rfFileName,'C:\Users\Mike\Desktop\Thesis\GPS\GpsC\GpsC\GPS.sigmf-data',            % Name of RF data file used for GPS L1 signal
+% gpsl1,rfFileName,'C:\Users\Mike\Desktop\Thesis\GNSS-sim-C\GNSS-sim-C\ExampleOutput.sigmf-data',
+% gpsl1,rfFileName,'..\GNSS-sdr-sim\data\OutputIQ.sigmf-data',
+gpsl1,rfFileName,'..\GNSS-sdr-sim\data\Evaluation\myGPS_15.sigmf-data',
+%gpsl1,rfFileName,'..\gps_sdr_sim_home.bin',
+
+
+% Radio front end configurations
+gpsl1,centerFrequency,1575.42e6, % Radio center frequency [Hz]
+% gpsl1,samplingFreq,2600000, % Sampling frequency [Hz]
+% gpsl1,samplingFreq,1023000, % Sampling frequency [Hz]
+gpsl1,samplingFreq,15000000, % Sampling frequency [Hz]
+gpsl1,bandWidth,10e6, % Bandwidth of the front end [Hz]
+gpsl1,sampleSize,16, % Number of bits for one sample. For complex data this is the size for I+Q.
+gpsl1,complexData,true, % Complex or real data
+gpsl1,iqSwap,false, % Complex or real data
+
+gpsl1,acqSatelliteList,[1:32]
+gpsl1,enableIonoCorrections,true,       % Use iono corrections or not
+gpsl1,enableTropoCorrections,false,      % Use tropo corrections or not
+gpsl1,ionomodel,'default'
+
+% True/reference user position, if available
+%nav,trueLat,43.70853,    
+%nav,trueLong,10.4036,
+%nav,trueHeight,0.2,
+
+nav,trueLat,52.150197,
+nav,trueLong,4.666391,
+nav,trueHeight,44.17,
+
+% piza: [4541995.72232094],[833907.206476633],[4384738.7981905]
+nav,trueECEFx,4541995.72232094,    
+nav,trueECEFy,833907.206476633,
+nav,trueECEFz,4384738.7981905,

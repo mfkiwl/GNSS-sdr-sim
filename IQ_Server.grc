@@ -1,0 +1,320 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: test
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: freq_c
+  id: variable
+  parameters:
+    comment: ''
+    value: '1575420000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '2600000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 8.0]
+    rotation: 0
+    state: enabled
+- name: blocks_probe_rate_0
+  id: blocks_probe_rate
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: '0.15'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mintime: '1000.0'
+    name: ''
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 20.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 148.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport socket\nimport os\nfrom collections import deque\n\
+      from functools import reduce\n\nclass myConn:\n    def __init__(self, server_port):\n\
+      \        self.server_port = server_port\n        self.isOpen = False\n     \
+      \   self.buffer = deque()\n    \n    def connect(self):\n        sock = socket.socket(socket.AF_INET,\
+      \ socket.SOCK_STREAM)  \n        sock.bind(('127.0.0.1', self.server_port))\
+      \  \n        sock.listen(5)\n        print(\"waiting for connection\")\n   \
+      \     connection,address = sock.accept()\n        print(\"connected\") \n  \
+      \      self.connection = connection\n        self.address = address\n      \
+      \  self.isOpen= True\n        sock.setblocking(False)\n    \n    def reciveComplex(self):\n\
+      \        buf = self.connection.recv(4096)\n        recived_ints = np.frombuffer(buf,\
+      \ dtype=np.int8)\n        output = recived_ints.astype(np.float32).view(np.complex64)\n\
+      \        return output\n\n    def fillOwnBuffer(self):\n      if len(self.buffer)>400:\n\
+      \          return\n      buf = None\n      try:\n          buf = self.reciveComplex()\n\
+      \          self.buffer.append(buf)\n          while len(buf)==2048:\n      \
+      \        buf = self.reciveComplex()\n              self.buffer.append(buf)\n\
+      \      except socket.timeout(e):\n          self.buffer.append(buf)\n    \n\
+      \    def fillOutput(self, output_items):\n        s = 0\n        while True:\n\
+      \            v = len(output_items[0])\n            b = len(self.buffer[0])\n\
+      \            if v-s<b:\n                output_items[0][s:] = self.buffer[0][0:v-s]\n\
+      \                self.buffer[0] = self.buffer[0][v-s:]\n                return\
+      \ v\n            elif v-s>b:\n                output_items[0][s:b+s] = self.buffer[0]\n\
+      \                self.buffer.popleft()\n                if len(self.buffer)==0:\n\
+      \                    return s+b\n                s = b\n            elif v-s==b:\n\
+      \                output_items[0][s:b+s] = self.buffer[0]\n                self.buffer.popleft()\n\
+      \                return s+b # = v\n                \n    def bufferSize(self):\n\
+      \        return reduce(lambda a,b: a+len(b), self.buffer, 0)\n    \n    def\
+      \ shortPause(self):\n        self.connection.send(b'P')\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ server_port=12345):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='IQ Input Server',   # will show up in\
+      \ GRC\n            in_sig=[],\n            out_sig=[np.complex64]#, np.uint32]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.server_port\
+      \ = server_port\n        #self.isConnected=False\n        #self.spare = None\n\
+      \        self.conn = myConn(server_port)\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"example: multiply with constant\"\"\"\n    \
+      \    if not self.conn.isOpen:\n            self.conn.connect()\n        self.conn.fillOwnBuffer()\n\
+      \        #if self.conn.bufferSize()>2600000: # if buffer is larger than 1 second\n\
+      \        #    self.conn.shortPause()\n        #    #print(\"pause\")\n     \
+      \   n = self.conn.fillOutput(output_items)\n        #output_items[1][0:n] =\
+      \ np.repeat(self.conn.bufferSize(), n)\n        return n\n        \n\n     \
+      \   #if not self.isConnected:\n        #    sock = socket.socket(socket.AF_INET,\
+      \ socket.SOCK_STREAM)  \n        #    sock.bind(('127.0.0.1', self.server_port))\
+      \  \n        #    sock.listen(5)\n        #    print(\"waiting for connection\"\
+      )\n        #    connection,address = sock.accept()\n        #    print(\"connected\"\
+      ) \n        #    self.connection = connection\n        #    self.address = address\n\
+      \        #    self.isConnected = True\n        #output = None\n        #if self.spare\
+      \ is not None:\n        #    output = self.spare\n        #else:\n        #\
+      \    buf = self.connection.recv(4096) # 2*4*(2**15)\n        #    #print(\"\
+      buffer size:\", len(buf), buf[0:16])\n        #    recived_ints = np.frombuffer(buf,\
+      \ dtype=np.int8)\n        #    n = len(recived_ints)\n        #    #print(\"\
+      recived:\", n, recived_ints[0:8])\n        #    output = recived_ints.astype(np.float32).view(np.complex64)\n\
+      \        #self.spare = None\n        #k = n//2\n        #if k>output_items[0].shape[0]:\n\
+      \        #    v = output_items[0].shape[0]\n        #    output_items[0][0:v]\
+      \ = output[0:v]\n        #    self.spare = output[v:]\n        #else:\n    \
+      \    #    output_items[0][0:k] = recived_ints.astype(np.float32).view(np.complex64)\n\
+      \        #    #output_items[0][0:n] = np.zeros(n, dtype=np.complex64)\n    \
+      \    #    #print(\"returning\")\n        #    return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    server_port: '12345'
+  states:
+    _io_cache: ('IQ Input Server', 'blk', [('server_port', '12345')], [], [('0', 'complex',
+      1)], 'Embedded Python Block example - a simple multiply const', ['server_port'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 156.0]
+    rotation: 0
+    state: enabled
+- name: iio_fmcomms2_sink_0
+  id: iio_fmcomms2_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    attenuation1: '30.0'
+    attenuation2: '10.0'
+    bandwidth: '20000000'
+    buffer_size: '32768'
+    comment: ''
+    cyclic: 'False'
+    filter: ''
+    filter_source: '''Auto'''
+    fpass: '0'
+    frequency: freq_c
+    fstop: '0'
+    len_tag_key: ''
+    rf_port_select: '''A'''
+    samplerate: samp_rate
+    tx1_en: 'True'
+    tx2_en: 'False'
+    type: fc32
+    uri: ip:192.168.1.131
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 236.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: freq_c
+    fftsize: '8192'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 140.0]
+    rotation: 0
+    state: disabled
+
+connections:
+- [blocks_probe_rate_0, rate, blocks_message_debug_0, print]
+- [blocks_throttle2_0, '0', blocks_probe_rate_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
+- [epy_block_0, '0', blocks_probe_rate_0, '0']
+- [epy_block_0, '0', blocks_throttle2_0, '0']
+- [epy_block_0, '0', iio_fmcomms2_sink_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.9.2

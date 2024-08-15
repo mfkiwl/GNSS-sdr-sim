@@ -1,0 +1,54 @@
+% System parameters
+sys,enabledSignals,[ {['beib1']}], % List of enabled signals
+sys,msToProcess,67000,       % Number of ms to process in total from data file. If 0 the maximum number of ms will be processed
+sys,msToSkip,0,             % Number of ms to skip from beginning of file
+
+% Input/Output file names
+sys,loadDataFile,false,     % Defines if data file is to be loaded
+sys,dataFileIn,'.\trackData_BeiDouB1_my_sim15.mat',          % Datafile to load of enabled
+sys,saveDataFile,true,     % Defines if data should be stored to file
+sys,dataFileOut,'.\trackData_BeiDouB1_my_sim15.mat',  % Data file for storing output
+sys,loadIONMetaDataReading,false,
+sys,metaDataFileIn,''
+
+
+% Beidou B1 Settings
+
+% Input RF file
+% beib1,rfFileName,'C:\Users\Mike\Desktop\Thesis\BeiDou\BeiDouC\BeiDouC\BeiDou.sigmf-data',
+% beib1,rfFileName,'..\GNSS-sdr-sim\data\OutputIQ.sigmf-data',
+beib1,rfFileName,'..\GNSS-sdr-sim\data\Evaluation\myBeidou_15.sigmf-data',
+
+% Radio front end configurations
+beib1,centerFrequency,1561098000,    % Radio center frequency [Hz]
+% beib1,samplingFreq,4000000,            % Sampling frequency [Hz]
+% beib1,samplingFreq,2600000,            % Sampling frequency [Hz]
+beib1,samplingFreq,15000000,            % Sampling frequency [Hz]
+beib1,bandWidth,8e6,               % Bandwidth of the front end [Hz]
+beib1,sampleSize,16,                % Number of bits for one sample. For complex data this is the size for I+Q.
+beib1,complexData,true,             % Complex or real data
+beib1,iqSwap,false, 	            % Complex or real data
+
+% Acquisition parameters
+beib1,acqSatelliteList,[1:35],       % Specify what GPS satellites to search for [PRN numbers]          
+beib1,nonCohIntNumber,6,           % Number of non-coherent integration rounds for signal acquisition
+beib1,cohIntNumber,2,              % Coherent integration time for signal acquisition [ms]
+beib1,acqThreshold,10,             % Threshold for the signal presence decision rule
+beib1,maxSearchFreq,6000,          % Maximum search frequency in one direction 
+
+% Signal specific observation parameters
+beib1,enableIonoCorrections,false,       % Use iono corrections or not
+beib1,enableTropoCorrections,false,      % Use tropo corrections or not
+beib1,ionomodel,'beib1',              % Iono model to use (default,gale1b,gale1b,beib1,glol1, ionex)
+beib1,ionexFile,''                      % Filename for ionex file if ionomodel is = ionex
+
+
+% True/reference user position, if available
+%nav,trueLat,43.70853,    
+%nav,trueLong,10.4036,
+%nav,trueHeight,0.2,
+
+
+nav,trueLat,52.150197,
+nav,trueLong,4.666391,
+nav,trueHeight,44.17,
