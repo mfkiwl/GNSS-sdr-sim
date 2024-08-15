@@ -54,7 +54,7 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
             earthRotationCorection = orbit.earthRotationCorrection(satPos, userPos)
             delay += earthRotationCorection
 
-            delay -= 60/1000
+            #delay -= 60/1000
             
             #print(earthRotationCorection)
 

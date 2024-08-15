@@ -53,7 +53,7 @@ def getSatPosVel(eph, tk):
             break
             
         E = E + dTemp
-    
+    eph["E_k"] = E
 
     # Reduce eccentric anomaly to between 0 and 360 deg
     E   = (E + 2*gpsPi)%(2*gpsPi)

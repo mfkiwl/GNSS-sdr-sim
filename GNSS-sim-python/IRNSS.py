@@ -10,6 +10,7 @@ import const
 import mulSatpos
 import ionosphere
 import RINEX
+import orbit
 
 ###########################
 #                         #
@@ -48,10 +49,12 @@ def postProcessRINAXData(data, header):
             N+=1
         sat["URA"] = N
 
+        sat["datetime"] = datetime.datetime(sat["year"], sat["month"], sat["day"], sat["hour"], sat["minute"], sat["second"])
+
         sat["a_f0"] = sat["clockbias"]
         sat["a_f1"] = sat["clockdrift"]
         sat["a_f2"] = sat["clockdriftrate"]
-        sat["t_oc"] = 0 # for clock corection?
+        sat["t_oc"] = utcToConstelationTime(sat["datetime"])[0] #0 # for clock corection?
 
         sat["sv id"] = int(sat["name"][-2:])
 
@@ -67,8 +70,7 @@ def postProcessRINAXData(data, header):
 
         sat["t_LS"] = header["t_LS"]
         
-        sat["datetime"] = datetime.datetime(sat["year"], sat["month"], sat["day"], sat["hour"], sat["minute"], sat["second"])
-        
+
 ##############################
 #                            #
 #      ORBIT SIMULATION      #
@@ -77,9 +79,9 @@ def postProcessRINAXData(data, header):
 
 def getSatPosVel(eph, t):
     tk = t[0] - eph["toe"]
-    satPos_old = Galileo.getSatPos(eph, tk)
-    satPosN_old = Galileo.getSatPos(eph, tk+1)
-    satVel_old = satPosN_old-satPos_old
+    #satPos_old = orbit.mulSatpos(eph, tk)
+    #satPosN_old = orbit.mulSatpos(eph, tk+1)
+    #satVel_old = satPosN_old-satPos_old
     (satPos, satVel) = mulSatpos.getSatPosVel(eph, tk)
     #return (satPos_old, satVel_old)
     return (np.array([satPos]).T, np.array([satVel]).T)
@@ -104,11 +106,11 @@ def clockCorection(sat, syncTime):
     t_GD = sat["T_GD"]
 
     # relativistic corection, uses 0.1s old data, but should be beter than nothing
-    #if "E_k" in sat:
-    #    F = -2*math.sqrt(const.EARTH_GRAVCONSTANT)/const.SPEED_OF_LIGHT**2
-    #    relcorr = F * sat["e"] * sat["sqrt_a"] * math.sin(sat["E_k"])
-    #    #print("relcorr:", relcorr)
-    #    satClkCorr += relcorr
+    if "E_k" in sat:
+        F = -2*math.sqrt(const.EARTH_GRAVCONSTANT)/const.SPEED_OF_LIGHT**2
+        relcorr = F * sat["e"] * sat["sqrt_a"] * math.sin(sat["E_k"])
+        #print("relcorr:", relcorr)
+        satClkCorr += relcorr
 
     return (syncTime[0]-satClkCorr + t_GD, syncTime[1]) # could be +, since i do inverse of reciever
 
@@ -202,7 +204,7 @@ def encode_subframe(bits):
 def packageSubFrame(subframe, data, eph, dateTime:datetime.datetime):
     assert len(data)==232
     #TLM(8) : reserved for later use
-    #TOWC(17) : time of week (12 secconds), start of next sub frame
+    #TOWC(17) : time of week (12 secconds), start of sub frame
     #alert flag : use sat at own risk
     #AutoNav : sat is using AutoNav data
     #subframe id
@@ -212,7 +214,7 @@ def packageSubFrame(subframe, data, eph, dateTime:datetime.datetime):
     #data
     #CRC
     #tail
-    (TOWC, WN) = utcToConstelationTime(dateTime+datetime.timedelta(seconds=12))
+    (TOWC, WN) = utcToConstelationTime(dateTime)#+datetime.timedelta(seconds=12))
 
     start = NavMessage.dataStructureToBits([
             ["TLM", 8], ["TOWC", 17, 1/12], ["ALERT", 1], ["AUTONAV", 1], ["subframe", 2], [0, 1]

@@ -53,24 +53,24 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
         #    headerData["h4"] = int(  fields[4])
 
         # for GPS / Rinex V2
-        #if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
-        #    headerData["alpha1"] = parse_float(fields[0])
-        #    headerData["alpha2"] = parse_float(fields[1])
-        #    headerData["alpha3"] = parse_float(fields[2])
-        #    headerData["alpha4"] = parse_float(fields[3])
-        #    #print("ION Alpha")
-        #if fields[-1].upper() == "BETA" and fields[-2].upper() == "ION":
-        #    headerData["beta1"] = parse_float(fields[0])
-        #    headerData["beta2"] = parse_float(fields[1])
-        #    headerData["beta3"] = parse_float(fields[2])
-        #    headerData["beta4"] = parse_float(fields[3])
-        #    #print("ION Beta")
-        #if fields[-1].upper() == "A0,A1,T,W" and fields[-2].upper() == "DELTA-UTC:":
-        #    headerData["A0"] = parse_float(fields[0])
-        #    headerData["A1"] = parse_float(fields[1])
-        #    headerData["T"] = parse_float(fields[2])
-        #    headerData["W"] = parse_float(fields[3])
-        #    #print("Delta UTC")
+        if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
+            headerData["alpha1"] = parse_float(fields[0])
+            headerData["alpha2"] = parse_float(fields[1])
+            headerData["alpha3"] = parse_float(fields[2])
+            headerData["alpha4"] = parse_float(fields[3])
+            #print("ION Alpha")
+        if fields[-1].upper() == "BETA" and fields[-2].upper() == "ION":
+            headerData["beta1"] = parse_float(fields[0])
+            headerData["beta2"] = parse_float(fields[1])
+            headerData["beta3"] = parse_float(fields[2])
+            headerData["beta4"] = parse_float(fields[3])
+            #print("ION Beta")
+        if fields[-1].upper() == "A0,A1,T,W" and fields[-2].upper() == "DELTA-UTC:":
+            headerData["A0"] = parse_float(fields[0])
+            headerData["A1"] = parse_float(fields[1])
+            headerData["T"] = parse_float(fields[2])
+            headerData["W"] = parse_float(fields[3])
+            #print("Delta UTC")
 
         # for beidou
         #if fields[0].upper() == "BDSA":
@@ -108,9 +108,9 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
 
 
         # all
-        #if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
-        #    headerData["t_LS"] = int(fields[0])
-        #    #print("Leap Seconds")
+        if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
+            headerData["t_LS"] = int(fields[0])
+            #print("Leap Seconds")
         
         for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
             matchHeader(fields, header, headerData)
