@@ -15,6 +15,8 @@ import BeiDou
 import IRNSS
 
 def startClient():
+    """Manage the simulation and send result over the network to be encoded
+    """
     print("Starting")
 
     (startTime, duration, posVelFunc, sats, setup, config) = init()
@@ -49,6 +51,9 @@ def startClient():
     print("Done")
 
 def init():
+    """ Setup the simulator
+    """
+
     sats, setup = Constelation.loadSats([
         #(GPS.getConstelation(), "data/GPS/brdc3260.23n"),
         #(GPS.getConstelation(), "data/GPS/Brdc3250.23n"),
@@ -64,9 +69,8 @@ def init():
     #sats = main.selectSats(sats, ["G13", "G15", "G16", "G18", "G23", "G24", "G27", "G29", "G32"])
     #sats = main.selectSats(sats, ["G16", "G24", "G29", "G32"])
 
-
-    #centerFrequency = 1575420000 # L1  gps / galileo
-    centerFrequency = 1602000000 # L1  glonass
+    centerFrequency = 1575420000 # L1  gps / galileo
+    #centerFrequency = 1602000000 # L1  glonass
     #centerFrequency = 1561098000 # B1i beidou
     #centerFrequency = 1176450000 # L5  irnss
     sampleRate = 2600000
@@ -79,18 +83,22 @@ def init():
     config = "config "+str(centerFrequency)+" "+str(sampleRate)+" "+IQFile
 
     #startTime = datetime.datetime(2023,11,20, 0, 0) # brdc3240.23n
-    startTime = datetime.datetime(2024,7,15, 2, 0) # BRDM00DLR_S_20241970000_01D_MN.rnx
+    #startTime = datetime.datetime(2024,7,28, 0, 0) # BRDM00DLR_S_20242100000_01D_MN.rnx
+    startTime = datetime.datetime(2024,7,15, 2, 15) # BRDM00DLR_S_20241970000_01D_MN.rnx
     duration = datetime.timedelta(seconds=60*10+1)
 
     #userPos = np.array([[-2758918.635941], [4772301.120089], [3197889.437237]]) # gps-sdr-sim
     #userPos = np.array([[1240086], [5460847], [3043454]]) # University of Delhi, New Delhi, India : 28.685194, 77.205865, 240
-    userPos = orbit.wgslla2xyz(28.685194, 77.205865, 240)
+    #userPos = orbit.wgslla2xyz(28.685194, 77.205865, 240)
+    userPos = np.array([[3908805], [319054], [5013110]]) # home
     posVelFunc = main.simplePathInterpolation([(startTime, userPos)])
     #posVelFunc = steering.Steering(userPos)
 
     return (startTime, duration, posVelFunc, sats, setup, config)
 
 def run(startTime, duration, posVelFunc, sats, powerFactor=1):
+    """ Run the simulation
+    """
     timestep = datetime.timedelta(milliseconds=100) # hardcoded 0.1s
     endTime = startTime+duration
     time = startTime

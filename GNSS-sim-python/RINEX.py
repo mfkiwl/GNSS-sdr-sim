@@ -3,13 +3,21 @@ import re
 from pprint import pprint
 
 def split(y):
+    """Split a line of the a RINEX file into string values.
+    Takes special care of floats that don't have spaces inbetween them.
+    """
     expr = r"((-?\d*)(\.\d*([EeDd][+-]?\d*)?)?|[^\s]*)"
     return [m[0] for m in re.findall(expr, y) if m[0]!=""]
 
 def parse_float(x):
+    """Parse a string as they can occur in a RINEX file into a float 
+    """
     return float(x.replace("D", "E"))
 
 def matchHeader(line, header, headerData):
+    """check if 'line' matches one of the entries in 'header'
+    If it matches add the results to headerData
+    """
     # check if header matches
     if len(line)==len(header):
         for i in range(len(header)):
@@ -25,32 +33,20 @@ def matchHeader(line, header, headerData):
             headerData[header[i][0]] = header[i][1](line[i])
 
 def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix="R"):
+    """Parse a RINEX file.
+    Using the 'headerDescription' to know what to parse from the header
+    Using the 'dataDescription' to parse a satellite entry if the 'constelationPrefix' matches
+    If the RINEX(v2) file has no prefix for the satellite 'constelationPrefix' is added
+    """
     file = open(fileName, 'r')
     lines = file.readlines()
     
     headerData = {}
     
     header = itertools.takewhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
+    # parse lines in header
     for line in header:
         fields = split(line.strip())
-
-        # for galileo
-        #if fields[0].upper() == "GAL":
-        #    headerData["a_i0"] = float(fields[1])
-        #    headerData["a_i1"] = float(fields[2])
-        #    headerData["a_i2"] = float(fields[3])
-        #if fields[0].upper() == "GAUT": # GAL-UTC(a0, a1)
-        #    headerData["a0"]   = float(fields[1])
-        #    headerData["a1"]   = float(fields[2])
-        #    headerData["TOW"]  = int(  fields[3])
-        #    headerData["WN"]   = int(  fields[4])
-        
-        # for glonass
-        #if fields[0].upper() == "GLUT": # TIME SYSTEM CORR
-        #    headerData["h1"] = float(fields[1])
-        #    headerData["h2"] = float(fields[2])
-        #    headerData["h3"] = int(  fields[3])
-        #    headerData["h4"] = int(  fields[4])
 
         # for GPS / Rinex V2
         if fields[-1].upper() == "ALPHA" and fields[-2].upper() == "ION":
@@ -72,41 +68,6 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
             headerData["W"] = parse_float(fields[3])
             #print("Delta UTC")
 
-        # for beidou
-        #if fields[0].upper() == "BDSA":
-        #    headerData["alpha1"] = parse_float(fields[1])
-        #    headerData["alpha2"] = parse_float(fields[2])
-        #    headerData["alpha3"] = parse_float(fields[3])
-        #    headerData["alpha4"] = parse_float(fields[4])
-        #if fields[0].upper() == "BDSB":
-        #    headerData["beta1"] = parse_float(fields[1])
-        #    headerData["beta2"] = parse_float(fields[2])
-        #    headerData["beta3"] = parse_float(fields[3])
-        #    headerData["beta4"] = parse_float(fields[4])
-        #if fields[0].upper() == "BDUT": # GAL-UTC(a0, a1)
-        #    headerData["a0"]   = float(fields[1])
-        #    headerData["a1"]   = float(fields[2])
-        #    headerData["TOW"]  = int(  fields[3])
-        #    headerData["WN"]   = int(  fields[4])
-
-        # for irnss
-        #if fields[0].upper() == "IRNA":
-        #    headerData["alpha1"] = parse_float(fields[1])
-        #    headerData["alpha2"] = parse_float(fields[2])
-        #    headerData["alpha3"] = parse_float(fields[3])
-        #    headerData["alpha4"] = parse_float(fields[4])
-        #if fields[0].upper() == "IRNB":
-        #    headerData["beta1"] = parse_float(fields[1])
-        #    headerData["beta2"] = parse_float(fields[2])
-        #    headerData["beta3"] = parse_float(fields[3])
-        #    headerData["beta4"] = parse_float(fields[4])
-        #if fields[0].upper() == "IRUT": # GAL-UTC(a0, a1)
-        #    headerData["a0"]   = parse_float(fields[1])
-        #    headerData["a1"]   = parse_float(fields[2])
-        #    headerData["TOW"]  = int(  fields[3])
-        #    headerData["WN"]   = int(  fields[4])
-
-
         # all
         if fields[-1].upper() == "SECONDS" and fields[-2].upper() == "LEAP":
             headerData["t_LS"] = int(fields[0])
@@ -114,11 +75,11 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
         
         for header in (headerDescription+[[["t_LS", int], ["dt_LS", int], ["WN_LSF", int], ["DN", int], "LEAP", "SECONDS"]]):
             matchHeader(fields, header, headerData)
-    
-    lines = itertools.dropwhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
-    lines = itertools.islice(lines, 1, None)
+
 
     def batch(lines):
+        """Group lines into blocks for one satellite.
+        """
         next = []
         for line in lines:
             if line[0] not in [" ", "\t"] and len(next)>0:
@@ -127,28 +88,32 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
             next.append(line)
         yield next
 
-    #batchedLines = itertools.batched(lines, 8) #CHECK: is 8 standered?
+    # split satellite entries into groups of lines
+    lines = itertools.dropwhile(lambda line: line.strip().upper()!="END OF HEADER", lines)
+    lines = itertools.islice(lines, 1, None)
     batchedLines = batch(lines)
-    #batchedLines = map(lambda x: list(map(lambda y: y.strip().split(), list(x))), batchedLines)
     expr = r"((-?\d*)(\.\d*([EeDd][+-]?\d*)?)?|[^\s]*)"
     batchedLines = map(lambda x: list(map(lambda y: [m[0] for m in re.findall(expr, y) if m[0]!=""], list(x))), batchedLines)
     
     satsList = []
     satsMap = {}
 
+    # parse satellite entries
     for entry in list(batchedLines):
         valid = False
         sat = {}
         if entry[0][0].strip().isnumeric():
+            # is a RINEX v2 entry -> add prefix so it can be parsed by v3 logic
             valid = True
             entry[0][0] = constelationPrefix+(entry[0][0].strip().zfill(2))
         if entry[0][0][0]==constelationPrefix:
+            # this entry is for the satellite constelation we are parsing for
             valid = True
             for row in range(len(dataDescription)):
                 rowDataDescription = dataDescription[row]
                 if len(entry[row])-1 == len(dataDescription[row]) and len(entry[row][0])==1 and entry[row][1].strip().isnumeric():
-                    entry[row] = [entry[row][0]+"0"+entry[row][1]]+entry[row][2:]
-                if len(entry[row]) < len(rowDataDescription):
+                    entry[row] = [entry[row][0]+"0"+entry[row][1]]+entry[row][2:] #add zero padding to id number of only 1 digit
+                if len(entry[row]) < len(rowDataDescription): # handel a miss match
                     rowDataDescription = [x for x in rowDataDescription if not isinstance(x, str) or (x.find("spare")==-1 and x.find("blank")==-1)]
                     if len(entry[row]) < len(rowDataDescription):
                         rowDataDescription2 = [x for x in rowDataDescription if not isinstance(x, str) or x.find("BNK")==-1] # Blank Not Known -> need to find previus value
@@ -169,6 +134,7 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
                 else:
                     assert len(entry[row]) == len(rowDataDescription), "Data desciption and rinex data don't match"
                 for column in range(len(rowDataDescription)):
+                    # parse values according to data description
                     if isinstance(rowDataDescription[column], list):
                         f = rowDataDescription[column][1]
                         sat[rowDataDescription[column][0]] = f(entry[row][column])
@@ -181,14 +147,9 @@ def parseRINEX(fileName, dataDescription, headerDescription, constelationPrefix=
     return satsList, headerData
 
 def float_int(x):
+    """parse a string as a float and convert it to an int
+    """
     return int(float(x))
-
-    
-
-#["record_id", "year", "month", "day", "hour", "min", "sec", "Epoch flag", "num sat in epoch", "(reserved)", "reciver clock offset"],
-#        ["m", ],
-#        [],
-#        []
 
 
 

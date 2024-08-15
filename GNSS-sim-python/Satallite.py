@@ -4,6 +4,9 @@ import NavMessage
 from typing import Self
 
 class TimedEfemris:
+    """ Store list of ephemeris
+    Allows for easy indexing by time
+    """
     ephs = []
     lastIndex = 0
 
@@ -33,6 +36,8 @@ class TimedEfemris:
         return self.ephs[-1]
 
 class Satallite:
+    """ Store data for a satellite: ephemeris, constelation, and name
+    """
     name : str = ""
     constelation : Constelation.Constelation = None
     eph : TimedEfemris = None
@@ -46,12 +51,16 @@ class Satallite:
         self.bitBuffer.fillBuffer = constelation.fillBuffer
 
     def add(self, other: Self):
+        """ Add ephemeris entries from another satellite object
+        """
         if self.name!=other.name:
             print("merge rejected diffrent satalite")
         else:
             self.eph.add(other.eph)
 
 def getGoodRange(sats: dict[str, Satallite]):
+    """Check for what time range ephemeris data is available
+    """
     earliest = []
     latest = []
     for name in sats:

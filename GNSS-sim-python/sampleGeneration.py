@@ -1,6 +1,8 @@
 import NavMessage
 import matplotlib.pyplot as plt
 
+# code for generating intermediate files used in testing
+
 def ensureList(input, size):
     if isinstance(input, list):
         if len(input) >= size:

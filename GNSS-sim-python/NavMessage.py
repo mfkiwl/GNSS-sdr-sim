@@ -1,9 +1,9 @@
-
-
 import itertools
 
 
 class BitBuffer:
+    """Data structure and functions to communicate between the generation of the navigation message and the 0.1 second frames that are send for encoding
+    """
 
     buffer = []
     store = {}
@@ -28,12 +28,13 @@ class BitBuffer:
             self.debugBuffer += bits
             # how to deal with not aligned
             return self.getBits(n, datetime, sat, sats)
-            
-
 
 
 
 def numToBits(val, bits):
+    """Convert a number to a array of bits.
+    'bits' indicates how many bits to use to encode 'val'.
+    """
     if val is None:
         return [0]*bits
     val = int(round(val))
@@ -43,6 +44,11 @@ def numToBits(val, bits):
     return res
 
 def dataStructureToBits(structure, data, twosCompliment=False, spareData = {}):
+    """Use the given 'structure' to create a bit array.
+    To fill the structure values are first taken from 'data'.
+    If a value is not present in data look in 'spareData'.
+    'twosCompliment' indicates how to encode data
+    """
     result = []
     for entry in structure:
         if isinstance(entry, list):
@@ -69,6 +75,8 @@ def dataStructureToBits(structure, data, twosCompliment=False, spareData = {}):
     return result
 
 def bitsToHex(bits):
+    """Convert array of bits to a string
+    """
     hex = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
     charbits = bits[0:4]
     v=0
@@ -97,12 +105,16 @@ def crc_remainder(input_bitstring, polynomial_bitstring, initial_filler):
     return input_padded_array[len_input:]
 
 def interleave(data, c=8, r=30):
+    """Interleave a array
+    """
     assert len(data)==c*r
     datai = [0]*len(data)
     for i in range(c):
         for j in range(r):
             datai[i*r+j] = data[j*c+i]
     return datai
+
+
 
 def main():
     print("NavMessage")

@@ -15,7 +15,8 @@ import IRNSS
 SPEED_OF_LIGHT = 299792458
 
 def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTime: datetime.datetime, powerFactor=1):
-    
+    """Run the simulation for 0.1 seconds / one time step
+    """
     frameData = []
     
     ephs = {}
@@ -79,33 +80,40 @@ def generateFrame(userPos, userVel, sats: dict[str, Satallite.Satallite], dateTi
     return ("data "+",".join(frameData)+"\n", results)
 
 def printResults(time, results, userPos, userVel):
-    #userPos = np.array([[4687282.796],[1840346.018],[4055083.320]])
+    """Print the results of one simulation step
+    """
+
     ps = ""
     for name in results:
-        #print("\033[F", end="")
         ps = ps+"\033[F"
     ps = ps+"\033[F\033[F\033[J" + (" "*150) + "\n"
-    #print("\033[F", end="")
-    #print("\033[F", " "*50)
 
-    #print("time:", time.strftime('%F %T.%f')[:-3], "@", userPos.T[0], "v:", userVel.T[0], " "*10)
     ps = ps + "time:" + time.strftime('%F %T.%f')[:-3] + "@" + str(userPos.T[0]) + "v:" + str(userVel.T[0]) + (" "*15)
     for name in results:
         result = results[name]
         elevation, azimuth, alivation = orbit.calcAzimElevDist(userPos, result["satPos"]-userPos)
         ps = ps + ("\n{} : {:3.0f} @ {} {:10.6f} {:10.4f}, {} ([{:11.1f} {:11.1f} {:11.1f}], [{:9.6f} {:9.6f} {:5.1f}])   ".format(name, result["power"], result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], "".join(map(str,result["data"])), result["satPos"][0][0], result["satPos"][1][0], result["satPos"][2][0], elevation, azimuth, alivation))
-        #print("{} : {:3.0f} @ {} {:10.6f} {:10.4f}, {} ([{:11.1f} {:11.1f} {:11.1f}], [{:9.6f} {:9.6f} {:5.1f}])".format(name, result["power"], result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], "".join(map(str,result["data"])), result["satPos"][0][0], result["satPos"][1][0], result["satPos"][2][0], elevation, azimuth, alivation))
-        #print(name, ":", result["power"], "@", result["constelation"].getIdString(result["eph"]), result["delay"], result["shift"], result["data"], " "*10)
     print(ps, end="")
 
 def selectSats(sats, names):
+    """Select a limited number of satellites
+    """
     newSats = {}
     for satName in names:
         newSats[satName] = sats[satName]
     return newSats
 
 def main():
+    """Run the simulation and output the results to an intermediate text file that can be used later for encoding into IQ samples
+
+    This functions main use is setting up the simulation by loading RINEX files, selecting a signal to simulate and defining the targeted position and time
+    """
+
     print("main")
+
+    ########################################################################
+    # Uncomment one of the following blocks to select a signal to simulate #
+    ########################################################################
 
     #constelation = Glonass.getConstelation()
     #rinexFile = "data/Glonass/ANK200TUR_S_20240110000_01D_RN.rnx"
@@ -129,6 +137,10 @@ def main():
     #resultFile = "data/irnss.txt"
 
 
+    #############################
+    # Select a time to simulate #
+    #############################
+
     #startTime = datetime.datetime(2024,2,21, 23,00) # IRNSS
     #startTime = datetime.datetime(2024,2,22, 1,0) # BeiDou
     #startTime = datetime.datetime(2024,1,11, 2, 0) # glonass
@@ -138,7 +150,12 @@ def main():
     #startTime = datetime.datetime(2021,6,20, 0, 0) # galileo week 171?
     
     
+    ######################################
+    # Set the duration of the simulation #
+    ######################################
+
     duration = datetime.timedelta(seconds=181)
+
 
 
 
@@ -171,6 +188,11 @@ def main():
 
     timestep = datetime.timedelta(milliseconds=100) # hardcoded 0.1s
     endTime = startTime+duration
+
+
+    ####################################
+    # Select position/path to simulate #
+    ####################################
 
     #userPos = np.array([[3992112.0],[4929847.0],[-662268.0]])
     #userPos = np.array([[4541995.72232094],[833907.206476633],[4384738.7981905]]) # piza
@@ -208,6 +230,9 @@ def main():
     #])
 
     
+    ##################
+    # Run Simulation #
+    ##################
 
     outputFile = open(resultFile, "w")
     outputFile.write("setup "+setup+"\n")
@@ -215,11 +240,7 @@ def main():
     time = startTime
 
     while time <= endTime:
-        #print("time:", time, end="\r")
         t = time.second+time.microsecond/1000000
-        #print(t)
-        #posOscillation = np.array([[math.sin(2*t/math.pi)],[math.sin(2*t/math.pi)],[math.sin(2*t/math.pi)]]) * 25
-        #print(posOscillation)
         (pos, vel) = posVelFunc(time)
         (dataString, result) = generateFrame(pos, vel, sats, time)
         printResults(time, result, pos, vel)
@@ -228,11 +249,11 @@ def main():
 
     outputFile.close()
 
-    #print(generateFrame(userPos, userVel, sats, time)[0])
-
     print("Done")
 
 def simplePathInterpolation(timePosPairs: tuple[datetime.datetime, np.ndarray]):
+    """Create function that returns position and velocity that match given locations to move through over time
+    """
     timePosPairs = sorted(timePosPairs)
     def getPosVelAtTime(time):
         index = 0

@@ -12,6 +12,8 @@ def normalize(v):
     return v / norm
 
 class Steering:
+    """Can be used to update the simulated position be pressing the arrow keys
+    """
     def __init__(self, pos):
         self.pos = pos
 
