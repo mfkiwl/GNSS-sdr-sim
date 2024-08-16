@@ -17,6 +17,16 @@
 #include "BeiDou/Sat.h"
 #include "IRNSS/Sat.h"
 
+// usefull functions for parsing intermediate data
+
+/// <summary>
+/// Construct the stalite object that contains info abbout the satellite and its signal.
+/// Add new signals here to be able to use them by parsing a setup string
+/// </summary>
+/// <param name="constelationCode">the code of the signal</param>
+/// <param name="id">number of the satalite</param>
+/// <param name="arg">extra data passed along between []</param>
+/// <returns></returns>
 Satellite* constructSat(std::string constelationCode, std::string id, std::string arg) {
 	//std::cout << constelationCode << " " << id << " " << arg << std::endl;
 	if (constelationCode == "E") {

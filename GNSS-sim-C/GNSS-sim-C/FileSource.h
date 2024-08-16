@@ -13,37 +13,9 @@
 
 #include "Parse.h"
 
-/*#include "Galileo/Sat.h"
-#include "Glonass/Sat.h"
-#include "GPS/Sat.h"
-#include "BeiDou/Sat.h"
-#include "IRNSS/Sat.h"
-
-Satellite* constructSat(std::string constelationCode, std::string id, std::string arg) {
-	//std::cout << constelationCode << " " << id << " " << arg << std::endl;
-	if (constelationCode == "E") {
-		Satellite* sat = new galileo::Sat(std::stoi(id));
-		return sat;
-	}
-	if (constelationCode == "R") {
-		Satellite* sat = new glonass::Sat(std::stoi(id), std::stoi(arg));
-		return sat;
-	}
-	if (constelationCode == "G") {
-		Satellite* sat = new gps::Sat(std::stoi(id));
-		return sat;
-	}
-	if (constelationCode == "C") {
-		Satellite* sat = new beidou::Sat(std::stoi(id));
-		return sat;
-	}
-	if (constelationCode == "I") {
-		Satellite* sat = new irnss::Sat(std::stoi(id));
-		return sat;
-	}
-	throw std::invalid_argument("Unexpeced constelation code");
-}*/
-
+/// <summary>
+/// interface to load intermediate data from file
+/// </summary>
 class FileSource {
 	std::ifstream file;
 public:

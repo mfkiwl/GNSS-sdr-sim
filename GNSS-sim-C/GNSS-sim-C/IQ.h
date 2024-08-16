@@ -5,8 +5,6 @@
 #include <math.h>
 #include <type_traits>
 
-//#define IQ_FLOATS
-
 #ifdef IQ_FLOATS
 typedef double IQ_v;
 const double IQ_v_unit = 1.0;
@@ -38,6 +36,9 @@ const int SIN_TABLE[256] = {
 	253, 253, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254
 };
 
+/// <summary>
+/// Data structure to store and work with IQ samples
+/// </summary>
 struct IQ {
 	IQ_v I;
 	IQ_v Q;

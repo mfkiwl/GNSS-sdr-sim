@@ -9,6 +9,9 @@
 #include "DataFrame.h"
 #include "ChainLink.h"
 
+/// <summary>
+/// Handel the request for new bits and update the settings for upsampling
+/// </summary>
 class DataHandler : public ChainLink {
 private:
 
@@ -75,6 +78,9 @@ public:
 	}
 
 private:
+	/// <summary>
+	/// Get data ready for the next 0.1 seconds / frame of signal
+	/// </summary>
 	void loadNextFrame() {
 		currentBit = 0;
 		last_frame_delay = currentData.delay;
@@ -83,7 +89,12 @@ private:
 		resample->setDxyz(currentData.dx / 1000000, currentData.dy / 1000000, currentData.dz / 1000000);
 	}
 
+	/// <summary>
+	/// Update resampler settings
+	/// </summary>
 	void setBitData() {
+
+		// quadratic interpolation between the current and next delay
 		double u = last_frame_delay;
 		double v = currentData.delay;
 		double w = data.front().delay;

@@ -5,17 +5,10 @@
 #include "NetworkSink.h"
 #include "Parse.h"
 
-/*std::string read_(boost::asio::ip::tcp::socket& socket) {
-	boost::asio::streambuf buf;
-	boost::asio::read_until(socket, buf, "\n");
-	std::string data = boost::asio::buffer_cast<const char*>(buf.data());
-	return data;
-}
-void send_(boost::asio::ip::tcp::socket& socket, const std::string& message) {
-	const std::string msg = message + "\n";
-	boost::asio::write(socket, boost::asio::buffer(message));
-}*/
 
+/// <summary>
+/// Interface that can be used like FileSource only then when reciver the intermediate data over the network
+/// </summary>
 class NetworkSource {
 	boost::asio::ip::tcp::socket* socket;
 	std::string read() {
@@ -69,6 +62,10 @@ public:
 	}
 };
 
+/// <summary>
+/// Start listning for connections that send intermediate data.
+/// Only one connection at a time.
+/// </summary>
 void startServer() {
 	using namespace boost::asio;
 	using ip::tcp;
@@ -126,103 +123,3 @@ void startServer() {
 		std::cerr << e.what() << std::endl;
 	}
 }
-
-/*
-void startServer() {
-	using namespace boost::asio;
-	using ip::tcp;
-	try {
-		io_context io_context;
-		// listen for new connection
-		tcp::acceptor acceptor(io_context, tcp::endpoint(tcp::v4(), 21978));
-		for (;;) {
-			//socket creation 
-			tcp::socket socket(io_context);
-			//waiting for connection
-			std::cout << "Waiting for connection" << std::endl;
-			acceptor.accept(socket); // <-- blocking
-			
-			//
-			//	config
-			//
-			std::string message = "config\n";
-			boost::system::error_code ignored_error;
-			boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
-
-			boost::asio::streambuf b;
-			boost::system::error_code error;
-
-			size_t len = boost::asio::read_until(socket, b, "\n", error);
-			if (error == boost::asio::error::eof)
-				continue; // Connection closed cleanly by peer.
-			else if (error)
-				throw boost::system::system_error(error); // Some other error.
-			std::string config_line((std::istreambuf_iterator<char>(&b)), std::istreambuf_iterator<char>());
-			std::cout << "config responce: " << std::endl << config_line;
-
-			int samplingRate;
-			int frequency;
-			std::string saveFile;
-			bool ok = parseConfig(config_line, &samplingRate, &frequency, &saveFile);
-			if (!ok) {
-				std::cout << "config failed" << std::endl;
-				continue;
-			}
-			std::cout << "config: " << samplingRate << " " << frequency << " " << saveFile << std::endl;
-
-			//
-			//	setup
-			//
-			message = "setup\n";
-			boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
-
-			len = boost::asio::read_until(socket, b, "\n", error);
-			if (error == boost::asio::error::eof)
-				continue; // Connection closed cleanly by peer.
-			else if (error)
-				throw boost::system::system_error(error); // Some other error.
-			std::string setup_line((std::istreambuf_iterator<char>(&b)), std::istreambuf_iterator<char>());
-			std::cout << "setup responce: " << std::endl << setup_line;
-			std::vector<Satellite*> sats = parseSetup(setup_line, &ok);
-			if (!ok) {
-				std::cout << "failed to parse setup" << std::endl;
-				continue;
-			}
-			std::cout << "Satalite Count: " << sats.size() << std::endl;
-
-			//
-			//	data
-			//
-			for (;;) {
-				std::string message = "next\n";
-				boost::system::error_code ignored_error;
-				boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
-
-				boost::asio::streambuf b;
-				len = boost::asio::read_until(socket, b, "\n", error);
-				if (error == boost::asio::error::eof)
-					break; // Connection closed cleanly by peer.
-				else if (error)
-					throw boost::system::system_error(error); // Some other error.
-				std::string data_line((std::istreambuf_iterator<char>(&b)), std::istreambuf_iterator<char>());
-				std::cout << "next responce: " << std::endl << data_line;
-				std::map<std::string, DataFrame> data = parseData(data_line, &ok);
-				if (!ok) {
-					std::cout << "failed to parse data" << std::endl;
-					break;
-				}
-				for (auto& kv : data) {
-					std::cout << kv.first << ", ";
-				}
-				std::cout << "\b\b" << std::endl;
-			}
-		}
-
-		//io_context.run(); // <-- async
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-}
-*/

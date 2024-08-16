@@ -4,6 +4,10 @@
 
 #include "ChainLink.h"
 
+/// <summary>
+/// Datastructure to encode data abbout a satalite signal
+/// used to setup and configure processing chains
+/// </summary>
 struct Satellite {
 	std::string name;
 	int prn;

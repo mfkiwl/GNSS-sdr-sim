@@ -6,11 +6,17 @@
 #include <math.h>
 #include "IQ.h"
 
+/// <summary>
+/// Interface to handled genered IQ samples with.
+/// Stores IQ samples in a file.
+/// </summary>
+/// <typeparam name="T">Data type to write: int8_t or int16_t</typeparam>
 template<typename T>
 class FileSink {
 
 	std::basic_ofstream<T> output;
 
+	// Flushes data to file every 512 values / 256 IQ samples
 	T buffer[512];
 	int index = 0;
 
@@ -20,7 +26,7 @@ public:
 	}
 
 	void add(IQ iq) {
-		int bitshiftmult = 1 << (sizeof(int8_t/*T*/) * 8 - 1);
+		int bitshiftmult = 1 << (sizeof(T) * 8 - 1);
 		buffer[index + 0] = round(iq.I * bitshiftmult * 120 / 128 / IQ_v_unit);
 		buffer[index + 1] = round(iq.Q * bitshiftmult * 120 / 128 / IQ_v_unit);
 

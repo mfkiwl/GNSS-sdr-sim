@@ -9,6 +9,8 @@
 #include "DataFrame.h"
 #include "ChainLink.h"
 
+// alternative(and now outdated) implementaion of datahandler to interface with the alternavtive Resampler2
+
 class DataHandler : public ChainLink {
 private:
 

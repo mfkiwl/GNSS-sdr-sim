@@ -1,16 +1,18 @@
-// GNSS-sim-C.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 //#include <boost/program_options.hpp>
 
-/* Settings */
+/* 
+    Settings: comment or uncomment #defines to enable options
+*/
 
-//#define USE_CBOC
-#define SET_DELAY_ON_START
-//#define RELATIVE_MOVE
-//#define TRIG_LOOKUP
-#define IQ_FLOATS
+//#define USE_CBOC              // use CBOC or SinBOC for Galileo Modulation
+#define SET_DELAY_ON_START      // set the initial delay when first starting or let it accumilate during the first frame
+//#define RELATIVE_MOVE         // enable checks and implementation to allow for quicker updates to the simulated position, resample.[dxmm, dymm, dzmm] have to be set menualy, no nice interface for them
+//#define TRIG_LOOKUP           // use a lookup table for trig function, small optimization, little impact on performance
+#define IQ_FLOATS               // use floats or int8_t in IQ samples, used in program, but not the output 
+
+
+
 
 #include "DataHandler.h"
 //#include "Resample2.h"
@@ -26,6 +28,8 @@
 #include "GPS/PRN_Code.h"
 
 #include "FPGA_data.h"
+
+// these example mangers setup the program for diffrent signals, they are used when loading from a file, and not over the network
 
 void example_manager_config(std::string file) {
     FileSource fileSource(file);
@@ -98,40 +102,9 @@ void example_manager_irnss() {
 }
 
 
-void example_chain() {
-
-    galileo::Sat sat(2);
-
-    DataFrame f1;
-    f1.delay = 0.00;
-    f1.doppler = 0;
-    f1.power = 1;
-    f1.bits = 0b111110000011111000001111101010;
-
-
-    DataFrame f2;
-    f2.delay = 0.01;
-    f2.doppler = 20;
-    f2.power = 1;
-    f2.bits = 0b000001111100000111110101010101;
-
-    DataHandler* dataHandler = setupChain(&sat, 20000000, 1575420000);
-
-    dataHandler->addFrame(f1);
-    dataHandler->addFrame(f2);
-
-    dataHandler->init();
-
-    for (int i = 0; i < 1000; i++) {
-        IQ iq = dataHandler->nextSample();
-        std::cout << iq << std::endl;
-    }
-
-    deleteChain(dataHandler);
-}
-
 int main(int argc, char**argv)
 {
+    // I had problems with boost::program_options so the code is commented out
     /*namespace po = boost::program_options;
 
     po::options_description desc("Allowed options");
@@ -151,7 +124,7 @@ int main(int argc, char**argv)
     po::notify(vm);
 
     if      (vm.count("help"))    { std::cout << desc << "\n"; }
-    else if (vm.count("server"))  { startServer2(); }
+    else if (vm.count("server"))  { startServer(); }
     else if (vm.count("file"))    { example_manager_config(vm["file"].as<std::string>()); }
     else if (vm.count("gps"))     { example_manager_gps();     }
     else if (vm.count("galileo")) { example_manager_galileo(); }
@@ -159,41 +132,22 @@ int main(int argc, char**argv)
     else if (vm.count("beidou"))  { example_manager_beidou();  }
     else if (vm.count("irnss"))   { example_manager_irnss();   }
     else {
-
-
-
         std::cout << "No arguments found\n";
-        */
-        startServer();
+    }
+    */
 
-        /*gps::PRN ca(1);
-        for (int i = 0; i < 1023; i++) {
-            std::cout << (int)ca.next();
-        }
-        std::cout << std::endl;*/
-        //return 0;
-        //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
+    // generate vhdl code for testing that implementation
+    //generateFPGA_data("../../data/glonass.txt", 1602000000, 15000000, 100);
 
-        //example_manager_config("../../data/gps.txt");
+    // start a server that waits for a connection to generate and output a signal
+    startServer();
 
-        //example_manager_glonass();
-        //example_manager_galileo();
-        //example_manager_gps();
-        //example_manager_beidou();
-        //example_manager_irnss();
-        //example_file();
-        //example_chain()
-
-    //}
+    // load intermediate data from a file to generate and output a signal
+    //example_manager_config("../../data/gps.txt");
+    //example_manager_glonass();
+    //example_manager_galileo();
+    //example_manager_gps();
+    //example_manager_beidou();
+    //example_manager_irnss();
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

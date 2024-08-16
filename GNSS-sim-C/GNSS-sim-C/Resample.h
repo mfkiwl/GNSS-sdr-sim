@@ -14,40 +14,55 @@
 //long dxmm = 0, dymm = 10000, dzmm = 0; // offset in mm
 #endif // RELATIVE_MOVE
 
-
+/// <summary>
+/// Upsample, delay, and shift signals
+/// </summary>
 class Resample : public ChainLink{
+	// settings : resolution of signal phase
 	const long long PHASE_POWER = 30;
 	const long long PHASE_RANGE = (1 << PHASE_POWER);
 public:
+	// settings: central frequency of incomming and outgoing signal
 	long radioFrequencyOut;
 	long radioFrequencyIn;
 
+	// settings: sample rates
 	long inputRate;
 	long outputRate;
 
+	// state: signal
 	IQ currentSample;
 
+	// state: timing
 	long long n = 0;
 	long long itterNStep;
 	long long bufferNStep;
+	// current : delay change
 	long long delayNStep = 0;
+
+	// setting: timing resolution
 	const int subCycles = 10000;
 
+	// state: phase
 	long unitStepPhase;
 	long unitPhase;
 
+	// current: power
 	int power = 1;
 
+	// state: timing controle
 	long long last_set_delay = 0;
 	long long last_target = 0;
 
-	long long dx = 0, dy = 0, dz = 0; // offset n per meter
+	// current: offset n per meter
+	long long dx = 0, dy = 0, dz = 0;
 #ifdef RELATIVE_MOVE
-	long long dxn = 0, dyn = 0, dzn = 0; // current ofset in n
-	long long dnstep = 1; // how fast to go to target
-	long long dxmm = 0, dymm = 0, dzmm = 0; // offset in mm
+	long long dxn = 0, dyn = 0, dzn = 0; // current ofset in n (state)
+	long long dnstep = 1; // how fast to go to target (setting)
+	long long dxmm = 0, dymm = 0, dzmm = 0; // offset in mm (current/setting)
 #endif
 
+	// settings: data flow
 	ChainLink* dataSource;
 	ChainLink* sampleSource;
 public:
@@ -117,6 +132,11 @@ public:
 		return dataSource->nextBit();
 	}
 
+	/// <summary>
+	/// Delay in miliseconds to delay in n
+	/// </summary>
+	/// <param name="delay_ms">delay in miliseconds</param>
+	/// <returns>delay in n</returns>
 	long long calcDelayNum(double delay_ms) {
 		double delay_samples = delay_ms / 1000 * outputRate;
 		long delay_whole_samples = (long)delay_samples;
@@ -134,6 +154,11 @@ public:
 		return delay;
 	}
 
+	/// <summary>
+	/// step of n per sample to corespoding phase step
+	/// </summary>
+	/// <param name="n"></param>
+	/// <returns></returns>
 	long long numToPhaseStep(long long n) {
 		//long long nPerSample = ((long long)subCycles * inputRate); /*itterNStep*/
 		//long long samples = n / (subCycles * inputRate);
@@ -172,6 +197,12 @@ public:
 
 	long long lastDelay = 0;
 	double stepFraction = 0;
+	/// <summary>
+	/// Calculate delay step in n per sample using the open loop methode.
+	/// mainly used to test the methode
+	/// </summary>
+	/// <param name="delay_ms">next delay in miliseconds</param>
+	/// <param name="time_till_next_update">time after witch the target delay has to be reached</param>
 	void setDelayTargetOpenLoop(double delay_ms, double time_till_next_update) {
 
 
@@ -194,6 +225,13 @@ public:
 		//std::cout << "step: " << nStep << ", addedDelay: " << addedDelay << ", loops:" << u << std::endl;
 	}
 
+
+	/// <summary>
+	/// Calculate delay step in n per sample using the closed loop methode.
+	/// Recomened for use in the C++ implementation
+	/// </summary>
+	/// <param name="delay_ms">next delay in miliseconds</param>
+	/// <param name="time_till_next_update">time after witch the target delay has to be reached</param>
 	void setDelayTargetClosedLoop(double delay_ms, double time_till_next_update) {
 
 		//static long long last_target = 0;
@@ -233,6 +271,11 @@ public:
 		std::cout << delayNStep << " - " << test_delayNStep << std::endl;*/
 	}
 
+	/// <summary>
+	/// Get the next sample
+	/// This function handles the upsampleing, delaying, and frequency shifting.
+	/// </summary>
+	/// <returns>IQ sample</returns>
 	IQ nextSample() {
 
 #ifdef RELATIVE_MOVE

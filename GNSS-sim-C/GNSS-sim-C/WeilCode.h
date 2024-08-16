@@ -2,6 +2,9 @@
 #include <cstdint>
 #include <algorithm>
 
+/// <summary>
+/// Helpher class for generating PRNs that use WielCodes
+/// </summary>
 class LegendreWeilCodes {
 	size_t N;
 	uint8_t* legendre;

@@ -1,7 +1,13 @@
 #pragma once
 
 #include "FileSource.h"
-
+/// <summary>
+/// Generate data to test the vhdl implmentation with
+/// </summary>
+/// <param name="fileName">Intrmediate data file</param>
+/// <param name="radioFrequency">Radio Frequency setting</param>
+/// <param name="outputRate">Sample Rate setting</param>
+/// <param name="subCycles">subCycles paramter setting </param>
 void generateFPGA_data(std::string fileName, unsigned long radioFrequency, unsigned long outputRate, uint64_t subCycles) {
 	FileSource fileSource(fileName);
 	std::vector<Satellite*> sats = fileSource.getSats();

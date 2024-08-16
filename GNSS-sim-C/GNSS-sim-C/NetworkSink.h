@@ -11,6 +11,10 @@
 #include <boost/asio.hpp>
 #include "IQ.h"
 
+/// <summary>
+/// Send IQ samples out over the network
+/// </summary>
+/// <typeparam name="T">type of data to output: int8_t or int16_t</typeparam>
 template<typename T>
 class NetworkSink {
 
@@ -41,7 +45,7 @@ public:
 	}
 
 	void add(IQ iq) {
-		int bitshiftmult = 1 << (sizeof(int8_t/*T*/) * 8 - 1);
+		int bitshiftmult = 1 << (sizeof(T) * 8 - 1);
 		buffer[index + 0] = round(iq.I * bitshiftmult * 120 / 128 / IQ_v_unit);
 		buffer[index + 1] = round(iq.Q * bitshiftmult * 120 / 128 / IQ_v_unit);
 

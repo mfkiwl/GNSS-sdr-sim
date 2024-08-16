@@ -42,6 +42,13 @@ void deleteChain(DataHandler* dataHandler) {
 	delete dataHandler;
 }
 
+/// <summary>
+/// Manages a simulation by
+///  - Setting up processing chains
+///  - Mixing signals
+///  - Handeling paralelization
+///  - Handeling input and output
+/// </summary>
 class Manager {
 private:
 	std::map<std::string, DataHandler*> activeSats;
@@ -59,11 +66,20 @@ public:
 		
 	}
 
+	/// <summary>
+	/// set noize level to be added
+	/// </summary>
+	/// <param name="SNR_db">Stregth compared to a solo satalite at full power</param>
 	void setNoise(float SNR_db) {
 		float factor = powf(10.0f, SNR_db / 10);
 		SNR = 1- (1 / (factor + 1));
 	}
 
+	/// <summary>
+	/// Add data to the data handels
+	/// </summary>
+	/// <param name="satsData">data to add</param>
+	/// <returns>if data was persent</returns>
 	bool addData(std::map<std::string, DataFrame> satsData) {
 		if (satsData.size() == 0) {
 			return false;
@@ -74,6 +90,10 @@ public:
 		return true;
 	}
 
+	/// <summary>
+	/// Get the next mixed IQ sample
+	/// </summary>
+	/// <returns>IQ sample</returns>
 	IQ next() {
 		int n = 0;
 		IQ iq(0);
@@ -84,26 +104,37 @@ public:
 		return iq / n;
 	}
 
+	/// <summary>
+	/// Run simulation with satellites in serial
+	/// </summary>
+	/// <typeparam name="DST">type for the data sink (.add(IQ) and .close())</typeparam>
+	/// <typeparam name="SRC">type for the data source (.getSats() and .nextData())</typeparam>
+	/// <param name="source">Used to get data for the satellites</param>
+	/// <param name="sink">Used to store the generated signal</param>
+	/// <param name="skip10th">How much of the signal to skip at the start, ~0.4 second(=4) is recomended</param>
 	template<typename SRC, typename DST>
 	void run(SRC& source, DST& sink, int skip10th = 0) {
+		// create chains
 		std::vector<Satellite*> sats = source.getSats();
 		for (auto& sat : sats) {
 			activeSats[sat->getName()] = setupChain(sat, sampleRate, radioFrequency);
 		}
+
+		// load inital data
 		addData(source.nextData());
 		addData(source.nextData());
 		for (auto& sat : sats) {
 			activeSats[sat->getName()]->init();
 		}
 
+		// skip first part of signal
 		for (int j = 0; j < skip10th && addData(source.nextData()); j++) {
 			for (int i = 0; i < sampleRate / 10; i++) {
 				next();
 			}
 		}
 
-		// back buffer and frond buffer, fill back buffer 1 thread per each chanel, front buffer merge the chanels
-
+		// run simulation
 		int t = 0;
 		while (addData(source.nextData())) {
 			t++;
@@ -124,6 +155,8 @@ public:
 			//std::cout << "\r" << (float)t / 10.0 << " s";
 			//std::cout << "line" << std::endl;
 		}
+
+		//clean up
 		sink.close();
 
 		for (auto& sat : activeSats) {
@@ -137,26 +170,40 @@ public:
 
 	typedef std::map<std::string, std::pair<bool, IQ*>>* SatSampBuffer;
 
+	/// <summary>
+	/// Run simulation with satellites in paralell
+	/// </summary>
+	/// <typeparam name="DST">type for the data sink (.add(IQ) and .close())</typeparam>
+	/// <typeparam name="SRC">type for the data source (.getSats() and .nextData())</typeparam>
+	/// <param name="source">Used to get data for the satellites</param>
+	/// <param name="sink">Used to store the generated signal</param>
+	/// <param name="skip10th">How much of the signal to skip at the start, ~0.4 second(=4) is recomended</param>
 	template<typename SRC, typename DST>
 	void run_paralell(SRC& source, DST& sink, int skip10th = 0) {
+		// create chains
 		const size_t batches = 1;
 		std::vector<Satellite*> sats = source.getSats();
 		int numSats = sats.size();
 		for (auto& sat : sats) {
 			activeSats[sat->getName()] = setupChain(sat, sampleRate, radioFrequency);
 		}
+
+		// load inital data
 		addData(source.nextData());
 		addData(source.nextData());
 		for (auto& sat : sats) {
 			activeSats[sat->getName()]->init();
 		}
 
+		// setup buffers for paralelization
 		size_t buffer_size = sampleRate/10*batches;
 		SatSampBuffer backbuffer;
 		SatSampBuffer frontbuffer;
 		IQ* merged_buffer;
 		init_paralell(buffer_size, &backbuffer, &frontbuffer, &merged_buffer);
 
+
+		// skip first part of signal
 		for (int j = 0; j < skip10th && addData(source.nextData()); j+=batches) {
 			if (batches > 1) {
 				for (int i = 0; i < batches - 1; i++) {
@@ -179,6 +226,7 @@ public:
 		run_paralell(buffer_size, backbuffer);
 		t++;
 
+		// run simulation
 		while (addData(source.nextData())) {
 			if (batches > 1) {
 				for (int i = 0; i < batches - 1; i++) {
@@ -191,6 +239,7 @@ public:
 			t++;
 
 #ifdef RELATIVE_MOVE
+			// a quick movement at 15 seconds into the signal
 			if (t > 150 && t < 152) {
 				std::cout << "targed modified" << std::endl;
 				for (auto& sat : activeSats) {
@@ -219,6 +268,7 @@ public:
 
 		merge(buffer_size, backbuffer, merged_buffer, sink, numSats); // run merge+sink in paralell with run_paralell
 
+		// clean up
 		sink.close();
 
 		for (auto& sat : activeSats) {
@@ -250,6 +300,11 @@ public:
 		delete frontbuffer;
 	}
 
+	/// <summary>
+	/// Run simulation till buffer is full
+	/// </summary>
+	/// <param name="buffer_size">size of buffer</param>
+	/// <param name="buffer">buffer for results</param>
 	void run_paralell(size_t buffer_size, SatSampBuffer buffer) {
 		for (auto& sat : activeSats) {
 			if (buffer->find(sat.first) == buffer->end()) {
@@ -278,6 +333,15 @@ public:
 
 	}
 
+	/// <summary>
+	/// Merge the signals generated for the diffrent satalites and send the result to the output sink
+	/// </summary>
+	/// <typeparam name="DST">interface to store IQ samples</typeparam>
+	/// <param name="buffer_size">satalite input buffer</param>
+	/// <param name="buffers">satalite input buffers</param>
+	/// <param name="merged_buffer">buffer to merge data into</param>
+	/// <param name="sink">output</param>
+	/// <param name="numSats">sumber of satellite buffers</param>
 	template<typename DST>
 	void merge(size_t buffer_size, SatSampBuffer buffers, IQ* merged_buffer, DST& sink, size_t numSats) {
 		for (int i = 0; i < buffer_size; i++) {
