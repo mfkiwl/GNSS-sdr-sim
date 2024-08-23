@@ -54,20 +54,28 @@ def init():
     """ Setup the simulator
     """
 
+    ###############################################
+    # Select constelations and RINEX files to use #
+    ###############################################
+
     sats, setup = Constelation.loadSats([
         #(GPS.getConstelation(), "data/GPS/brdc3260.23n"),
         #(GPS.getConstelation(), "data/GPS/Brdc3250.23n"),
         #(GPS.getConstelation(), "data/GPS/Brdc3240.23n"),
 
         
-        #(GPS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
-        (Glonass.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
-        #(Galileo.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
-        #(BeiDou.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
-        #(IRNSS.getConstelation(), "D:/data/brdc/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        (GPS.getConstelation(), "data/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        #(Glonass.getConstelation(), "data/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        (Galileo.getConstelation(), "data/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        #(BeiDou.getConstelation(), "data/BRDM00DLR_S_20241970000_01D_MN.rnx"),
+        #(IRNSS.getConstelation(), "data/BRDM00DLR_S_20241970000_01D_MN.rnx"),
     ])
     #sats = main.selectSats(sats, ["G13", "G15", "G16", "G18", "G23", "G24", "G27", "G29", "G32"])
     #sats = main.selectSats(sats, ["G16", "G24", "G29", "G32"])
+
+    #########################
+    # Settings for encoding #
+    #########################
 
     centerFrequency = 1575420000 # L1  gps / galileo
     #centerFrequency = 1602000000 # L1  glonass
@@ -82,15 +90,22 @@ def init():
 
     config = "config "+str(centerFrequency)+" "+str(sampleRate)+" "+IQFile
 
+    ###################################
+    # Set simulation and and duration #
+    ###################################
+
     #startTime = datetime.datetime(2023,11,20, 0, 0) # brdc3240.23n
-    #startTime = datetime.datetime(2024,7,28, 0, 0) # BRDM00DLR_S_20242100000_01D_MN.rnx
     startTime = datetime.datetime(2024,7,15, 2, 15) # BRDM00DLR_S_20241970000_01D_MN.rnx
     duration = datetime.timedelta(seconds=60*10+1)
+
+    ##################################
+    # Set simulation target position #
+    ##################################
 
     #userPos = np.array([[-2758918.635941], [4772301.120089], [3197889.437237]]) # gps-sdr-sim
     #userPos = np.array([[1240086], [5460847], [3043454]]) # University of Delhi, New Delhi, India : 28.685194, 77.205865, 240
     #userPos = orbit.wgslla2xyz(28.685194, 77.205865, 240)
-    userPos = np.array([[3908805], [319054], [5013110]]) # home
+    userPos = np.array([[3908805], [319054], [5013110]])
     posVelFunc = main.simplePathInterpolation([(startTime, userPos)])
     #posVelFunc = steering.Steering(userPos)
 

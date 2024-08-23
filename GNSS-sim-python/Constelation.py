@@ -13,7 +13,7 @@ class Constelation:
     postProcessRINAXData = lambda data, header: None # function called after parsing, handel any needed post processing here
     getSatPosVel = lambda eph, t : (np.zeros(1,3), np.zeros(1,3)) # return a satellite's position and velocity
     # usually ony the following two lines are needed:
-    #   mulSatpos.getSatPosVel(eph, t[0]-eph["toe"])
+    #   (satPos, satVel) = mulSatpos.getSatPosVel(eph, t[0]-eph["toe"])
     #   return (np.array([satPos]).T, np.array([satVel]).T)
 
     bitsPerFrame = -1 # how many bits to send for encoding every 0.1 seconds: bitrate/10

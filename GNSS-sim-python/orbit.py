@@ -3,6 +3,7 @@ import math
 import numpy as np
 from scipy.integrate import odeint
 
+# functions that can be useful, however some are no longer in use
 
     #x = sat["x(t_b)"] + sat["x'(t_b)"]*t_k + 0.5*sat["x''(t_b)"]*t_k**2
     #y = sat["y(t_b)"] + sat["y'(t_b)"]*t_k + 0.5*sat["y''(t_b)"]*t_k**2
